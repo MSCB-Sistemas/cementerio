@@ -32,7 +32,7 @@ CREATE TABLE `deudo` (
   `localidad` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NOT NULL,
   `codigo_postal` int unsigned NOT NULL,
   PRIMARY KEY (`id_deudo`),
-  UNIQUE KEY `unique_dni` (`dni`)
+  UNIQUE KEY `unique_dni_deudo` (`dni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -66,6 +66,7 @@ CREATE TABLE `difunto` (
   `localidad` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NOT NULL,
   `codigo_postal` int unsigned NOT NULL,
   PRIMARY KEY (`id_difunto`),
+  UNIQUE KEY `unique_dni_difunto` (`dni`),
   KEY `difunto_deudo_FK` (`id_deudo`),
   CONSTRAINT `difunto_deudo_FK` FOREIGN KEY (`id_deudo`) REFERENCES `deudo` (`id_deudo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
@@ -214,4 +215,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-28 18:10:00
+-- Dump completed on 2025-07-28 20:02:31
