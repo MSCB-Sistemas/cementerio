@@ -115,10 +115,8 @@ erDiagram
     difunto ||--o{ ubicacion_difunto : "fk_id_difunto"
     parcela ||--o{ tipo_parcela : "fk_id_tipo"
     difunto ||--o{ estado_civil : "fk_id_estado_civil"
-    difunto ||--o{ nacionalidad : "fk_id_nacionalidad"
+    difunto ||--o{ nacionalidades : "fk_id_nacionalidad"
     difunto ||--o{ sexo : "fk_id_sexo"
     parcela ||--o{ orientacion : "fk_id_orientacion"
-
-
 ```
 
