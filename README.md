@@ -18,5 +18,7 @@
 
   ## :file_folder: Carpetas 
 
-  - ***docs:*** contiene la documentación del proyecto
-  - ***db:*** contiene las bases de datos 
+   - ***mvc_cementerio:*** contiene el código fuente con la estructura Modelo - Vista - Controlador
+   - ***db:*** contiene las bases de datos 
+   - ***docs:*** contiene la documentación del proyecto
+ 
