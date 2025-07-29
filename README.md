@@ -67,9 +67,9 @@ erDiagram
         string descripcion
     }
 
-    nacionalidad {
+    nacionalidades {
         int id_nacionalidad PK
-        string descripcion
+        string nacionalidad
     }
 
     sexo {
