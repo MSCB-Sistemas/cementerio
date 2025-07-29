@@ -1,4 +1,4 @@
-# Sistema de Gestión Cementerio Municipal - Municipalidad de San Carlos de Bariloche 
+# Sistema de Gestión Cementerio Municipal
 
   ## :memo: Objetivos del proyecto
 
@@ -54,9 +54,9 @@ erDiagram
         int dni
         int edad
         date fecha_fallecimiento
-        string sexo FK
-        string nacionalidad FK
-        string estado_civil FK
+        int sexo FK
+        int nacionalidad FK
+        int estado_civil FK
         string domicilio
         string localidad
         string codigo_postal
@@ -91,7 +91,6 @@ erDiagram
         string seccion
         string fraccion
         int nivel
-        date fecha_venta
         string orientacion FK
     }
 
