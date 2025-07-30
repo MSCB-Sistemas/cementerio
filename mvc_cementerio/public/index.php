@@ -1,5 +1,7 @@
 <?php
 #Encargado de manejar las peticiones y redirigirlas al controlador adecuado
 require_once '../app/init.php';
-$init = new Core;
+
+// Inicializar Core para probar
+$init = new core;   
 ?>
