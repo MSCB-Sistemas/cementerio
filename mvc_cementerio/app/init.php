@@ -1,7 +1,10 @@
 <?php
-echo "<h1>Welcome to the Cementerio MVC App</h1>";
+echo "<h3>Municipalidad San Carlos de Bariloche</h1>";
 
-spl_autoload_register(function ($lib){
+require_once 'config/config.php';
+
+spl_autoload_register( function ($lib) {
     require_once 'lib/' . $lib . '.php';
 });
+
 ?>
