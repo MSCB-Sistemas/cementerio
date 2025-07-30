@@ -134,7 +134,7 @@ CREATE TABLE `ubicacion_difunto` (
   CONSTRAINT `ubicacion_difunto_FK_1` FOREIGN KEY (`id_difunto`) REFERENCES `difunto` (`id_difunto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
--- sgpc.usuarios definition
+-- sgcm.usuarios definition
 
 CREATE TABLE `usuarios` (
   `id_usuario` int NOT NULL AUTO_INCREMENT,
@@ -151,7 +151,7 @@ CREATE TABLE `usuarios` (
   CONSTRAINT `usuarios_FK` FOREIGN KEY (`id_tipo_usuario`) REFERENCES `tipos_usuarios` (`id_tipo_usuario`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
--- sgpc.tipos_usuarios definition
+-- sgcm.tipos_usuarios definition
 
 CREATE TABLE `tipos_usuarios` (
   `id_tipo_usuario` int NOT NULL AUTO_INCREMENT,
