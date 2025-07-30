@@ -8,12 +8,10 @@ class Control {
   }
 
   public function load_view($view, $datos = []) {
-    if(file_exists('../app/views/pages/' . $view . '.php'))
-    {
+    if(file_exists('../app/views/pages/' . $view . '.php')){
       require_once '../app/views/pages/' . $view . '.php';
     }
-    else
-    {
+    else{
       die("404 NOT FOUND");
     }
   }

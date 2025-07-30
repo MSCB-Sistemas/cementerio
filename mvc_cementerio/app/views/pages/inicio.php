@@ -2,7 +2,7 @@
 
 <div class="container-fluid bg-light py-5">
   <div class="container">
-    <h1 class="display-4">Cementerio Municipalidad San Carlos de Bariloche</h1>
+    <h1 class="display-4">Cementerio Municipal SCB</h1>
   </div>
 </div>
 
