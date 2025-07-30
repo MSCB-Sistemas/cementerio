@@ -17,7 +17,7 @@ class ParcelaModel {
     }
 
     public function getParcela($id_parcela) : array {
-        $stmt = $this->db->prepare("SELECT * FROM parcelas WHERE id_parcela = :id");
+        $stmt = $this->db->prepare("SELECT * FROM parcela WHERE id_parcela = :id_parcela");
         $stmt->execute(['id_parcela' => $id_parcela]);
         return $stmt->fetch();
     }
