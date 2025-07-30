@@ -133,3 +133,28 @@ CREATE TABLE `ubicacion_difunto` (
   CONSTRAINT `ubicacion_difunto_FK` FOREIGN KEY (`id_parcela`) REFERENCES `parcela` (`id_parcela`),
   CONSTRAINT `ubicacion_difunto_FK_1` FOREIGN KEY (`id_difunto`) REFERENCES `difunto` (`id_difunto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+
+-- sgpc.usuarios definition
+
+CREATE TABLE `usuarios` (
+  `id_usuario` int NOT NULL AUTO_INCREMENT,
+  `usuario` varchar(100) COLLATE utf8mb4_spanish2_ci NOT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_spanish2_ci NOT NULL,
+  `apellido` varchar(100) COLLATE utf8mb4_spanish2_ci NOT NULL,
+  `cargo` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `sector` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `contrasenia` varchar(100) COLLATE utf8mb4_spanish2_ci NOT NULL,
+  `id_tipo_usuario` int NOT NULL,
+  `activo` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`id_usuario`),
+  KEY `usuarios_FK` (`id_tipo_usuario`),
+  CONSTRAINT `usuarios_FK` FOREIGN KEY (`id_tipo_usuario`) REFERENCES `tipos_usuarios` (`id_tipo_usuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+
+-- sgpc.tipos_usuarios definition
+
+CREATE TABLE `tipos_usuarios` (
+  `id_tipo_usuario` int NOT NULL AUTO_INCREMENT,
+  `tipo_usuario` varchar(100) COLLATE utf8mb4_spanish2_ci NOT NULL,
+  PRIMARY KEY (`id_tipo_usuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
