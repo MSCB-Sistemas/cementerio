@@ -61,21 +61,10 @@ class ParcelaModel {
         * @param int $id_orientacion ID de la orientación
         * @return bool Resultado de la operación
     */
-    public function insertParcela(
-        int $id_tipo,
-        int $id_deudo,
-        string $numero_ubicacion,
-        string $hilera,
-        string $seccion,
-        string $fraccion,
-        int $nivel,
-        int $id_orientacion
-    ): int|false {
-        $stmt = $this->db->prepare("
-            INSERT INTO parcela (id_tipo, id_deudo, numero_ubicacion, hilera, seccion, fraccion, nivel, id_orientacion)
-            VALUES (:id_tipo, :id_deudo, :numero_ubicacion, :hilera, :seccion, :fraccion, :nivel, :id_orientacion)
-        ");
-        if ($stmt->execute([
+    public function insertParcela($id_tipo, $id_deudo, $numero_ubicacion, $hilera, $seccion, $fraccion, $nivel, $id_orientacion) {
+        $stmt = $this->db->prepare("INSERT INTO parcela (id_tipo, id_deudo, numero_ubicacion, hilera, seccion, fraccion, nivel, id_orientacion) VALUES (:id_tipo, :id_deudo, :numero_ubicacion, :hilera, :seccion, :fraccion, :nivel, :id_orientacion)");
+        $stmt->execute([
+
             'id_tipo' => $id_tipo,
             'id_deudo' => $id_deudo,
             'numero_ubicacion' => $numero_ubicacion,
@@ -94,7 +83,12 @@ class ParcelaModel {
     /**
         * Actualiza una parcela existente
         * @param int $id_parcela ID de la parcela a actualizar
-    */
+    
+    public function updateParcela($id_parcela, $id_tipo, $id_deudo, $numero_ubicacion, $hilera, $seccion, $fraccion, $nivel, $id_orientacion) : bool {
+        $stmt = $this->db->prepare("UPDATE parcela 
+                                           SET id_tipo = :id_tipo, id_deudo = :id_deudo, numero_ubicacion = :numero_ubicacion, hilera = :hilera, seccion = :seccion, fraccion = :fraccion, nivel = :nivel, id_orientacion = :id_orientacion 
+                                           WHERE id_parcela = :id_parcela");
+        $stmt->execute([
     public function updateParcela(
         int $id_parcela,
         int $id_tipo,
