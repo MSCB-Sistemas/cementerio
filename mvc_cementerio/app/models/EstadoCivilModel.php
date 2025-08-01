@@ -1,5 +1,5 @@
 <?php
-// Carga la configuración del sistema y la clase para conectar a la base de datos
+
 require_once __DIR__ . '/config/config.php';
 require_once 'Database.php';
 
@@ -20,6 +20,7 @@ class EstadoCivilModel {
         * Inicializa la conexión a la base de datos
     */
     public function __construct() {
+
         $this->db = Database::connect();
     }
 
@@ -30,17 +31,18 @@ class EstadoCivilModel {
     public function getAllEstadosCiviles(): array {
         $stmt = $this->db->prepare("SELECT * FROM estado_civil");
         $stmt->execute();
-        return $stmt->fetchAll();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-         * Obtiene un estado civil por su ID
-         * @param int $id_estado_civil ID del estado civil
-         * @return array Detalles del estado civil
+     * Obtiene un estado civil por su ID
+     * @param int $id_estado_civil ID del estado civil
+     * @return array Detalles del estado civil
      */
-    public function getEstadoCivil(int $id_estado_civil): array|false {
+    public function getEstadoCivil($id_estado_civil) : array {
         $stmt = $this->db->prepare("SELECT * FROM estado_civil WHERE id_estado_civil = :id_estado_civil");
-        $stmt->execute(['id_estado_civil' => $id_estado_civil]);
+        $stmt->execute(['id_parcela' => $id_estado_civil]);
         return $stmt->fetch();
     }
 
@@ -49,35 +51,37 @@ class EstadoCivilModel {
         * @param string $nombre Nombre del estado civil
         * @return bool Resultado de la operación
     */
-    public function insertEstadoCivil(string $descripcion): int|false {
-        $stmt = $this->db->prepare("INSERT INTO estado_civil (descripcion) VALUES (:descripcion)");
-        if ($stmt->execute(['descripcion' => $descripcion])) {
-            return intval($this->db->lastInsertId());
-        }
-        return false;
+
+    public function insertEstadoCivil($id_estado_civil, $descripcion) {
+        $stmt = $this->db->prepare("INSERT INTO estado_civil (id_estado_civil, descripcion) VALUES (:id_estado_civil, :descripcion)");
+        return $stmt->execute([
+            'id_estado_civil' => $id_estado_civil,
+            'descripcion' => $descripcion,
+        ]);
+        return $this->db->lastInsertId();
     }
 
     /**
-         * Actualiza un estado civil
-         * @param int $id_estado_civil ID del estado civil
-         * @param string $descripcion Descripción del estado civil
-         * @return bool Resultado de la operación
+     * Actualiza un estado civil
+     * @param int $id_estado_civil ID del estado civil
+     * @param string $descripcion Descripción del estado civil
+     * @return bool Resultado de la operación
      */
-    public function updateEstadoCivil(int $id_estado_civil, string $descripcion): bool {
-        $stmt = $this->db->prepare("UPDATE estado_civil SET descripcion = :descripcion WHERE id_estado_civil = :id_estado_civil");
-        $stmt->execute([
+    public function updateParcela($id_estado_civil, $descripcion) : bool {
+        $stmt = $this->db->prepare("UPDATE estado_civil SET id_estado_civil = :id_estado_civil, descripcion = :descripcion WHERE id_estado_civil = :id_estado_civil");
+        return $stmt->execute([
             'id_estado_civil' => $id_estado_civil,
             'descripcion' => $descripcion
         ]);
         return $stmt->rowCount() > 0;
     }
 
-    /**
-         * Elimina un estado civil
-         * @param int $id_estado_civil ID del estado civil a eliminar
-         * @return bool Resultado de la operación
+
+     * Elimina un estado civil
+     * @param int $id_estado_civil ID del estado civil a eliminar
+     * @return bool Resultado de la operación
      */
-    public function deleteEstadoCivil(int $id_estado_civil): bool {
+    public function deleteParcela($id_estado_civil): bool {
         $stmt = $this->db->prepare("DELETE FROM estado_civil WHERE id_estado_civil = :id_estado_civil");
         $stmt->execute(['id_estado_civil' => $id_estado_civil]);
         return $stmt->rowCount() > 0;

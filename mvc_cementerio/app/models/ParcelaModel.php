@@ -1,10 +1,10 @@
 <?php
-// Carga la configuración del sistema y la clase para conectar a la base de datos
+
 require_once __DIR__ . '/config/config.php';
 require_once 'Database.php';
 
 
-/*
+
     * Modelo ParcelaModel
     * Maneja las operaciones CRUD para la tabla 'parcelas'
 */
@@ -26,24 +26,28 @@ class ParcelaModel {
 
     /**
          * Obtiene todas las parcelas
-         * @return array Lista de parcelas
+
      */
     public function getAllParcelas(): array {
         $stmt = $this->db->prepare("SELECT * FROM parcela");
         $stmt->execute();
-        return $stmt->fetchAll();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
     /**
-         * Obtiene una parcela por su ID
-         * @param int $id_parcela ID de la parcela
-         * @return array Detalles de la parcela
+     * Obtiene una parcela por su ID
+     * @param int $id_parcela ID de la parcela
+     * @return array Detalles de la parcela
      */
-    public function getParcela(int $id_parcela): array|false {
+    public function getParcela($id_parcela) : array {
         $stmt = $this->db->prepare("SELECT * FROM parcela WHERE id_parcela = :id_parcela");
         $stmt->execute(['id_parcela' => $id_parcela]);
         return $stmt->fetch();
     }
+
+
 
     /**
         * Inserta una nueva parcela
@@ -114,6 +118,7 @@ class ParcelaModel {
                 id_orientacion = :id_orientacion
             WHERE id_parcela = :id_parcela
         ");
+
         return $stmt->execute([
             'id_parcela' => $id_parcela,
             'id_tipo' => $id_tipo,
@@ -133,6 +138,7 @@ class ParcelaModel {
          * @return bool Resultado de la operación
      */
     public function deleteParcela(int $id_parcela): bool {
+
         $stmt = $this->db->prepare("DELETE FROM parcela WHERE id_parcela = :id_parcela");
         $stmt->execute(['id_parcela' => $id_parcela]);
         return $stmt->rowCount() > 0;
