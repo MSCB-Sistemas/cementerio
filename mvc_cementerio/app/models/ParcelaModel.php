@@ -1,32 +1,40 @@
 <?php
+
 require_once __DIR__ . '/config/config.php';
 require_once 'Database.php';
 
-/*
+
+
     * Modelo ParcelaModel
     * Maneja las operaciones CRUD para la tabla 'parcelas'
 */
 class ParcelaModel {
+
+    /**
+        * @var PDO $db
+        * Conexión a la base de datos
+    */
     private PDO $db;
 
     /*
-    * Constructor
-    * Inicializa la conexión a la base de datos
+        * Constructor
+        * Inicializa la conexión a la base de datos
     */
-    public function __construct()
-    {
+    public function __construct() {
         $this->db = Database::connect();
     }
 
     /**
-     * Obtiene todas las parcelas
-     * @return array Lista de parcelas
+         * Obtiene todas las parcelas
+
      */
     public function getAllParcelas(): array {
         $stmt = $this->db->prepare("SELECT * FROM parcela");
         $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     /**
      * Obtiene una parcela por su ID
@@ -38,6 +46,8 @@ class ParcelaModel {
         $stmt->execute(['id_parcela' => $id_parcela]);
         return $stmt->fetch();
     }
+
+
 
     /**
         * Inserta una nueva parcela
@@ -54,6 +64,7 @@ class ParcelaModel {
     public function insertParcela($id_tipo, $id_deudo, $numero_ubicacion, $hilera, $seccion, $fraccion, $nivel, $id_orientacion) {
         $stmt = $this->db->prepare("INSERT INTO parcela (id_tipo, id_deudo, numero_ubicacion, hilera, seccion, fraccion, nivel, id_orientacion) VALUES (:id_tipo, :id_deudo, :numero_ubicacion, :hilera, :seccion, :fraccion, :nivel, :id_orientacion)");
         $stmt->execute([
+
             'id_tipo' => $id_tipo,
             'id_deudo' => $id_deudo,
             'numero_ubicacion' => $numero_ubicacion,
@@ -62,19 +73,47 @@ class ParcelaModel {
             'fraccion' => $fraccion,
             'nivel' => $nivel,
             'id_orientacion' => $id_orientacion
-        ]);
-        return $this->db->lastInsertId();
+        ])) {
+            return intval($this->db->lastInsertId());
+        }
+        return false;
     }
 
+
     /**
-    * Actualiza una parcela existente
-    * @param int $id_parcela ID de la parcela a actualizar
-    */
+        * Actualiza una parcela existente
+        * @param int $id_parcela ID de la parcela a actualizar
+    
     public function updateParcela($id_parcela, $id_tipo, $id_deudo, $numero_ubicacion, $hilera, $seccion, $fraccion, $nivel, $id_orientacion) : bool {
         $stmt = $this->db->prepare("UPDATE parcela 
                                            SET id_tipo = :id_tipo, id_deudo = :id_deudo, numero_ubicacion = :numero_ubicacion, hilera = :hilera, seccion = :seccion, fraccion = :fraccion, nivel = :nivel, id_orientacion = :id_orientacion 
                                            WHERE id_parcela = :id_parcela");
         $stmt->execute([
+    public function updateParcela(
+        int $id_parcela,
+        int $id_tipo,
+        int $id_deudo,
+        string $numero_ubicacion,
+        string $hilera,
+        string $seccion,
+        string $fraccion,
+        int $nivel,
+        int $id_orientacion
+    ): bool {
+        $stmt = $this->db->prepare("
+            UPDATE parcela SET 
+                id_tipo = :id_tipo,
+                id_deudo = :id_deudo,
+                numero_ubicacion = :numero_ubicacion,
+                hilera = :hilera,
+                seccion = :seccion,
+                fraccion = :fraccion,
+                nivel = :nivel,
+                id_orientacion = :id_orientacion
+            WHERE id_parcela = :id_parcela
+        ");
+
+        return $stmt->execute([
             'id_parcela' => $id_parcela,
             'id_tipo' => $id_tipo,
             'id_deudo' => $id_deudo,
@@ -85,15 +124,15 @@ class ParcelaModel {
             'nivel' => $nivel,
             'id_orientacion' => $id_orientacion
         ]);
-        return $stmt->rowCount() > 0;
     }
 
     /**
-     * Elimina una parcela por su ID
-     * @param int $id_parcela ID de la parcela a eliminar
-     * @return bool Resultado de la operación
+         * Elimina una parcela por su ID
+         * @param int $id_parcela ID de la parcela a eliminar
+         * @return bool Resultado de la operación
      */
-    public function deleteParcela($id_parcela): bool {
+    public function deleteParcela(int $id_parcela): bool {
+
         $stmt = $this->db->prepare("DELETE FROM parcela WHERE id_parcela = :id_parcela");
         $stmt->execute(['id_parcela' => $id_parcela]);
         return $stmt->rowCount() > 0;

@@ -1,4 +1,6 @@
 <?php
+// Carga la configuración del sistema y la clase para conectar a la base de datos
+
 require_once __DIR__ . '/config/config.php';
 require_once 'Database.php';
 
@@ -6,14 +8,16 @@ require_once 'Database.php';
     * Modelo SexoModel
     * Maneja las operaciones CRUD para la tabla 'sexo'
 */
-class SexoModel{
+class SexoModel {
     /**
-    * @var PDO $db
-    * Conexión a la base de datos
+        * @var PDO $db
+        * Conexión a la base de datos
+
     */
     private PDO $db;
 
     /*
+
     * Constructor
     * Inicializa la conexión a la base de datos
     */
@@ -23,12 +27,14 @@ class SexoModel{
     }
 
     /**
-     * Obtiene todos los sexos
-     * @return array Lista de sexos
+         * Obtiene todos los sexos
+         * @return array Lista de sexos
+
      */
     public function getAllSexos(): array {
         $stmt = $this->db->prepare("SELECT * FROM sexo");
         $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -44,6 +50,7 @@ class SexoModel{
     }
 
     /** 
+
      * Inserta un nuevo sexo
      * @param int $id_sexo ID del sexo
      * @param string $descripcion Descripción del sexo

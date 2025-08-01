@@ -1,8 +1,11 @@
 <?php
+// Carga la configuración del sistema y la clase para conectar a la base de datos
+
 require_once __DIR__ . '/config/config.php';
 require_once 'Database.php';
 
 /*
+
     * Modelo SexoModel
     * Maneja las operaciones CRUD para la tabla 'sexo'
 */
@@ -14,17 +17,18 @@ class TipoParcelaModel {
     private PDO $db;
 
     /*
+
     * Constructor
     * Inicializa la conexión a la base de datos
     */
     public function __construct()
-    {
         $this->db = Database::connect();
     }
 
     /**
+
      * Obtiene todos los tipos de parcelas
-     * @return array Lista de tipos de parcelas
+     * @return array Lista de tipos de parcelas>>>>>>> submain
      */
     public function getAllTiposParcelas(): array {
         $stmt = $this->db->prepare("SELECT * FROM tipo_parcela");
@@ -33,6 +37,12 @@ class TipoParcelaModel {
     }
 
     /**
+
+         * Obtiene un tipo de parcela por su ID
+         * @param int $id_tipo ID del tipo de parcela
+         * @return array Detalles del tipo de parcela
+     */
+    public function getTipoParcela(int $id_tipo): array|false {
      * Obtiene un tipo de parcela por su ID
      * @param int $id_tipo ID del tipo de parcela
      * @return array Detalles del tipo de parcela
@@ -72,6 +82,7 @@ class TipoParcelaModel {
         return $stmt->rowCount() > 0;
     }
 
+
     /**
      * Elimina un tipo de parcela por su ID
      * @param int $id_tipo ID del tipo de parcela a eliminar
@@ -83,4 +94,5 @@ class TipoParcelaModel {
         return $stmt->rowCount() > 0;
     }
 }
+
 ?>
