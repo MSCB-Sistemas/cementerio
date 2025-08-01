@@ -1,4 +1,5 @@
 <?php
+//controlador de controllers
 
 class Views extends Control{
 
@@ -6,8 +7,13 @@ class Views extends Control{
     $datos = [
       "title" => "Inicio"
     ];
+
+    $this->load_controller("UsuarioController", $datos);
+
+    /*
     $this->load_view('inicio', $datos);
-    echo "Página de inicio";
+    echo "Página de inicio Controller/Views.php";
+    */
   }
 
   public function update($id){

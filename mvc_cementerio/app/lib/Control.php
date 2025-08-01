@@ -2,17 +2,24 @@
 class Control {
   public function load_model($model) {
     require_once APP . '/models/' . $model . '.php';
-
     return new $model;
+  }
+
+  public function load_controller($controller, $datos = []) {
+    $viewFile = APP . '/controllers/' . $controller . '.php';
+
+    require_once($viewFile);
   }
 
   public function load_view($view, $datos = [], $layout = 'main') {
     if (session_status() === PHP_SESSION_NONE) {
       session_start();
     }
+    
 
     $viewFile = APP . '/views/pages/' . $view . '.php';
-
+    require_once($viewFile);
+    /*
     if (file_exists($viewFile)) {
       if ($layout) {
         $viewPath = $viewFile;
@@ -22,7 +29,10 @@ class Control {
       }
     } else {
       die($viewFile);
-    }
+    }*/
   }
+
+
+    
 }
 ?>

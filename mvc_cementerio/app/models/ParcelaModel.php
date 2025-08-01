@@ -2,7 +2,7 @@
 require_once __DIR__ . '/config/config.php';
 require_once 'Database.php';
 
-/*
+
     * Modelo ParcelaModel
     * Maneja las operaciones CRUD para la tabla 'parcelas'
 */
@@ -17,10 +17,12 @@ class ParcelaModel {
     * Constructor
     * Inicializa la conexión a la base de datos
     */
+
     public function __construct()
     {
         $this->db = Database::connect();
     }
+
 
     /**
      * Obtiene todas las parcelas
@@ -32,6 +34,7 @@ class ParcelaModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
     /**
      * Obtiene una parcela por su ID
      * @param int $id_parcela ID de la parcela
@@ -42,6 +45,7 @@ class ParcelaModel {
         $stmt->execute(['id_parcela' => $id_parcela]);
         return $stmt->fetch();
     }
+
 
     /**
         * Inserta una nueva parcela
