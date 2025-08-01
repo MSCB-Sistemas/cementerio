@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/config/config.php';
+require_once APP . '/config/config.php';
 require_once 'Database.php';
 
 class UsuarioModel {
