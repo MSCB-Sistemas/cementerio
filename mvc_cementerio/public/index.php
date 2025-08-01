@@ -7,7 +7,7 @@ $base = '/cementerio/mvc_cementerio/';
 
 
 
-// 📋​ Rutas disponibles: ruta => [Controlador, método]
+// 📋​ Rutas disponibles: ruta => [Controlador, metodo]
 
 $routes = [
     '' => ['UsuarioController', 'index'],
@@ -15,6 +15,8 @@ $routes = [
     'usuario/logout' => ['UsuarioController', 'logout'],
     'usuario/update' => ['UsuarioController', 'update'],
     'usuario/mostrar' => ['UsuarioController', 'mostrar'],
+
+    // setear tantas rutas como sean necesarias
 ];
 
 
@@ -35,7 +37,7 @@ $partes = explode('/', $uri);
 $ruta = '';
 $parametro = null;
 
-// Lógica para GET con 1 variable (ej: usuario/12)
+// Logica para GET con 1 variable (ejemplo: usuario/12)
 if ($method === 'GET' && count($partes) === 2) {
     $ruta = $partes[0] . '/mostrar';
     $parametro = $partes[1];
@@ -52,53 +54,53 @@ if ($method === 'GET' && count($partes) === 2) {
 
 
 
-// 1️⃣​. Si la ruta está definida en el arreglo de rutas
+// 1️⃣​. Si la ruta esta definida en el arreglo de rutas
 if (isset($routes[$ruta])) {
     
-    // 2️⃣​. Obtener el nombre del controlador y del método asociado a la ruta
+    // 2️⃣​. Obtener el nombre del controlador y del metodo asociado a la ruta
     $controlador = $routes[$ruta][0];
     $metodo = $routes[$ruta][1];
 
     // 3️⃣​​​​​​​​​. Armar la ruta al archivo del controlador
     $archivo = __DIR__ . '/../app/controllers/' . $controlador . '.php';
 
-    // 4️⃣. Verificar si el archivo del controlador existe
+    // 4️⃣. Verifica si el controlador existe
     if (file_exists($archivo)) {
         require_once $archivo;
 
-        // 5️⃣. Verificar si la clase del controlador existe
+        // 5️⃣. Verifica si la clase existe
         if (class_exists($controlador)) {
             $obj = new $controlador();
 
-            // 6️⃣. Verificar si el método existe en el controlador
+            // 6️⃣. Verifica si el metodo existe
             if (method_exists($obj, $metodo)) {
 
-                // 7️⃣. Si hay un parámetro, lo pasa al método
+                // 7️⃣. Si hay parametro se pasa
                 if ($parametro !== null) {
                     $obj->$metodo($parametro);
                 } 
-                // 8️⃣. Si no hay parámetro, llama al método sin argumentos
+                // 8️⃣. sino se llama al metodo sin parametros
                 else {
                     $obj->$metodo();
                 }
                 exit;
             } 
-            // 9️⃣. El método no existe
+            // 9️⃣. erro el metodo no exite
             else {
                 echo errorMensaje('405', "Método '$metodo' no existe.");
             }
         } 
-        // 🔟. La clase del controlador no existe
+        // 🔟. error la clase no existe
         else {
             echo errorMensaje('404', "Controlador '$controlador' no encontrado.");
         }
     } 
-    // 11 ​😔​ (me quede sin stikers). El archivo del controlador no existe
+    // 11 ​😔​ (me quede sin stickers). El archivo del controlador no existe
     else {
         echo errorMensaje('404', "Archivo del controlador no encontrado.");
     }
 } 
-// 12 😭. La ruta no está definida
+// 12 😭. La ruta no esta definida
 else {
     echo errorMensaje('404', "Ruta '$ruta' no encontrada.");
 }
