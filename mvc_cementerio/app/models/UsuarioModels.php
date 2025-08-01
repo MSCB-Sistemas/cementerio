@@ -31,7 +31,7 @@ class UsuarioModel {
         $condiciones = [];
         foreach ($filtros as $campo => $valor) {
             $condiciones[] = "$campo = :$campo";
-        }
+        } 
         $sql = "SELECT * FROM usuarios";
         if (!empty($condiciones)) {
             $sql .= " WHERE " . implode(' AND ', $condiciones);
@@ -43,10 +43,10 @@ class UsuarioModel {
 
 
     // Verificar login
-    public function verificarLogin($correo, $contrasenia): bool {
-        $sql = "SELECT contrasenia FROM usuarios WHERE usuario = :usuario";
+    public function verificarLogin($email, $contrasenia): bool {
+        $sql = "SELECT contrasenia FROM usuarios WHERE email = :email";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(['usuario' => $correo]);
+        $stmt->execute(['email' => $email]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $usuario && password_verify($contrasenia, $usuario['contrasenia']);
@@ -54,12 +54,12 @@ class UsuarioModel {
 
 
     // Insertar usuario
-    public function insertUsuario($correo, $contrasenia) {
-        $hash = password_hash($contrasenia, PASSWORD_DEFAULT);     //// Encripta la contraseña
-        $sql = "INSERT INTO usuarios (usuario, contrasenia) VALUES (:usuario, :contrasenia)";
+    public function insertUsuario($email, $contrasenia) {
+        $hash = password_hash($contrasenia, PASSWORD_DEFAULT);     // Encripta la contraseña
+        $sql = "INSERT INTO usuarios (email, contrasenia) VALUES (:email, :contrasenia)";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
-            'usuario'=> $correo, 
+            'email'=> $email, 
             'contrasenia'=> $hash
         ]);
     }
