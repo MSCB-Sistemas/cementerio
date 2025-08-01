@@ -1,0 +1,18 @@
+Modelos:
+
+-Usuario
+-Difunto
+-Deudo
+-Parcela
+-UbicaciónDifunto
+-Pago
+
+Funciones:
+
+public function get(id){}
+public function get(filtro){}
+public function getAll(){}
+public function insert(){}
+public function update(){}
+public function delete(){}
+
