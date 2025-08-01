@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/config/config.php';
 require_once 'Database.php';
 
@@ -7,28 +8,30 @@ require_once 'Database.php';
     * Maneja las operaciones CRUD para la tabla 'estado_civil'
 */
 class EstadoCivilModel {
+
     /**
-    * @var PDO $db
-    * Conexión a la base de datos
+        * @var PDO $db
+        * Conexión a la base de datos
     */
     private PDO $db;
 
-    /*
-    * Constructor
-    * Inicializa la conexión a la base de datos
+     /*
+        * Constructor
+        * Inicializa la conexión a la base de datos
     */
-    public function __construct()
-    {
+    public function __construct() {
+
         $this->db = Database::connect();
     }
 
     /**
-     * Obtiene todos los estados civiles
-     * @return array Lista de estados civiles
+         * Obtiene todos los estados civiles
+         * @return array Lista de estados civiles
      */
     public function getAllEstadosCiviles(): array {
         $stmt = $this->db->prepare("SELECT * FROM estado_civil");
         $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -48,6 +51,7 @@ class EstadoCivilModel {
         * @param string $nombre Nombre del estado civil
         * @return bool Resultado de la operación
     */
+
     public function insertEstadoCivil($id_estado_civil, $descripcion) {
         $stmt = $this->db->prepare("INSERT INTO estado_civil (id_estado_civil, descripcion) VALUES (:id_estado_civil, :descripcion)");
         return $stmt->execute([
@@ -72,7 +76,7 @@ class EstadoCivilModel {
         return $stmt->rowCount() > 0;
     }
 
-    /**
+
      * Elimina un estado civil
      * @param int $id_estado_civil ID del estado civil a eliminar
      * @return bool Resultado de la operación
