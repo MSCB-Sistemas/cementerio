@@ -1,22 +1,38 @@
 <?php
-#Encargado de Cargar los modelos y las vistas 
-
 class Control {
   public function load_model($model) {
-    require_once '../app/models/' . $model . '.php';
-
+    require_once APP . '/models/' . $model . '.php';
     return new $model;
   }
 
-  public function load_view($view, $datos = []) {
-    // Extraer variables del array para poder usarlas en la vista
-    if(file_exists('../app/views/pages/' . $view . '.php')){
-      require_once '../app/views/pages/' . $view . '.php';
-    }
-    else{
-      die("404 NOT FOUND");
-    }
+  public function load_controller($controller, $datos = []) {
+    $viewFile = APP . '/controllers/' . $controller . '.php';
+
+    require_once($viewFile);
   }
-  
+
+  public function load_view($view, $datos = [], $layout = 'main') {
+    if (session_status() === PHP_SESSION_NONE) {
+      session_start();
+    }
+    
+
+    $viewFile = APP . '/views/pages/' . $view . '.php';
+    require_once($viewFile);
+    /*
+    if (file_exists($viewFile)) {
+      if ($layout) {
+        $viewPath = $viewFile;
+        require_once APP . "/views/layouts/{$layout}.php";
+      } else {
+        require_once $viewFile;
+      }
+    } else {
+      die($viewFile);
+    }*/
+  }
+
+
+    
 }
 ?>
