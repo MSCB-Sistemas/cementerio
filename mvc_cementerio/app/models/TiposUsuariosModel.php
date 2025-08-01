@@ -1,0 +1,88 @@
+<?php
+// Carga la configuración del sistema y la clase para conectar a la base de datos
+require_once __DIR__ . '/config/config.php';
+require_once 'Database.php';
+
+/**
+     * Modelo TipoUsuariosModel
+     * 
+     * Esta clase gestiona todas las operaciones relacionadas con los tipos de usuarios.
+     * Permite acceder, crear, modificar y eliminar registros de la tabla `tipos_usuarios`.
+ */
+class TipoUsuariosModel {
+    private PDO $db;
+
+    /**
+         * Constructor.
+         * Establece la conexión con la base de datos al instanciar la clase.
+     */
+    public function __construct() {
+        $this->db = Database::connect();
+    }
+
+    /**
+         * Obtiene todos los tipos de usuarios existentes en la base de datos.
+         * 
+         * @return array Lista de tipos de usuarios como arrays asociativos.
+     */
+    public function getAllTiposUsuarios(): array {
+        $stmt = $this->db->prepare("SELECT * FROM tipos_usuarios");
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /**
+         * Obtiene un tipo de usuario específico por su ID.
+         * 
+         * @param int $id_tipo_usuario ID del tipo de usuario a consultar.
+         * @return array|false Array asociativo con los datos del tipo de usuario o false si no se encuentra.
+     */
+    public function getTipoUsuario(int $id_tipo_usuario): array|false {
+        $stmt = $this->db->prepare("SELECT * FROM tipos_usuarios WHERE id_tipo_usuario = :id_tipo_usuario");
+        $stmt->execute(['id_tipo_usuario' => $id_tipo_usuario]);
+        return $stmt->fetch();
+    }
+
+    /**
+         * Inserta un nuevo tipo de usuario en la base de datos.
+         * 
+         * @param string $descripcion Descripción del nuevo tipo de usuario.
+         * @return int|false ID del nuevo tipo de usuario insertado o false si ocurre un error.
+     */
+    public function insertTipoUsuario(string $descripcion): int|false {
+        $stmt = $this->db->prepare("INSERT INTO tipos_usuarios (descripcion) VALUES (:descripcion)");
+        if ($stmt->execute(['descripcion' => $descripcion])) {
+            return intval($this->db->lastInsertId());
+        }
+        return false;
+    }
+
+    /**
+         * Actualiza la descripción de un tipo de usuario existente.
+         * 
+         * @param int $id_tipo_usuario ID del tipo de usuario a actualizar.
+         * @param string $descripcion Nueva descripción del tipo de usuario.
+         * @return bool True si se actualizó correctamente, false si no se modificó nada.
+     */
+    public function updateTipoUsuario(int $id_tipo_usuario, string $descripcion): bool {
+        $stmt = $this->db->prepare("UPDATE tipos_usuarios SET descripcion = :descripcion WHERE id_tipo_usuario = :id_tipo_usuario");
+        $stmt->execute([
+            'id_tipo_usuario' => $id_tipo_usuario,
+            'descripcion' => $descripcion
+        ]);
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+         * Elimina un tipo de usuario de la base de datos.
+         * 
+         * @param int $id_tipo_usuario ID del tipo de usuario a eliminar.
+         * @return bool True si se eliminó correctamente, false en caso contrario.
+     */
+    public function deleteTipoUsuario(int $id_tipo_usuario): bool {
+        $stmt = $this->db->prepare("DELETE FROM tipos_usuarios WHERE id_tipo_usuario = :id_tipo_usuario");
+        $stmt->execute(['id_tipo_usuario' => $id_tipo_usuario]);
+        return $stmt->rowCount() > 0;
+    }
+}
+?>
