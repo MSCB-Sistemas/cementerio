@@ -49,12 +49,9 @@ class TipoParcelaModel {
      * @param string $nombre_parcela Nombre del tipo de parcela
      * @return bool Resultado de la operación
      */
-    public function insertTipoParcela($id_tipo, $nombre_parcela) {
-        $stmt = $this->db->prepare("INSERT INTO tipo_parcela (id_tipo, nombre_parcela) VALUES (:id_tipo, :nombre_parcela)");
-        return $stmt->execute([
-            'id_tipo' => $id_tipo,
-            'nombre_parcela' => $nombre_parcela,
-        ]);
+    public function insertTipoParcela($nombre_parcela) {
+        $stmt = $this->db->prepare("INSERT INTO tipo_parcela (nombre_parcela) VALUES (:nombre_parcela)");
+        $stmt->execute(['nombre_parcela' => $nombre_parcela]);
         return $this->db->lastInsertId();
     }
 
@@ -65,8 +62,10 @@ class TipoParcelaModel {
      * @return bool Resultado de la operación
      */
     public function updateTipoParcela($id_tipo, $nombre_parcela) : bool {
-        $stmt = $this->db->prepare("UPDATE tipo_parcela SET id_tipo = :id_tipo, nombre_parcela = :nombre_parcela WHERE id_tipo = :id_tipo");
-        return $stmt->execute([
+        $stmt = $this->db->prepare("UPDATE tipo_parcela 
+                                           SET nombre_parcela = :nombre_parcela 
+                                           WHERE id_tipo = :id_tipo");
+        $stmt->execute([
             'id_tipo' => $id_tipo,
             'nombre_parcela' => $nombre_parcela
         ]);
