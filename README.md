@@ -39,6 +39,7 @@ erDiagram
         int id_pago PK
         int id_deudo FK
         int id_parcela FK
+        int id_usuario FK
         date fecha_pago
         int numero_recibo
         int importe
@@ -107,6 +108,23 @@ erDiagram
         string nombre_parcela
     }
 
+    usuarios {
+        int id_usuario PK
+        string usuario
+        string nombre
+        string apellido
+        string cargo
+        string sector
+        string contrasenia
+        int id_tipo_usuario FK
+        bool activo
+    }
+
+    tipo_usuario {
+        int id_tipo_usuario PK
+        string descripcion
+    }
+
     deudo ||--o{ difunto : "fk_id_deudo"
     deudo ||--o{ pago : "fk_id_deudo"
     parcela ||--o{ pago : "fk_id_parcela"
@@ -118,5 +136,7 @@ erDiagram
     difunto ||--o{ nacionalidades : "fk_id_nacionalidad"
     difunto ||--o{ sexo : "fk_id_sexo"
     parcela ||--o{ orientacion : "fk_id_orientacion"
+    usuarios ||--o{ pago : "fk_id_usuario"
+    tipo_usuario ||--o{ usuarios : "fk_id_tipo_usuario"
 ```
 
