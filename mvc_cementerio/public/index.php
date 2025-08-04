@@ -1,5 +1,7 @@
 <?php
+require_once __DIR__ . '/../app/config/config.php';
 require_once __DIR__ . '/../app/config/errores.php';
+require_once APP . '/views/inc/sidebar.php';
 
 
 // ⚠️ Modificar segun el entorno necesario
