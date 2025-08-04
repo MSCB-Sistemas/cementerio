@@ -44,9 +44,9 @@ class UsuarioModel {
 
     // Verificar login
     function verificarLogin($usuario, $contrasenia) {
-    $query = "SELECT * FROM usuarios WHERE username = :username LIMIT 1";
+    $query = "SELECT * FROM usuarios WHERE usuario = :usuario LIMIT 1";
     $stmt = $this->db->prepare($query);
-    $stmt->bindParam(':username', $usuario);
+    $stmt->bindParam(':usuario', $usuario);
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {

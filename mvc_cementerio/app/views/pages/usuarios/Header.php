@@ -13,10 +13,10 @@
   <link rel="stylesheet" href="<?= URL . '/public/css/sign-in.css' ?>">
   <link rel="stylesheet" href="<?= URL . '/public/css/sidebars.css' ?>">
 
-  <script src="<?= URL . '/public/js/color-modes.js' ?>"></script>
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-  <meta name="theme-color" content="#712cf9">
+
 
   <?php if (isset($datos['error'])) {
     $error = $datos['error'];

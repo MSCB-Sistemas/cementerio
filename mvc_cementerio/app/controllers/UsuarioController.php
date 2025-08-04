@@ -58,7 +58,7 @@ class UsuarioController{
 
             if ($usuarioEncontrado) {
                 $_SESSION['usuario'] = [
-                    'nombre' => $usuarioEncontrado['nombre'] ?? $usuarioEncontrado['username'],
+                    'nombre' => $usuarioEncontrado['nombre'] ?? $usuarioEncontrado['usuario'],
                     'contrasenia' => $usuarioEncontrado['contrasenia'] ?? 'usuario' 
                 ];
                 exit;
