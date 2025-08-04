@@ -76,7 +76,7 @@ class EstadoCivilModel {
         return $stmt->rowCount() > 0;
     }
 
-
+    /**
      * Elimina un estado civil
      * @param int $id_estado_civil ID del estado civil a eliminar
      * @return bool Resultado de la operación
