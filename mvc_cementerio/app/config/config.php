@@ -1,6 +1,6 @@
 <?php
     define('APP', dirname(dirname(__FILE__)));
-    define('URL', 'http://localhost/mvc_cementerio');
+    define('URL', 'http://localhost/mvc_cementerio/public');
 
     
     define('DB_HOST', 'localhost');

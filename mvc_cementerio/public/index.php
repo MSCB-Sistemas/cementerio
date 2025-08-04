@@ -3,32 +3,26 @@ require_once __DIR__ . '/../app/config/errores.php';
 
 
 // ⚠️ Modificar segun el entorno necesario
-$base = '/cementerio/mvc_cementerio/';
-
-
+$base = '/cementerio/mvc_cementerio';
 
 // 📋​ Rutas disponibles: ruta => [Controlador, metodo]
-
 $routes = [
     '' => ['UsuarioController', 'index'],
     'login' => ['UsuarioController', 'login'],
     'usuario/logout' => ['UsuarioController', 'logout'],
     'usuario/update' => ['UsuarioController', 'update'],
     'usuario/mostrar' => ['UsuarioController', 'mostrar'],
+    'deudo' => ['DeudoController', 'index'],
+    'deudo/mostrar' => ['DeudoController', 'mostrar'],
 
     // setear tantas rutas como sean necesarias
 ];
-
-
-
-
 
 // Obtener ruta y metodo actual
 $uri = $_SERVER['REQUEST_URI'];
 $uri = str_replace($base, '', $uri);
 $uri = trim(parse_url($uri, PHP_URL_PATH), '/');
 $method = $_SERVER['REQUEST_METHOD'];
-
 
 // Separar en partes la ruta para manejar mejor los parametros
 $partes = explode('/', $uri);
@@ -41,18 +35,19 @@ $parametro = null;
 if ($method === 'GET' && count($partes) === 2) {
     $ruta = $partes[0] . '/mostrar';
     $parametro = $partes[1];
-}else {
+} else {
     // sino arma ruta normal
     $ruta = implode('/', $partes);
 }
 
-
-
-
-
-
-
-
+var_dump([
+    'REQUEST_URI' => $_SERVER['REQUEST_URI'],
+    'base' => $base,
+    'uri' => $uri,
+    'partes' => $partes,
+    'ruta' => $ruta,
+    'parametro' => $parametro,
+]);
 
 // 1️⃣​. Si la ruta esta definida en el arreglo de rutas
 if (isset($routes[$ruta])) {
@@ -85,7 +80,7 @@ if (isset($routes[$ruta])) {
                 }
                 exit;
             } 
-            // 9️⃣. erro el metodo no exite
+            // 9️⃣. error el metodo no exite
             else {
                 echo errorMensaje('405', "Método '$metodo' no existe.");
             }
@@ -104,5 +99,4 @@ if (isset($routes[$ruta])) {
 else {
     echo errorMensaje('404', "Ruta '$ruta' no encontrada.");
 }
-
 ?>

@@ -4,7 +4,7 @@ require_once(__DIR__ . "/../models/UsuarioModel.php");
 
 class UsuarioController{
     private $usuario;
-    function __contruct(){
+    function __construct(){
         $this->usuario = new UsuarioModel();
     }
 
@@ -28,7 +28,7 @@ class UsuarioController{
     
     }
 
-    function mostrar(){
+    function mostrar() {
         $obj = new UsuarioModel();
         $datos = $obj->getAllUsuarios();
         var_dump($datos);
@@ -41,6 +41,14 @@ class UsuarioController{
          // Cargar footer
         require_once(__DIR__ . '/../views/pages/usuarios/Footer.php');
         
+    }
+
+    function login(){
+        // Lógica para manejar el inicio de sesión
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $usuario = $_POST['usuario'] ?? '';
+            $contrasenia = $_POST['contrasenia'] ?? '';
+        }
     }
 }
 
