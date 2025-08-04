@@ -1,6 +1,7 @@
 <?php
 //controlador de controllers
 
+require_once APP . '/helpers/authHelper.php';
 class Views extends Control{
 
   public function inicio(){
