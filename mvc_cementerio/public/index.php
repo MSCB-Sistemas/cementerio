@@ -40,14 +40,14 @@ if ($method === 'GET' && count($partes) === 2) {
     $ruta = implode('/', $partes);
 }
 
-var_dump([
-    'REQUEST_URI' => $_SERVER['REQUEST_URI'],
-    'base' => $base,
-    'uri' => $uri,
-    'partes' => $partes,
-    'ruta' => $ruta,
-    'parametro' => $parametro,
-]);
+// var_dump([
+//     'REQUEST_URI' => $_SERVER['REQUEST_URI'],
+//     'base' => $base,
+//     'uri' => $uri,
+//     'partes' => $partes,
+//     'ruta' => $ruta,
+//     'parametro' => $parametro,
+// ]);
 
 // 1️⃣​. Si la ruta esta definida en el arreglo de rutas
 if (isset($routes[$ruta])) {
