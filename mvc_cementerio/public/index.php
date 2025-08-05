@@ -30,7 +30,7 @@ $uri = $_SERVER['REQUEST_URI'];
 $uri = str_replace($base, '', $uri);
 $uri = trim(parse_url($uri, PHP_URL_PATH), '/');
 $method = $_SERVER['REQUEST_METHOD'];
-//  var_dump($_SERVER['REQUEST_URI']);
+ var_dump($_SERVER['REQUEST_URI']);
 
 
 // Separar en partes la ruta para manejar mejor los parametros
