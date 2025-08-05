@@ -3,7 +3,8 @@ require_once __DIR__ . '/../app/config/errores.php';
 
 
 // ⚠️ Modificar segun el entorno necesario
-$base = '/cementerio/mvc_cementerio/';
+$base = '/cementerio/mvc_cementerio/public/';
+
 
 
 
@@ -29,6 +30,7 @@ $uri = $_SERVER['REQUEST_URI'];
 $uri = str_replace($base, '', $uri);
 $uri = trim(parse_url($uri, PHP_URL_PATH), '/');
 $method = $_SERVER['REQUEST_METHOD'];
+//  var_dump($_SERVER['REQUEST_URI']);
 
 
 // Separar en partes la ruta para manejar mejor los parametros
@@ -40,6 +42,7 @@ $parametro = null;
 
 // Logica para GET con 1 variable (ejemplo: usuario/12)
 if ($method === 'GET' && count($partes) === 2) {
+   
     $ruta = $partes[0] . '/mostrar';
     $parametro = $partes[1];
 }else {
