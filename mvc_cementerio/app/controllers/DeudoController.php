@@ -1,35 +1,63 @@
 <?php
-require_once(__DIR__ . "/../models/DeudoModel.php");
+class DeudoController extends Control {
+    private DeudoModel $model;
 
-class DeudoController {
-    private $deudo;
-
-    function __construct() {
-        $this->deudo = new DeudoModel();
+    function __construct()
+    {
+        $this->model = $this->loadModel("DeudoModel");
     }
 
-    function index() {
-        $vista = __DIR__ . '/../views/pages/deudos/DeudoView.php';
+    function index()
+    {
+        $deudos = $this->model->getAllDeudos();
+        $datos = [
+            'title' => 'Lista de Deudos',
+            'urlCrear' => URL . '/deudo/create',
+            'columnas' => [
+                'DNI', 'Nombre', 'Apellido', 'Teléfono', 'Email', 'Domicilio', 'Localidad', 'Código Postal'
+            ],
+            'columnas_claves' => [
+                'dni', 'nombre', 'apellido', 'telefono', 'email', 'domicilio', 'localidad', 'codigo_postal'
+            ],
+            'data' => $deudos,
+            'acciones' => function($fila) {
+                $id = $fila['id_deudo'];
+                $url = URL . '/deudo';
+                return '
+                    <a href="'.$url.'/edit/'.$id.'" class="btn btn-sm btn-outline-primary">Editar</a>
+                    <a href="'.$url.'/delete/'.$id.'" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'¿Eliminar este difunto?\');">Eliminar</a>
+                ';
+            }
+        ];
+        $this->loadView('partials/TablaView', $datos);
+    }
 
-        require_once(__DIR__ . '/../views/pages/deudos/Header.php');
+    function create() {
+        $deudos = $this->model->getAllDeudos();
+        $datos = [
+            'title'=> 'Crear Deudo',
+            'action' => URL . '/deudo/save',
+            'values' => [],
+            'errores' => [],
+            'deudos' => $deudos
+        ];
 
-        if (file_exists($vista)) {
-            require $vista;
-        } else {
-            echo errorMensaje('404', "Vista DeudoView.php no encontrada.");
+        $this->loadView('deudos/DeudoView', $datos);
+    }
+
+    function update($id) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = $_POST;
         }
-
-        require_once(__DIR__ . '/../views/pages/deudos/Footer.php');
     }
 
-    function mostrar() {
-        $obj = new DeudoModel();
-        $datos = $obj->getAllDeudos();
-        var_dump($datos);
-
-        require_once(__DIR__ . '/../views/pages/deudos/Header.php');
-        require_once("../views/deudos/DeudoListView.php");
-        require_once(__DIR__ . '/../views/pages/deudos/Footer.php');
+    function show($id) {
+        $deudo = $this->deudo->getDeudo($id);
+        if ($deudo) {
+            require_once(__DIR__ . '../views/pages/deudos/DeudoDetailView.php');
+        } else {
+            echo errorMensaje('404', 'Deudo no encontrado.');
+        }
     }
 }
 ?>

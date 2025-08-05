@@ -1,1 +1,1 @@
-<html>header usuarios <br></html>
+<?php require_once APP . '/views/inc/header.php' ?>

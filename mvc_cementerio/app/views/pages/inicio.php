@@ -2,7 +2,7 @@
 
 <div class="container-fluid bg-light py-5">
   <div class="container">
-    <h1 class="display-4">Cementerio Municipal SCB </h1><h3>"app/Views/pages/inicio.php"</h3>
+    <h1 class="display-4">Cementerio Municipal SCB </h1><h3>"app/views/pages/inicio.php"</h3>
   </div>
 </div>
 

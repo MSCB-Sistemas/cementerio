@@ -1,3 +1,1 @@
-<html>
-    <footer>footer usuarios</footer>
-</html>
+<?php require_once APP . '/views/inc/footer.php' ?>
