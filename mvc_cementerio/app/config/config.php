@@ -11,7 +11,7 @@
 
     $protocolo = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
     $host = $_SERVER['HTTP_HOST'];
-    $baseUrl = '/cementerio/mvc_cementerio/public';
+    $baseUrl = '/cementerio/mvc_cementerio/public/';
 
     define('URL', $protocolo . $host . $baseUrl);
 
