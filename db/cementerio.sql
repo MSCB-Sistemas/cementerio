@@ -74,7 +74,7 @@ CREATE TABLE `usuarios` (
   `sector` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
   `contrasenia` varchar(100) COLLATE utf8mb4_spanish2_ci NOT NULL,
   `id_tipo_usuario` int NOT NULL,
-  `activo` tinyint(1) DEFAULT NULL,
+  `activo` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id_usuario`),
   KEY `usuarios_FK` (`id_tipo_usuario`),
   CONSTRAINT `usuarios_FK` FOREIGN KEY (`id_tipo_usuario`) REFERENCES `tipos_usuarios` (`id_tipo_usuario`)

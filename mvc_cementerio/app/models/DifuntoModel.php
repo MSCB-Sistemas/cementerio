@@ -1,41 +1,39 @@
 <?php
-// Carga la configuración del sistema y la clase para conectar a la base de datos
 require_once __DIR__ . '/config/config.php';
 require_once 'Database.php';
 
 /**
-     * Modelo DifuntoModel
-     * Encargado de gestionar las operaciones relacionadas con los difuntos en la base de datos.
-     * Forma parte de la capa Modelo del patrón MVC.
+ * Modelo DifuntoModel
+ * Encargado de gestionar las operaciones relacionadas con los difuntos en la base de datos.
+ * Forma parte de la capa Modelo del patrón MVC.
  */
 class DifuntoModel {
-    // Instancia de la conexión PDO a la base de datos
     private PDO $db;
 
     /**
-         * Constructor
-         * Establece la conexión a la base de datos al crear una instancia del modelo.
+     * Constructor
+     * Establece la conexión a la base de datos al crear una instancia del modelo.
      */
     public function __construct() {
         $this->db = Database::connect();
     }
 
     /**
-         * Obtiene todos los registros de difuntos.
-         * @return array Lista de difuntos como arrays asociativos.
+     * Obtiene todos los registros de difuntos.
+     * @return array Lista de difuntos como arrays asociativos.
      */
     public function getAllDifuntos(): array {
         $stmt = $this->db->prepare("SELECT * FROM difunto");
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-         * Obtiene un difunto específico por su ID.
-         * @param int $id_difunto ID del difunto.
-         * @return array|false Datos del difunto como array asociativo, o false si no se encuentra.
+     * Obtiene un difunto específico por su ID.
+     * @param int $id_difunto ID del difunto.
+     * @return array|false Datos del difunto como array asociativo, o false si no se encuentra.
      */
-    public function getDifunto(int $id_difunto): array|false {
+    public function getDifunto(int $id_difunto): array {
         $stmt = $this->db->prepare("SELECT * FROM difunto WHERE id_difunto = :id_difunto");
         $stmt->execute(['id_difunto' => $id_difunto]);
         return $stmt->fetch();
@@ -46,7 +44,7 @@ class DifuntoModel {
          * @param array $data Datos del difunto (usando claves con nombres de columnas).
          * @return int|false ID del nuevo difunto insertado o false en caso de error.
      */
-    public function insertDifunto(array $data): int|false {
+    public function insertDifunto(array $data): int {
         $stmt = $this->db->prepare("
             INSERT INTO difunto (
                 id_deudo, nombre, apellido, dni, edad, fecha_fallecimiento,
