@@ -4,7 +4,7 @@ require_once APP . '/views/inc/Header.php' ?>
 
 <body id="body" class="bg-light text-dark d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <main class="w-100" style="max-width: 600px;">
-        <form id="loginForm" class="rounded-4 shadow p-4 bg-light text-dark" method="POST" action="<?php echo $base; ?>/login">
+        <form id="loginForm" class="rounded-4 shadow p-4 bg-light text-dark" method="POST" action="<?php echo URL; ?>/login">
             <div class="d-flex align-items-center justify-content-center mb-4">
                 <h1 class="h2 fw-bold text-black m-0 text-center">Cementerio Municipal<br> San Carlos de Bariloche</h1>
                 <img src="/cementerio/mvc_cementerio/public/img/EscudoBariloche.png" alt="Logo" style="width: 80px; height: 80px; object-fit: contain; margin-left: 20px;">

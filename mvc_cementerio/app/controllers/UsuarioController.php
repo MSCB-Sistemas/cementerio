@@ -73,7 +73,7 @@ class UsuarioController{
         $datos['title'] = "Login";
         $datos['error'] = $error;
 
-       header("Location:" .$base. '');
+       header("Location:" .APP);
     } 
 }
 
