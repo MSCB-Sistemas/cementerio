@@ -54,13 +54,15 @@ class UsuarioController{
             $error = "Por favor complete ambos campos.";
         } else {
             $this->usuario = new UsuarioModel();
-            $usuarioEncontrado = $this->usuario->verificarLogin($usuario, $contrasenia);
+           // $usuarioEncontrado = $this->usuario->verificarLogin($usuario, $contrasenia);
+           $usuarioEncontrado = $this->usuario->verificarLogin($usuario, $contrasenia);
 
             if ($usuarioEncontrado) {
                 $_SESSION['usuario'] = [
                     'nombre' => $usuarioEncontrado['nombre'] ?? $usuarioEncontrado['usuario'],
                     'contrasenia' => $usuarioEncontrado['contrasenia'] ?? 'usuario' 
                 ];
+                header("Location:" . APP . 'home');
                 exit;
             } else {
                 $error = "Usuario o contraseña incorrectos.";
@@ -71,7 +73,7 @@ class UsuarioController{
         $datos['title'] = "Login";
         $datos['error'] = $error;
 
-       header("Location: /");
+       header("Location:" .$base. '');
     } 
 }
 
