@@ -62,7 +62,7 @@ class UsuarioController{
                     'nombre' => $usuarioEncontrado['nombre'] ?? $usuarioEncontrado['usuario'],
                     'contrasenia' => $usuarioEncontrado['contrasenia'] ?? 'usuario' 
                 ];
-                header("Location:" . APP . 'home');
+                header("Location:" . URL  . 'home');
                 exit;
             } else {
                 $error = "Usuario o contraseña incorrectos.";
@@ -73,7 +73,7 @@ class UsuarioController{
         $datos['title'] = "Login";
         $datos['error'] = $error;
 
-       header("Location:" .APP);
+       header("Location:" .URL );
     } 
 }
 
