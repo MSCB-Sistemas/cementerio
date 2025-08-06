@@ -12,13 +12,13 @@ class DeudoController extends Control {
         $deudos = $this->model->getAllDeudos();
         $datos = [
             "title" => "Lista de Deudos",
+            'urlCrear' => URL . '/deudo/create',
             'columnas' => ['ID', 'Nombre', 'Apellido', 'DNI', 'Teléfono', 'Email', 'Domicilio'],
             'columnas_claves' => ['id_deudo', 'nombre', 'apellido', 'dni', 'telefono', 'email', 'domicilio'],
             "acciones" => function ($fila) {
                 $id = $fila['id_deudo'];
                 $url = URL . '/deudo';
                 return '
-                <a href="' . $url . '/create/' . $id . ' "class="btn btn-sm btn-outline-primary">Crear</a>
                 <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
                 <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
                 ';
