@@ -6,7 +6,7 @@ $base = '/cementerio/mvc_cementerio';
 
 // 📋​ Rutas disponibles: ruta => [Controlador, metodo]
 $routes = [
-    // URL's usuario
+    // URL's usuario.
     'usuario' => ['UsuarioController', 'index'],
     'usuario/create' => ['UsuarioController', 'create'],
     'usuario/save' => ['UsuarioController', 'save'],
@@ -17,7 +17,15 @@ $routes = [
     'usuario/changePass' => ['UsuarioController', 'changePass'],
     'usuario/savePass' => ['UsuarioController', 'savePass'],
 
-    // URL'S deudo.
+    // URL's difunto.
+    'difunto' => ['DifuntoController', 'index'],
+    'difunto/create' => ['DifuntoController', 'create'],
+    'difunto/save' => ['DifuntoController', 'save'],
+    'difunto/edit' => ['DifuntoController', 'edit'],
+    'difunto/update' => ['DifuntoController', 'update'],
+    'difunto/delete' => ['DifuntoController', 'delete'],
+
+    // URL's deudo.
     'deudo' => ['DeudoController', 'index'],
     'deudo/create' => ['DeudoController', 'create'],
     'deudo/save' => ['DeudoController', 'save'],

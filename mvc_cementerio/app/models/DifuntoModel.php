@@ -1,12 +1,7 @@
 <?php
-require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/../config/config.php';
 require_once 'Database.php';
 
-/**
- * Modelo DifuntoModel
- * Encargado de gestionar las operaciones relacionadas con los difuntos en la base de datos.
- * Forma parte de la capa Modelo del patrón MVC.
- */
 class DifuntoModel {
     private PDO $db;
 
@@ -23,7 +18,18 @@ class DifuntoModel {
      * @return array Lista de difuntos como arrays asociativos.
      */
     public function getAllDifuntos(): array {
-        $stmt = $this->db->prepare("SELECT * FROM difunto");
+        $stmt = $this->db->prepare("SELECT 
+                                                d.*,
+                                                de.nombre AS nombre_deudo,
+                                                s.descripcion AS sexo,
+                                                ec.descripcion AS estado_civil,
+                                                n.nacionalidad AS nacionalidad
+                                        FROM difunto d
+                                        LEFT JOIN deudo de ON d.id_deudo = de.id_deudo
+                                        LEFT JOIN sexo s ON d.id_sexo = s.id_sexo
+                                        LEFT JOIN estado_civil ec ON d.id_estado_civil = ec.id_estado_civil
+                                        LEFT JOIN nacionalidades n ON d.id_nacionalidad = n.id_nacionalidad
+    ");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
