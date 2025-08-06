@@ -14,15 +14,10 @@ class Control
             session_start();
         }
 
-        $viewFile = APP . 'views/pages' . $view . '.php';
+        $viewFile = APP . '/views/pages/' . $view . '.php';
 
         if (file_exists($viewFile)) {
-            if ($layout) {
-                $viewPath = $viewFile;
-                require_once APP . "/views/layout/{$layout}.php";
-            } else {
-                require_once $viewFile;
-            }
+            require_once $viewFile;
         } else {
             die($viewFile);
         }

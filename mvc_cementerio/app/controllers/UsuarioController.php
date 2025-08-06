@@ -1,40 +1,35 @@
 <?php
 require_once(__DIR__ . "/../models/UsuarioModel.php");
 
-class UsuarioController{
-    private $usuario;
+class UsuarioController extends Control{
+    private $model;
 
     function __construct(){
-        $this->usuario = new UsuarioModel();
+        $this->model = new UsuarioModel();
     }
 
     function index(){
-        $vista = __DIR__ . '/../views/pages/usuarios/LoginView.php';
+        $usuarios = $this->model->getAllUsuarios();
 
-        require_once(__DIR__ . '/../views/pages/usuarios/Header.php');
-        if (file_exists($vista)) {
-            require $vista;
-        } else {
-            echo errorMensaje('404', "Vista loginView.php no encontrada.");
-        }
-        require_once(__DIR__ . '/../views/pages/usuarios/Footer.php');
+        $datos = [
+            'title' => 'Lista de Usuarios',
+            'columnas' => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Rol', 'Activo'],
+            'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'id_tipo_usuario', 'activo'],
+            'acciones' => function ($fila) {
+
+            },
+            'values' => [],
+            'errores' => [],
+            'data' => $usuarios
+        ];
+
+        $this->loadView('usuarios/UsuarioListView', $datos);
     }
 
-    function mostrar() {
-        $obj = new UsuarioModel();
-        $datos = $obj->getAllUsuarios();
-        // var_dump($datos);
+    function show() {
 
-        $vista = __DIR__ . '/../views/pages/usuarios/UsuarioView.php';
-        require_once(__DIR__ . '/../views/pages/usuarios/Header.php');
-        if (file_exists($vista)) {
-            require $vista;
-        } else {
-            echo errorMensaje('404', "Vista UsuarioView.php no encontrada.");
-        }
-        require_once(__DIR__ . '/../views/pages/usuarios/Footer.php');
     }
+        
 }
-
 ?>
  

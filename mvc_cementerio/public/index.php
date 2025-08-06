@@ -8,33 +8,40 @@ $base = '/cementerio/mvc_cementerio';
 // 📋​ Rutas disponibles: ruta => [Controlador, metodo]
 $routes = [
     '' => ['UsuarioController', 'index'],
-    'login' => ['UsuarioController', 'login'],
-    'usuario/logout' => ['UsuarioController', 'logout'],
     'usuario/update' => ['UsuarioController', 'update'],
-    'usuario/mostrar' => ['UsuarioController', 'mostrar'],
+    'usuario/show' => ['UsuarioController', 'show'],
     'deudo' => ['DeudoController', 'index'],
-    'deudo/mostrar' => ['DeudoController', 'mostrar'],
+    'deudo/create' => ['DeudoController', 'create'],
+    'deudo/save' => ['DeudoController', 'save'],
+    'deudo/edit' => ['DeudoController', 'update'],
+    'deudo/delete' => ['DeudoController', 'delete'],
 
     // setear tantas rutas como sean necesarias
 ];
 
 // Obtener ruta y metodo actual
 $uri = $_SERVER['REQUEST_URI'];
+var_dump($uri);
 $uri = str_replace($base, '', $uri);
 $uri = trim(parse_url($uri, PHP_URL_PATH), '/');
 $method = $_SERVER['REQUEST_METHOD'];
 
+var_dump($method);
+
 // Separar en partes la ruta para manejar mejor los parametros
 $partes = explode('/', $uri);
+
+var_dump($partes);
 
 // Inicializa vairables
 $ruta = '';
 $parametro = null;
 
 // Logica para GET con 1 variable (ejemplo: usuario/12)
-if ($method === 'GET' && count($partes) === 2) {
-    $ruta = $partes[0] . '/mostrar';
-    $parametro = $partes[1];
+if ($method === 'GET' && count($partes) === 3) {
+    var_dump($method);
+    $ruta = $partes[0] . '/' . $partes[1];
+    $parametro = $partes[2];
 } else {
     // sino arma ruta normal
     $ruta = implode('/', $partes);
