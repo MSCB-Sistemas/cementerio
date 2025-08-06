@@ -13,8 +13,8 @@ class DeudoController extends Control {
         $datos = [
             "title" => "Lista de Deudos",
             'urlCrear' => URL . '/deudo/create',
-            'columnas' => ['ID', 'Nombre', 'Apellido', 'DNI', 'Teléfono', 'Email', 'Domicilio'],
-            'columnas_claves' => ['id_deudo', 'nombre', 'apellido', 'dni', 'telefono', 'email', 'domicilio'],
+            'columnas' => ['ID', 'Nombre', 'Apellido', 'DNI', 'Teléfono', 'Email', 'Domicilio', 'Codigo Postal'],
+            'columnas_claves' => ['id_deudo', 'nombre', 'apellido', 'dni', 'telefono', 'email', 'domicilio', 'codigo_postal'],
             "acciones" => function ($fila) {
                 $id = $fila['id_deudo'];
                 $url = URL . '/deudo';
