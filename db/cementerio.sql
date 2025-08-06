@@ -53,15 +53,15 @@ CREATE TABLE `tipos_usuarios` (
 CREATE TABLE `deudo` (
   `id_deudo` int NOT NULL AUTO_INCREMENT,
   `dni` int DEFAULT NULL,
-  `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `apellido` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `telefono` int DEFAULT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `domicilio` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `localidad` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `codigo_postal` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `apellido` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `telefono` bigint DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `domicilio` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `localidad` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `codigo_postal` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
   PRIMARY KEY (`id_deudo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 -- sgcm.usuarios definition
 
