@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/../config/config.php';
 require_once 'Database.php';
 
 /**
@@ -8,7 +8,7 @@ require_once 'Database.php';
  * Esta clase gestiona todas las operaciones relacionadas con los tipos de usuarios.
  * Permite acceder, crear, modificar y eliminar registros de la tabla `tipos_usuarios`.
  */
-class TipoUsuariosModel {
+class TiposUsuariosModel {
     private PDO $db;
 
     /**
@@ -51,7 +51,7 @@ class TipoUsuariosModel {
      * @param string $descripcion Descripción del nuevo tipo de usuario.
      * @return int ID del nuevo tipo de usuario insertado o false si ocurre un error.
      */
-    public function insertTipoUsuario($descripcion): int
+    public function insertTipoUsuario($descripcion): bool|string
     {
         $stmt = $this->db->prepare("INSERT INTO tipos_usuarios (descripcion) VALUES (:descripcion)");
         $stmt->execute(['descripcion' => $descripcion]);

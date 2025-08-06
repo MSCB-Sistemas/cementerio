@@ -30,10 +30,11 @@ class DeudoController extends Control {
         $this->loadView("deudos/DeudoView", $datos);
     }
 
-    public function create() {
+    public function create()
+    {
         $deudos = $this->model->getAllDeudos();
         $datos = [
-            'title'=> 'Crear Deudo',
+            'title' => 'Crear Deudo',
             'action' => URL . '/deudo/save',
             'values' => [],
             'errores' => [],
@@ -43,7 +44,8 @@ class DeudoController extends Control {
         $this->loadView('deudos/DeudoForm', $datos);
     }
 
-    public function save() {
+    public function save()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $dni = trim($_POST['dni']);
             $nombre = trim($_POST['nombre']);
@@ -55,14 +57,30 @@ class DeudoController extends Control {
             $codigo_postal = trim($_POST['codigo_postal']);
 
             $errores = [];
-            if (empty($dni)) { $errores[] = "El DNI es obligatorio."; }
-            if (empty($nombre)) { $errores[] = "Tenes que ingresar un nombre."; }
-            if (empty($apellido)) { $errores[] = "Tenes que ingresar un apellido."; }
-            if (empty($telefono)) { $errores[] = "Tenes que ingresar un telefono de referencia."; }
-            if (empty($email)) { $errores[] = "Ingresa un mail."; }
-            if (empty($domicilio)) { $errores[] = "Tiene que ingresar un domicilio."; }
-            if (empty($localidad)) { $errores[] = "Tiene que ingresar una localidad."; }
-            if (empty($codigo_postal)) { $errores[] = "El codigo postal es obligatorio."; }
+            if (empty($dni)) {
+                $errores[] = "El DNI es obligatorio.";
+            }
+            if (empty($nombre)) {
+                $errores[] = "Tenes que ingresar un nombre.";
+            }
+            if (empty($apellido)) {
+                $errores[] = "Tenes que ingresar un apellido.";
+            }
+            if (empty($telefono)) {
+                $errores[] = "Tenes que ingresar un telefono de referencia.";
+            }
+            if (empty($email)) {
+                $errores[] = "Ingresa un mail.";
+            }
+            if (empty($domicilio)) {
+                $errores[] = "Tiene que ingresar un domicilio.";
+            }
+            if (empty($localidad)) {
+                $errores[] = "Tiene que ingresar una localidad.";
+            }
+            if (empty($codigo_postal)) {
+                $errores[] = "El codigo postal es obligatorio.";
+            }
 
             if (!empty($errores)) {
                 $datos = [
@@ -72,11 +90,11 @@ class DeudoController extends Control {
                         'dni' => $dni,
                         'nombre' => $nombre,
                         'apellido' => $apellido,
-                        'telefono'=> $telefono,
-                        'email'=> $email,
-                        'domicilio'=> $domicilio,
-                        'localidad'=> $localidad,
-                        'codigo_postal'=> $codigo_postal
+                        'telefono' => $telefono,
+                        'email' => $email,
+                        'domicilio' => $domicilio,
+                        'localidad' => $localidad,
+                        'codigo_postal' => $codigo_postal
                     ],
                     'errores' => $errores
                 ];
@@ -88,14 +106,15 @@ class DeudoController extends Control {
             if ($idDeudo) {
                 header('Location: ' . URL . '/deudo');
             } else {
-                die ('Error al guardar el deudo');
+                die('Error al guardar el deudo');
             }
 
             header('Location: ' . URL . '/deudo');
         }
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $deudo = $this->model->getDeudo($id);
 
         if (!$deudo) {
@@ -104,7 +123,7 @@ class DeudoController extends Control {
 
         $this->loadView("deudos/DeudoForm", [
             'title' => 'Editar Deudo',
-            'action'=> URL . '/deudo/update/' . $id,
+            'action' => URL . '/deudo/update/' . $id,
             'values' => [
                 'dni' => $deudo['dni'],
                 'nombre' => $deudo['nombre'],
@@ -113,13 +132,14 @@ class DeudoController extends Control {
                 'email' => $deudo['email'],
                 'domicilio' => $deudo['domicilio'],
                 'localidad' => $deudo['localidad'],
-                'codigo_postal'=> $deudo['codigo_postal'],
+                'codigo_postal' => $deudo['codigo_postal'],
             ],
             'errores' => [],
         ]);
     }
 
-    public function update($id) {
+    public function update($id)
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $dni = trim($_POST['dni'] ?? '');
             $nombre = trim($_POST['nombre'] ?? '');
@@ -131,32 +151,48 @@ class DeudoController extends Control {
             $codigo_postal = trim($_POST['codigo_postal'] ?? '');
 
             $errores = [];
-            if (empty($dni)) { $errores[] = "Tiene que ingresar un DNI"; }
-            if (empty($nombre)) { $errores[] = "Tiene que ingresar un nombre"; }
-            if (empty($apellido)) { $errores[] = "Tiene que ingresar un apellido"; }
-            if (empty($telefono)) { $errores[] = "Tiene que ingresar un telefono"; }
-            if (empty($email)) { $errores[] = "Tiene que ingresar una direccion de mail"; }
-            if (empty($domicilio)) { $errores[] = "Tiene que ingresar un domicilio"; }
-            if (empty($localidad)) { $errores[] = "Tiene que ingresar una localidad"; }
-            if (empty($codigo_postal)) { $errores[] = "Tiene que ingresar un código postal"; }
+            if (empty($dni)) {
+                $errores[] = "Tiene que ingresar un DNI";
+            }
+            if (empty($nombre)) {
+                $errores[] = "Tiene que ingresar un nombre";
+            }
+            if (empty($apellido)) {
+                $errores[] = "Tiene que ingresar un apellido";
+            }
+            if (empty($telefono)) {
+                $errores[] = "Tiene que ingresar un telefono";
+            }
+            if (empty($email)) {
+                $errores[] = "Tiene que ingresar una direccion de mail";
+            }
+            if (empty($domicilio)) {
+                $errores[] = "Tiene que ingresar un domicilio";
+            }
+            if (empty($localidad)) {
+                $errores[] = "Tiene que ingresar una localidad";
+            }
+            if (empty($codigo_postal)) {
+                $errores[] = "Tiene que ingresar un código postal";
+            }
 
             if (!empty($errores)) {
                 $deudo = [
-                    "dni"=> $dni,
-                    "nombre"=>$nombre,
-                    "apellido"=>$apellido,
-                    "telefono"=>$telefono,
-                    "email"=>$email,
-                    "domicilio"=>$domicilio,
-                    "localidad"=>$localidad,
-                    "codigo_postal"=>$codigo_postal
+                    "dni" => $dni,
+                    "nombre" => $nombre,
+                    "apellido" => $apellido,
+                    "telefono" => $telefono,
+                    "email" => $email,
+                    "domicilio" => $domicilio,
+                    "localidad" => $localidad,
+                    "codigo_postal" => $codigo_postal
                 ];
 
                 $this->loadView("deudos/DeudosForm", [
                     'title' => 'Editar Deudo',
-                    'action'=> URL . '/deudo/update/' . $id,
+                    'action' => URL . '/deudo/update/' . $id,
                     'values' => $deudo,
-                    'errores'=> $errores,
+                    'errores' => $errores,
                 ]);
                 return;
             }
@@ -170,11 +206,12 @@ class DeudoController extends Control {
         }
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $eliminado = $this->model->deleteDeudo($id);
 
-        if (! $eliminado) {
-            die ('Error al eliminar el deudo');
+        if (!$eliminado) {
+            die('Error al eliminar el deudo');
         }
         header("Location: " . URL . "/deudo");
         exit;
