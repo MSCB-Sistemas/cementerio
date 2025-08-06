@@ -12,6 +12,7 @@
     <?php endif; ?>
 
     <form action="<?= $datos['action'] ?>" method="POST">
+        <input type="hidden" name="id" value="<?= $values['id_deudo'] ?? '' ?>">
         <div class="mb-3">
             <label for="dni" class="form-label">DNI</label>
             <input type="text" class="form-control" id="dni" name="dni" 

@@ -2,12 +2,12 @@
 class DeudoController extends Control {
     private DeudoModel $model;
 
-    function __construct()
+    public function __construct()
     {
         $this->model = $this->loadModel("DeudoModel");
     }
 
-    function index()
+    public function index()
     {
         $deudos = $this->model->getAllDeudos();
         $datos = [
@@ -20,7 +20,7 @@ class DeudoController extends Control {
                 return '
                 <a href="' . $url . '/create/' . $id . ' "class="btn btn-sm btn-outline-primary">Crear</a>
                 <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
-                <a href="' . $url . '/delete/' . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
+                <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
                 ';
             },
             "errores" => [],
@@ -30,7 +30,7 @@ class DeudoController extends Control {
         $this->loadView("deudos/DeudoView", $datos);
     }
 
-    function create() {
+    public function create() {
         $deudos = $this->model->getAllDeudos();
         $datos = [
             'title'=> 'Crear Deudo',
@@ -43,8 +43,8 @@ class DeudoController extends Control {
         $this->loadView('deudos/DeudoForm', $datos);
     }
 
-    function save() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    public function save() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $dni = trim($_POST['dni']);
             $nombre = trim($_POST['nombre']);
             $apellido = trim($_POST['apellido']);
@@ -95,8 +95,32 @@ class DeudoController extends Control {
         }
     }
 
-    function update($id) {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    public function edit($id) {
+        $deudo = $this->model->getDeudo($id);
+
+        if (!$deudo) {
+            die("Deudo no encontrado.");
+        }
+
+        $this->loadView("deudos/DeudoForm", [
+            'title' => 'Editar Deudo',
+            'action'=> URL . '/deudo/update/' . $id,
+            'values' => [
+                'dni' => $deudo['dni'],
+                'nombre' => $deudo['nombre'],
+                'apellido' => $deudo['apellido'],
+                'telefono' => $deudo['telefono'],
+                'email' => $deudo['email'],
+                'domicilio' => $deudo['domicilio'],
+                'localidad' => $deudo['localidad'],
+                'codigo_postal'=> $deudo['codigo_postal'],
+            ],
+            'errores' => [],
+        ]);
+    }
+
+    public function update($id) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $dni = trim($_POST['dni'] ?? '');
             $nombre = trim($_POST['nombre'] ?? '');
             $apellido = trim($_POST['apellido'] ?? '');
@@ -130,15 +154,23 @@ class DeudoController extends Control {
 
                 $this->loadView("deudos/DeudosForm", [
                     'title' => 'Editar Deudo',
-                    'action'=> URL . '/deudo/update' . $id,
+                    'action'=> URL . '/deudo/update/' . $id,
                     'values' => $deudo,
-                    'errores'=> $errores
-                ])
+                    'errores'=> $errores,
+                ]);
+                return;
+            }
+
+            if ($this->model->updateDeudo($id, $dni, $nombre, $apellido, $telefono, $email, $domicilio, $localidad, $codigo_postal)) {
+                header("Location: " . URL . "/deudo");
+                exit;
+            } else {
+                die("Error al actualizar el servicio.");
             }
         }
     }
 
-    function delete($id) {
+    public function delete($id) {
         $eliminado = $this->model->deleteDeudo($id);
 
         if (! $eliminado) {
@@ -148,6 +180,6 @@ class DeudoController extends Control {
         exit;
     }
 
-    function show($id) {}
+    public function show($id) {}
 }
 ?>

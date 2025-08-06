@@ -38,7 +38,7 @@ class DeudoModel {
      * @param int $id_deudo ID del deudo
      * @return array|false Datos del deudo o false si no se encuentra
      */
-    public function getDeudo(int $id_deudo): array
+    public function getDeudo($id_deudo): array
     {
         $stmt = $this->db->prepare("SELECT * FROM deudo WHERE id_deudo = :id_deudo");
         $stmt->execute(['id_deudo' => $id_deudo]);

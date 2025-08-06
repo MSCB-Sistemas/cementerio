@@ -13,7 +13,8 @@ $routes = [
     'deudo' => ['DeudoController', 'index'],
     'deudo/create' => ['DeudoController', 'create'],
     'deudo/save' => ['DeudoController', 'save'],
-    'deudo/edit' => ['DeudoController', 'update'],
+    'deudo/edit' => ['DeudoController', 'edit'],
+    'deudo/update' => ['DeudoController', 'update'],
     'deudo/delete' => ['DeudoController', 'delete'],
 
     // setear tantas rutas como sean necesarias
@@ -38,7 +39,7 @@ $ruta = '';
 $parametro = null;
 
 // Logica para GET con 1 variable (ejemplo: usuario/12)
-if ($method === 'GET' && count($partes) === 3) {
+if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
     var_dump($method);
     $ruta = $partes[0] . '/' . $partes[1];
     $parametro = $partes[2];
@@ -47,14 +48,7 @@ if ($method === 'GET' && count($partes) === 3) {
     $ruta = implode('/', $partes);
 }
 
-// var_dump([
-//     'REQUEST_URI' => $_SERVER['REQUEST_URI'],
-//     'base' => $base,
-//     'uri' => $uri,
-//     'partes' => $partes,
-//     'ruta' => $ruta,
-//     'parametro' => $parametro,
-// ]);
+var_dump($ruta);
 
 // 1️⃣​. Si la ruta esta definida en el arreglo de rutas
 if (isset($routes[$ruta])) {
