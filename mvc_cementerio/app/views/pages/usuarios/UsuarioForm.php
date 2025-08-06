@@ -64,6 +64,6 @@
         <?php endif; ?>
 
         <button type="submit" class="btn btn-success">Guardar</button>
-        <a href="<?= URL ?>/usuarios" class="btn btn-secondary">Cancelar</a>
+        <a href="<?= URL ?>/usuario" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
