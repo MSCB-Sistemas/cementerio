@@ -2,13 +2,20 @@
 require_once __DIR__ . '/../app/config/errores.php';
 require_once __DIR__ . '/../app/lib/Control.php';
 
-// ⚠️ Modificar segun el entorno necesario
 $base = '/cementerio/mvc_cementerio';
 
 // 📋​ Rutas disponibles: ruta => [Controlador, metodo]
 $routes = [
+    // URL's usuario
     'usuario' => ['UsuarioController', 'index'],
+    'usuario/create' => ['UsuarioController', 'create'],
+    'usuario/save' => ['UsuarioController', 'save'],
+    'usuario/edit' => ['UsuarioController', 'edit'],
     'usuario/update' => ['UsuarioController', 'update'],
+    'usuario/delete' => ['UsuarioController', 'delete'],
+    'usuario/activate' => ['UsuarioController', 'activate'],
+    'usuario/changePass' => ['UsuarioController', 'changePass'],
+    'usuario/savePass' => ['UsuarioController', 'savePass'],
 
     // URL'S deudo.
     'deudo' => ['DeudoController', 'index'],
@@ -17,23 +24,21 @@ $routes = [
     'deudo/edit' => ['DeudoController', 'edit'],
     'deudo/update' => ['DeudoController', 'update'],
     'deudo/delete' => ['DeudoController', 'delete'],
-
-    // setear tantas rutas como sean necesarias
 ];
 
 // Obtener ruta y metodo actual
 $uri = $_SERVER['REQUEST_URI'];
-var_dump($uri);
+// var_dump($uri);
 $uri = str_replace($base, '', $uri);
 $uri = trim(parse_url($uri, PHP_URL_PATH), '/');
 $method = $_SERVER['REQUEST_METHOD'];
 
-var_dump($method);
+// var_dump($method);
 
 // Separar en partes la ruta para manejar mejor los parametros
 $partes = explode('/', $uri);
 
-var_dump($partes);
+// var_dump($partes);
 
 // Inicializa vairables
 $ruta = '';
@@ -41,7 +46,7 @@ $parametro = null;
 
 // Logica para GET con 1 variable (ejemplo: usuario/12)
 if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
-    var_dump($method);
+    // var_dump($method);
     $ruta = $partes[0] . '/' . $partes[1];
     $parametro = $partes[2];
 } else {
@@ -49,7 +54,7 @@ if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
     $ruta = implode('/', $partes);
 }
 
-var_dump($ruta);
+// var_dump($ruta);
 
 // 1️⃣​. Si la ruta esta definida en el arreglo de rutas
 if (isset($routes[$ruta])) {

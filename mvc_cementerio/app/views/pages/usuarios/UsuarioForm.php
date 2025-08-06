@@ -12,43 +12,58 @@
     <?php endif; ?>
 
     <form action="<?= $datos['action'] ?>" method="POST">
-        <input type="hidden" name="id" value="<?= $values['id_deudo'] ?? '' ?>">
         <div class="mb-3">
-            <label for="dni" class="form-label">DNI</label>
-            <input type="text" class="form-control" id="dni" name="dni" 
+            <label for="usuario" class="form-label">Usuario</label>
+            <input type="text" class="form-control" id="usuario" name="usuario" 
                    value="<?= htmlspecialchars($datos['values']['usuario'] ?? '') ?>" required>
         </div>
+
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
             <input type="text" class="form-control" id="nombre" name="nombre" 
                    value="<?= htmlspecialchars($datos['values']['nombre'] ?? '') ?>" required>
         </div>
+
         <div class="mb-3">
             <label for="apellido" class="form-label">Apellido</label>
             <input type="text" class="form-control" id="apellido" name="apellido" 
                    value="<?= htmlspecialchars($datos['values']['apellido'] ?? '') ?>" required>
         </div>
+        
         <div class="mb-3">
             <label for="cargo" class="form-label">Cargo</label>
             <input type="text" class="form-control" id="cargo" name="cargo" 
-                   value="<?= htmlspecialchars($datos['values']['cargo'] ?? '') ?>" required>
+                   value="<?= htmlspecialchars($datos['values']['cargo'] ?? '') ?>">
         </div>
+
         <div class="mb-3">
             <label for="sector" class="form-label">Sector</label>
             <input type="text" class="form-control" id="sector" name="sector" 
-                   value="<?= htmlspecialchars($datos['values']['sector'] ?? '') ?>" required>
+                   value="<?= htmlspecialchars($datos['values']['sector'] ?? '') ?>">
         </div>
+
         <div class="mb-3">
-            <label for="tipo" class="form-label">Tipo</label>
-            <input type="text" class="form-control" id="tipo" name="tipo" 
-                   value="<?= htmlspecialchars($datos['values']['tipo'] ?? '') ?>" required>
+            <label for="tipo_usuario" class="form-label">Tipo de usuario</label>
+            <div class="input-group">
+                <select class="form-select" id="tipo_usuario" name="tipo_usuario" required>
+                    <option value="">Seleccione...</option>
+                    <?php foreach ($datos['tipos'] as $n): ?>
+                        <option value="<?= $n['id_tipo_usuario'] ?>"
+                            <?= ($datos['values']['id_tipo_usuario'] ?? '') == $n['id_tipo_usuario'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($n['descripcion']) ?>
+                        </option>
+                    <?php endforeach ?>
+                </select>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="activo" class="form-label">Activo</label>
-            <input type="text" class="form-control" id="activo" name="activo" 
-                   value="<?= htmlspecialchars($datos['values']['activo'] ?? '') ?>" required>
-        </div>
+        <?php if (!$datos['update']): ?>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+        <?php endif; ?>
+
         <button type="submit" class="btn btn-success">Guardar</button>
-        <a href="<?= URL ?>/deudo" class="btn btn-secondary">Cancelar</a>
+        <a href="<?= URL ?>/usuarios" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>

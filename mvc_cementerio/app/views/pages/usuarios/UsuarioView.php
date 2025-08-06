@@ -1,13 +1,13 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0"><?= $datos['title'] ?></h2>
-        <?php if (!empty($datos['urlCrear'])): ?>
-            <a href="<?= $datos['urlCrear'] ?>" class="btn btn-success">+ Nuevo</a>
-        <?php endif; ?>
     </div>
 
     <div class="mb-3">
         <input type="text" id="busqueda" class="form-control" placeholder="Buscar...">
+        <?php if (!empty($datos['urlCrear'])): ?>
+            <a href="<?= $datos['urlCrear'] ?>" class="btn btn-success">+ Nuevo</a>
+        <?php endif; ?>
     </div>
 
     <div class="table-responsive shadow rounded" style="overflow: hidden;">
