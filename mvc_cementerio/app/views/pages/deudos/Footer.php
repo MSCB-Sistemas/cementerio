@@ -1,1 +1,1 @@
-<html>Deudo footer</html>
+<?php require_once APP . '/views/inc/footer.php' ?>
