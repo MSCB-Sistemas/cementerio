@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../app/config/config.php';
 require_once __DIR__ . '/../app/config/errores.php';
-//require_once APP . '/views/pages/home/HomeView.php';
+require_once APP . '/views/pages/home/HomeView.php';
 
 
 // ⚠️ Modificar segun el entorno necesario

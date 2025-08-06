@@ -36,7 +36,7 @@ class UsuarioController{
         require_once(__DIR__ . '/../views/pages/usuarios/Header.php');
 
         
-        require_once("../views/usuarios/UsuarioView.php");
+        //require_once("../views/usuarios/UsuarioView.php");
 
          // Cargar footer
         require_once(__DIR__ . '/../views/pages/usuarios/Footer.php');
