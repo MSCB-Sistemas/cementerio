@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../app/config/errores.php';
-
+require_once __DIR__ . '/../app/lib/Control.php';
 
 // ⚠️ Modificar segun el entorno necesario
 $base = '/cementerio/mvc_cementerio';

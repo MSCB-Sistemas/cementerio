@@ -52,7 +52,7 @@ class DeudoController extends Control {
     }
 
     function show($id) {
-        $deudo = $this->deudo->getDeudo($id);
+        $deudo = $this->model->getDeudo($id);
         if ($deudo) {
             require_once(__DIR__ . '../views/pages/deudos/DeudoDetailView.php');
         } else {
