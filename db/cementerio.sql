@@ -53,15 +53,15 @@ CREATE TABLE `tipos_usuarios` (
 CREATE TABLE `deudo` (
   `id_deudo` int NOT NULL AUTO_INCREMENT,
   `dni` int DEFAULT NULL,
-  `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `apellido` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `telefono` int DEFAULT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `domicilio` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `localidad` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `codigo_postal` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `apellido` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `telefono` bigint DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `domicilio` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `localidad` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `codigo_postal` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
   PRIMARY KEY (`id_deudo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 -- sgcm.usuarios definition
 
@@ -74,7 +74,7 @@ CREATE TABLE `usuarios` (
   `sector` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
   `contrasenia` varchar(100) COLLATE utf8mb4_spanish2_ci NOT NULL,
   `id_tipo_usuario` int NOT NULL,
-  `activo` tinyint(1) DEFAULT NULL,
+  `activo` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id_usuario`),
   KEY `usuarios_FK` (`id_tipo_usuario`),
   CONSTRAINT `usuarios_FK` FOREIGN KEY (`id_tipo_usuario`) REFERENCES `tipos_usuarios` (`id_tipo_usuario`)
@@ -86,27 +86,27 @@ CREATE TABLE `usuarios` (
 CREATE TABLE `difunto` (
   `id_difunto` int NOT NULL AUTO_INCREMENT,
   `id_deudo` int NOT NULL,
-  `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `apellido` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `apellido` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
   `dni` int DEFAULT NULL,
   `edad` int DEFAULT NULL,
   `fecha_fallecimiento` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `id_sexo` int DEFAULT NULL,
   `id_nacionalidad` int DEFAULT NULL,
   `id_estado_civil` int DEFAULT NULL,
-  `domicilio` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `localidad` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
-  `codigo_postal` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `domicilio` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `localidad` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `codigo_postal` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
   PRIMARY KEY (`id_difunto`),
   KEY `difunto_FK` (`id_deudo`),
-  KEY `difunto_FK_1` (`id_sexo`),
-  KEY `difunto_FK_2` (`id_estado_civil`),
-  KEY `difunto_FK_3` (`id_nacionalidad`),
+  KEY `difunto_FK_2` (`id_sexo`),
+  KEY `difunto_FK_3` (`id_estado_civil`),
+  KEY `difunto_FK_1` (`id_nacionalidad`),
   CONSTRAINT `difunto_FK` FOREIGN KEY (`id_deudo`) REFERENCES `deudo` (`id_deudo`),
-  CONSTRAINT `difunto_FK_1` FOREIGN KEY (`id_sexo`) REFERENCES `sexo` (`id_sexo`),
-  CONSTRAINT `difunto_FK_2` FOREIGN KEY (`id_estado_civil`) REFERENCES `estado_civil` (`id_estado_civil`),
-  CONSTRAINT `difunto_FK_3` FOREIGN KEY (`id_nacionalidad`) REFERENCES `nacionalidades` (`id_nacionalidad`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+  CONSTRAINT `difunto_FK_1` FOREIGN KEY (`id_nacionalidad`) REFERENCES `nacionalidades` (`id_nacionalidad`),
+  CONSTRAINT `difunto_FK_2` FOREIGN KEY (`id_sexo`) REFERENCES `sexo` (`id_sexo`),
+  CONSTRAINT `difunto_FK_3` FOREIGN KEY (`id_estado_civil`) REFERENCES `estado_civil` (`id_estado_civil`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 
 -- sgcm.parcela definition

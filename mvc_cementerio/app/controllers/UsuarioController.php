@@ -1,48 +1,229 @@
 <?php
-//Llama al Modelo
-require_once(__DIR__ . "/../models/UsuarioModel.php");
+class UsuarioController extends Control{
+    private UsuarioModel $model;
+    private TiposUsuariosModel $tipoUsuariosModel;
 
-class UsuarioController{
-    private $usuario;
-    function __contruct(){
-        $this->usuario = new UsuarioModel();
+    public function __construct()
+    {
+        $this->model = $this->loadModel("UsuarioModel");
+        $this->tipoUsuariosModel = $this->loadModel("TiposUsuariosModel");
     }
 
-    function index(){
-        // llevar a pagina de login
-        $vista = __DIR__ . '/../views/pages/usuarios/LoginView.php';
+    public function index()
+    {
+        $usuarios = $this->model->getAllUsuarios();
 
+        $datos = [
+            'title' => 'Lista de Usuarios',
+            'urlCrear' => URL . '/usuario/create',
+            'columnas' => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Rol', 'Activo'],
+            'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'descripcion', 'activo'],
+            'data' => $usuarios,
+            'acciones' => function ($fila) {
+                $id = $fila['id_usuario'];
+                $url = URL . '/usuario';
+                return '
+                    <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
+                    <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
+                    <a href="' . $url . '/activate/' . $id . '" class="btn btn-sm btn-outline-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</a>
+                    <a href="' . $url . '/changePass/' . $id . '" class="btn btn-sm btn-outline-warning">Cambiar clave</a>
+                ';
+            },
+            'errores' => [],
+        ];
 
-         // Cargar header
-        require_once(__DIR__ . '/../views/pages/usuarios/Header.php');
+        $this->loadView('partials/tablaAbm', $datos);
+    }
 
+    public function create()
+    {
+        $tipos = $this->tipoUsuariosModel->getAllTiposUsuarios();
+        $datos = [
+            'title' => 'Crear usuario',
+            'action' => URL . '/usuario/save',
+            'values' => [],
+            'errores' => [],
+            'tipos' => $tipos,
+            'update' => false
+        ];
 
-        if (file_exists($vista)) {
-            require $vista;
-        } else {
-            echo errorMensaje('404', "Vista loginView.php no encontrada.");
+        $this->loadView('usuarios/UsuarioForm', $datos);
+    }
+
+    public function save()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $usuario = trim($_POST["usuario"] ?? '');
+            $nombre = trim($_POST["nombre"] ?? '');
+            $apellido = trim($_POST["apellido"] ?? '');
+            $cargo = trim($_POST["cargo"] ?? '');
+            $sector = trim($_POST["sector"] ?? '');
+            $contrasenia = trim($_POST["password"] ?? '');
+            $tipoUsuario = $_POST["tipo_usuario"] ?? '';
+
+            if (empty($usuario))
+                $errores[] = "El usuario es obligatorio.";
+            if (empty($nombre))
+                $errores[] = "El nombre es obligatorio.";
+            if (empty($apellido))
+                $errores[] = "El apellido es obligatorio.";
+            if (empty($contrasenia))
+                $errores[] = "El nombre es obligatorio.";
+            if (empty($tipoUsuario))
+                $errores[] = "Debe seleccionar un tipo de usuario.";
+
+            if (!empty($errores)) {
+                $tipos = $this->tipoUsuariosModel->getAllTiposUsuarios();
+                $this->loadView('usuarios/UsuarioForm', [
+                    'title' => 'Crear nuevo usuario',
+                    'action' => URL . '/usuario/save',
+                    'values' => $_POST,
+                    'errores' => $errores,
+                    'tipos' => $tipos,
+                    'update' => false
+                ]);
+                return;
+            }
+            $contrasenia = password_hash($contrasenia, PASSWORD_DEFAULT);
+
+            if ($this->model->insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $contrasenia, $tipoUsuario)) {
+                header("Location: " . URL . "/usuario");
+                exit;
+            } else {
+                die("Error al guardar el usuario");
+            }
+        }
+    }
+
+    public function edit($id)
+    {
+        $usuario = $this->model->getUsuarioId($id);
+        $tipos = $this->tipoUsuariosModel->getAllTiposUsuarios();
+
+        if (!$usuario) {
+            die("Usuario no encontrado");
         }
 
-         // Cargar footer
-        require_once(__DIR__ . '/../views/pages/usuarios/Footer.php');
-    
+        $this->loadView("usuarios/UsuarioForm", [
+            'title' => "Editar usuario",
+            'action' => URL . '/usuario/update/' . $id,
+            'values' => [
+                'usuario' => $usuario['usuario'],
+                'nombre' => $usuario['nombre'],
+                'apellido' => $usuario['apellido'],
+                'cargo' => $usuario['cargo'],
+                'sector' => $usuario['sector'],
+                'id_tipo_usuario' => $usuario['id_tipo_usuario'],
+            ],
+            'errores' => [],
+            'tipos' => $tipos,
+            'update' => true
+        ]);
     }
 
-    function mostrar(){
-        $obj = new UsuarioModel();
-        $datos = $obj->getAllUsuarios();
-        var_dump($datos);
+    public function update($id)
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $usuario = trim($_POST["usuario"] ?? '');
+            $nombre = trim($_POST["nombre"] ?? '');
+            $apellido = trim($_POST["apellido"] ?? '');
+            $cargo = trim($_POST["cargo"] ?? '');
+            $sector = trim($_POST["sector"] ?? '');
+            $tipoUsuario = $_POST["tipo_usuario"] ?? '';
 
-        require_once(__DIR__ . '/../views/pages/usuarios/Header.php');
+            $errores = [];
+            if (empty($usuario))
+                $errores[] = "El usuario es obligatorio.";
+            if (empty($nombre))
+                $errores[] = "El nombre es obligatorio.";
+            if (empty($apellido))
+                $errores[] = "El apellido es obligatorio.";
+            if (empty($tipoUsuario))
+                $errores[] = "Debe seleccionar un tipo de usuario.";
 
-        
-        require_once("../views/usuarios/UsuarioView.php");
+            if (!empty($errores)) {
+                $usuario = [
+                    'id_usuario' => $id,
+                    'usuario' => $usuario,
+                    'nombre' => $nombre,
+                    'apellido' => $apellido,
+                    'cargo' => $cargo,
+                    'sector' => $sector,
+                    'id_tipo_usuario' => $tipoUsuario
+                ];
+                $tipos = $this->tipoUsuariosModel->getAllTiposUsuarios();
+                $this->loadView('usuario/UsuarioForm', [
+                    'title' => 'Editar usuario',
+                    'action' => URL . '/usuario/update/' . $id,
+                    'values' => $usuario,
+                    'errores' => $errores,
+                    'tipos' => $tipos,
+                    'update' => true
+                ]);
+                return;
+            }
 
-         // Cargar footer
-        require_once(__DIR__ . '/../views/pages/usuarios/Footer.php');
-        
+            if ($this->model->updateUsuario($id, $usuario, $nombre, $apellido, $cargo, $sector, $tipoUsuario)) {
+                header("Location: " . URL . "/usuario");
+                exit;
+            } else {
+                die("Error al actualizar el usuario");
+            }
+        }
+    }
+
+    public function delete($id)
+    {
+        if ($this->model->deleteUsuario($id)) {
+            header("Location: " . URL . "/usuario");
+            exit;
+        } else {
+            die("No se pudo eliminar al usuario.");
+        }
+    }
+
+    public function activate($id) {
+        if($this->model->activateUsuario($id)) {
+            header("Location: ". URL . "/usuario");
+            exit;
+        } else {
+            die("No se pudo activar al usuario");
+        }
+    }
+
+    public function changePass($id) {
+        $this->loadView('usuarios/UsuarioFormPass', [
+            'title' => 'Cambiar clave',
+            'action' => URL .'/usuario/savePass/'. $id,
+            'errores' => []
+        ]);
+    }
+
+    public function savePass($id) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $password = trim($_POST["password"]);
+
+            $errores = [];
+            if (empty($password)) $errores[] = "El campo nueva contrasenia es obligatorio.";
+
+            if (!empty($errores)) {
+                $this->loadView("usuarios/UsuarioFormPass", [
+                    'title' => 'Cambiar clave',
+                    'action' => URL .'/usuario/savePass/'. $id,
+                    'errores' => $errores
+                ]);
+                return;
+            }
+
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            if ($this->model->updatePassword($id, $password)) {
+                header('Location: '. URL . '/usuario');
+                exit;
+            } else {
+                die("Error al cambiar la clave");
+            }
+        }
     }
 }
-
 ?>
  
