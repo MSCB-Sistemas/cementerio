@@ -33,6 +33,9 @@ $routes = [
     'estadoCivil/update' => ['EstadoCivilController', 'update'],
     'estadoCivil/delete' => ['EstadoCivilController', 'delete'],
 
+    // URL's parcela.
+    'parcela' => ['ParcelaController','index'],
+
     // URL's deudo.
     'deudo' => ['DeudoController', 'index'],
     'deudo/create' => ['DeudoController', 'create'],
