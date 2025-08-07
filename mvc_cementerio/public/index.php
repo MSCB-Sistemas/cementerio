@@ -25,6 +25,14 @@ $routes = [
     'difunto/update' => ['DifuntoController', 'update'],
     'difunto/delete' => ['DifuntoController', 'delete'],
 
+    // URL's estado civil.
+    'estadoCivil' => ['EstadoCivilController', 'index'],
+    'estadoCivil/create' => ['EstadoCivilController', 'create'],
+    'estadoCivil/save' => ['EstadoCivilController', 'save'],
+    'estadoCivil/edit' => ['EstadoCivilController', 'edit'],
+    'estadoCivil/update' => ['EstadoCivilController', 'update'],
+    'estadoCivil/delete' => ['EstadoCivilController', 'delete'],
+
     // URL's deudo.
     'deudo' => ['DeudoController', 'index'],
     'deudo/create' => ['DeudoController', 'create'],

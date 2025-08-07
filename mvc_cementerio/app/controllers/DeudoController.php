@@ -27,7 +27,7 @@ class DeudoController extends Control {
             "data"=> $deudos
         ];
 
-        $this->loadView("deudos/DeudoView", $datos);
+        $this->loadView("partials/tablaAbm", $datos);
     }
 
     public function create()

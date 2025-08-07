@@ -37,7 +37,7 @@ class DifuntoController extends Control
             'errores' => [],
         ];
 
-        $this->loadView('difuntos/DifuntoView', $datos);
+        $this->loadView('partials/tablaAbm', $datos);
     }
 
     public function create()
@@ -116,7 +116,8 @@ class DifuntoController extends Control
         }
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $difunto = $this->model->getDifunto($id);
         $deudos = $this->deudoModel->getAllDeudos();
         $nacionalidades = $this->nacionalidadesModel->getAllNacionalidades();
@@ -134,15 +135,15 @@ class DifuntoController extends Control
                 'deudo' => $difunto['id_deudo'],
                 'nombre' => $difunto['nombre'],
                 'apellido' => $difunto['apellido'],
-                'dni'=> $difunto['dni'],
+                'dni' => $difunto['dni'],
                 'edad' => $difunto['edad'],
                 'fecha_fallecimiento' => $difunto['fecha_fallecimiento'],
-                'sexo'=> $difunto['id_sexo'],
+                'sexo' => $difunto['id_sexo'],
                 'nacionalidad' => $difunto['id_nacionalidad'],
                 'estado_civil' => $difunto['id_estado_civil'],
                 'domicilio' => $difunto['domicilio'],
                 'localidad' => $difunto['localidad'],
-                'codigo_postal'=> $difunto['codigo_postal'],
+                'codigo_postal' => $difunto['codigo_postal'],
             ],
             'errores' => [],
             'deudos' => $deudos,
@@ -152,7 +153,8 @@ class DifuntoController extends Control
         ]);
     }
 
-    public function update($id) {
+    public function update($id)
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $deudo = $_POST["deudo"] ?? '';
             $nombre = trim($_POST["nombre"] ?? '');
@@ -186,10 +188,10 @@ class DifuntoController extends Control
                     'apellido' => $apellido,
                     'dni' => $dni,
                     'edad' => $edad,
-                    'fecha_fallecimiento'=> $fechaFallecimiento,
+                    'fecha_fallecimiento' => $fechaFallecimiento,
                     'id_sexo' => $sexo,
                     'id_nacionalidad' => $nacionalidad,
-                    'id_estado_civil'=> $estadoCivil,
+                    'id_estado_civil' => $estadoCivil,
                     'domicilio' => $domicilio,
                     'localidad' => $localidad,
                     'codigo_postal' => $codigoPostal
@@ -222,7 +224,8 @@ class DifuntoController extends Control
         }
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if ($this->model->deleteDifunto($id)) {
             header("Location: " . URL . "/difunto");
             exit;

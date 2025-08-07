@@ -32,7 +32,7 @@ class UsuarioController extends Control{
             'errores' => [],
         ];
 
-        $this->loadView('usuarios/UsuarioView', $datos);
+        $this->loadView('partials/tablaAbm', $datos);
     }
 
     public function create()
