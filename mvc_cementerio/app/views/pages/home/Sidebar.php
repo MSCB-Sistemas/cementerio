@@ -75,9 +75,10 @@
                 ABM Parcela
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="parcelaDropdown">
-                    <li><a class="dropdown-item dropdown" href="#">Agregar </a></li>
-                    <li><a class="dropdown-item dropdown" href="#">Editar </a></li>
-                    <li><a class="dropdown-item dropdown" href="#">Eliminar </a></li>
+                    <li><a class="dropdown-item dropdown" href="#">Agregar Parcela</a></li>
+                    <li><a class="dropdown-item dropdown" href="#">Modificar Parcela</a></li>
+                    <li><a class="dropdown-item dropdown" href="#">Eliminar Parcela</a></li>
+                    <li><a class="dropdown-item dropdown" href="#">Historial de Parcelas Vendidas</a></li>
                 </ul>
                 </li>
 
