@@ -60,6 +60,7 @@ class UsuarioController extends Control{
             $sector = trim($_POST["sector"] ?? '');
             $contrasenia = trim($_POST["password"] ?? '');
             $tipoUsuario = $_POST["tipo_usuario"] ?? '';
+            $errores = [];
 
             if (empty($usuario))
                 $errores[] = "El usuario es obligatorio.";

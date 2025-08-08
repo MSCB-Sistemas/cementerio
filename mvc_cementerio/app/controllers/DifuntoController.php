@@ -76,6 +76,7 @@ class DifuntoController extends Control
             $domicilio = trim($_POST["domicilio"] ?? '');
             $localidad = trim($_POST["localidad"] ?? '');
             $codigoPostal = trim($_POST["codigo_postal"] ?? '');
+            $errores = [];
 
             if (empty($deudo))
                 $errores[] = "El deudo es obligatorio";

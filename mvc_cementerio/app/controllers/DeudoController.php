@@ -55,8 +55,8 @@ class DeudoController extends Control {
             $domicilio = trim($_POST['domicilio']);
             $localidad = trim($_POST['localidad']);
             $codigo_postal = trim($_POST['codigo_postal']);
-
             $errores = [];
+            
             if (empty($dni)) {
                 $errores[] = "El DNI es obligatorio.";
             }

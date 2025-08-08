@@ -63,6 +63,7 @@ class ParcelaController extends Control {
             $fraccion = trim($_POST['fraccion'] ??'');
             $nivel = trim($_POST['nivel'] ??'');
             $orientacion = $_POST['orientacion'] ?? '';
+            $errores = [];
 
             if (empty($tipo_parcela)) $errores[] = "El tipo de parcela es obligatorio.";
             if (empty($orientacion)) $errores[] = "La orientacion de la parcela es obligatoria.";

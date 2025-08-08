@@ -41,6 +41,14 @@ $routes = [
     'parcela/update'=> ['ParcelaController', 'update'],
     'parcela/delete'=> ['ParcelaController', 'delete'],
 
+    // URL's sexo.
+    'sexo' => ['SexoController', 'index'],
+    'sexo/create' => ['SexoController', 'create'],
+    'sexo/save' => ['SexoController', 'save'],
+    'sexo/edit' => ['SexoController', 'edit'],
+    'sexo/update' => ['SexoController', 'update'],
+    'sexo/delete' => ['SexoController', 'delete'],
+
     // URL's deudo.
     'deudo' => ['DeudoController', 'index'],
     'deudo/create' => ['DeudoController', 'create'],
