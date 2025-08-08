@@ -27,6 +27,10 @@ require_once APP . '/views/inc/Header.php' ?>
                 <button class="btn btn-success w-100 py-2" type="submit">Iniciar sesión</button>
             </div><br>
             <div>
+                <div>
+                <button class="btn btn-success w-100 py-2" type="submit">Usuario Nuevo</button>
+            </div><br>
+            <div></div>
                 <?php if (!empty($error)): ?>
                     <div class="alert alert-danger"><?= $error ?></div>
                 <?php endif; ?>

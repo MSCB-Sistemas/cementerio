@@ -16,6 +16,9 @@ $routes = [
     'usuario/logout' => ['UsuarioController', 'logout'],
     'usuario/update' => ['UsuarioController', 'update'],
     'usuario/mostrar' => ['UsuarioController', 'mostrar'],
+    'usuario/crear' => ['UsuarioController', 'crear'],
+    'usuario/guardar' => ['UsuarioController', 'guardar'],
+
     
     'home'=> ['HomeController', 'index'],
     // setear tantas rutas como sean necesarias
