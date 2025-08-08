@@ -49,6 +49,14 @@ $routes = [
     'sexo/update' => ['SexoController', 'update'],
     'sexo/delete' => ['SexoController', 'delete'],
 
+    // URL's tipos de parcela.
+    'tipoParcela'=> ['TipoParcelaController', 'index'],
+    'tipoParcela/create'=> ['TipoParcelaController', 'create'],
+    'tipoParcela/save'=> ['TipoParcelaController', 'save'],
+    'tipoParcela/edit'=> ['TipoParcelaController', 'edit'],
+    'tipoParcela/update'=> ['TipoParcelaController', 'update'],
+    'tipoParcela/delete'=> ['TipoParcelaController', 'delete'],
+
     // URL's deudo.
     'deudo' => ['DeudoController', 'index'],
     'deudo/create' => ['DeudoController', 'create'],
