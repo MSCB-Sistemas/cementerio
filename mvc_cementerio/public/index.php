@@ -35,6 +35,11 @@ $routes = [
 
     // URL's parcela.
     'parcela' => ['ParcelaController','index'],
+    'parcela/save'=> ['ParcelaController', 'save'],
+    'parcela/create'=> ['ParcelaController', 'create'],
+    'parcela/edit'=> ['ParcelaController', 'edit'],
+    'parcela/update'=> ['ParcelaController', 'update'],
+    'parcela/delete'=> ['ParcelaController', 'delete'],
 
     // URL's deudo.
     'deudo' => ['DeudoController', 'index'],

@@ -203,7 +203,7 @@ class DifuntoController extends Control
                 $estadosCiviles = $this->estadoCivilModel->getAllestadosCiviles();
 
                 $this->loadView('difuntos/DifuntoForm', [
-                    'title' => 'Crear difunto',
+                    'title' => 'Editar difunto',
                     'action' => URL . '/difunto/update/' . $id,
                     'values' => $difunto,
                     'errores' => $errores,
