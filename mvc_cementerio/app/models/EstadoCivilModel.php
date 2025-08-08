@@ -42,7 +42,7 @@ class EstadoCivilModel {
      */
     public function getEstadoCivil($id_estado_civil) : array {
         $stmt = $this->db->prepare("SELECT * FROM estado_civil WHERE id_estado_civil = :id_estado_civil");
-        $stmt->execute(['id_parcela' => $id_estado_civil]);
+        $stmt->execute(['id_estado_civil' => $id_estado_civil]);
         return $stmt->fetch();
     }
 
@@ -51,11 +51,10 @@ class EstadoCivilModel {
     * @param string $nombre Nombre del estado civil
     * @return int Resultado de la operación
     */
-    public function insertEstadoCivil($id_estado_civil, $descripcion)
+    public function insertEstadoCivil($descripcion)
     {
-        $stmt = $this->db->prepare("INSERT INTO estado_civil (id_estado_civil, descripcion) VALUES (:id_estado_civil, :descripcion)");
+        $stmt = $this->db->prepare("INSERT INTO estado_civil (descripcion) VALUES (:descripcion)");
         $stmt->execute([
-            'id_estado_civil' => $id_estado_civil,
             'descripcion' => $descripcion,
         ]);
         return $this->db->lastInsertId();
@@ -67,7 +66,7 @@ class EstadoCivilModel {
      * @param string $descripcion Descripción del estado civil
      * @return bool Resultado de la operación
      */
-    public function updateParcela($id_estado_civil, $descripcion): bool
+    public function updateEstadoCivil($id_estado_civil, $descripcion): bool
     {
         $stmt = $this->db->prepare("UPDATE estado_civil SET id_estado_civil = :id_estado_civil, descripcion = :descripcion WHERE id_estado_civil = :id_estado_civil");
         $stmt->execute([
@@ -82,7 +81,7 @@ class EstadoCivilModel {
      * @param int $id_estado_civil ID del estado civil a eliminar
      * @return bool Resultado de la operación
      */
-    public function deleteParcela($id_estado_civil): bool
+    public function deleteEstadoCivil($id_estado_civil): bool
     {
         $stmt = $this->db->prepare("DELETE FROM estado_civil WHERE id_estado_civil = :id_estado_civil");
         $stmt->execute(['id_estado_civil' => $id_estado_civil]);
