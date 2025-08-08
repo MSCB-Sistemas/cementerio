@@ -1,5 +1,5 @@
 <?php
-require_once APP . '/config/config.php';
+require_once __DIR__ . '/../config/config.php';
 require_once 'Database.php';
 
 class UsuarioModel {
@@ -43,14 +43,21 @@ class UsuarioModel {
 
 
     // Verificar login
-    public function verificarLogin($email, $contrasenia): bool {
-        $sql = "SELECT contrasenia FROM usuarios WHERE email = :email";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute(['email' => $email]);
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+    function verificarLogin($usuario, $contrasenia) {
+    $query = "SELECT * FROM usuarios WHERE usuario = :usuario LIMIT 1";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindParam(':usuario', $usuario);
+    $stmt->execute();
 
-        return $usuario && password_verify($contrasenia, $usuario['contrasenia']);
+    if ($stmt->rowCount() > 0) {
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (password_verify($contrasenia, $usuario['contrasenia'])) {
+            return $usuario;
+        }
     }
+    return false;
+}
+
 
 
     // Insertar usuario
