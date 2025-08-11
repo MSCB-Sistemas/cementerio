@@ -1,3 +1,6 @@
+
+<?php require_once APP . '/views/inc/header.php' ?>
+
 <!DOCTYPE html>
 <html lang="es" data-bs-theme="light">
 <head>

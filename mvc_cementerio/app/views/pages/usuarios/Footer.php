@@ -1,3 +1,4 @@
+
   <div class="position-fixed bottom-0 end-0 mb-3 me-3 d-flex align-items-center gap-2">
     <?php 
       if (isset($datos['title']) && $datos['title'] != "Login"){

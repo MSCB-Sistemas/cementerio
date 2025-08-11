@@ -1,65 +1,81 @@
 <?php
 require_once __DIR__ . '/../app/config/errores.php';
+require_once __DIR__ . '/../app/lib/Control.php';
 
-
-// ⚠️ Modificar segun el entorno necesario
-$base = '/cementerio/mvc_cementerio/public/';
-
-
-
+$base = '/cementerio/mvc_cementerio';
 
 // 📋​ Rutas disponibles: ruta => [Controlador, metodo]
-
 $routes = [
-    '' => ['UsuarioController', 'index'],
-    'login' => ['UsuarioController', 'login'],
-    'usuario/logout' => ['UsuarioController', 'logout'],
+    // URL's usuario.
+    'usuario' => ['UsuarioController', 'index'],
+    'usuario/create' => ['UsuarioController', 'create'],
+    'usuario/save' => ['UsuarioController', 'save'],
+    'usuario/edit' => ['UsuarioController', 'edit'],
     'usuario/update' => ['UsuarioController', 'update'],
-    'usuario/mostrar' => ['UsuarioController', 'mostrar'],
-    'usuario/crear' => ['UsuarioController', 'crear'],
-    'usuario/guardar' => ['UsuarioController', 'guardar'],
+    'usuario/delete' => ['UsuarioController', 'delete'],
+    'usuario/activate' => ['UsuarioController', 'activate'],
+    'usuario/changePass' => ['UsuarioController', 'changePass'],
+    'usuario/savePass' => ['UsuarioController', 'savePass'],
 
-    
-    'home'=> ['HomeController', 'index'],
-    // setear tantas rutas como sean necesarias
+    // URL's difunto.
+    'difunto' => ['DifuntoController', 'index'],
+    'difunto/create' => ['DifuntoController', 'create'],
+    'difunto/save' => ['DifuntoController', 'save'],
+    'difunto/edit' => ['DifuntoController', 'edit'],
+    'difunto/update' => ['DifuntoController', 'update'],
+    'difunto/delete' => ['DifuntoController', 'delete'],
+
+    // URL's estado civil.
+    'estadoCivil' => ['EstadoCivilController', 'index'],
+    'estadoCivil/create' => ['EstadoCivilController', 'create'],
+    'estadoCivil/save' => ['EstadoCivilController', 'save'],
+    'estadoCivil/edit' => ['EstadoCivilController', 'edit'],
+    'estadoCivil/update' => ['EstadoCivilController', 'update'],
+    'estadoCivil/delete' => ['EstadoCivilController', 'delete'],
+
+    // URL's parcela.
+    'parcela' => ['ParcelaController','index'],
+
+    // URL's deudo.
+    'deudo' => ['DeudoController', 'index'],
+    'deudo/create' => ['DeudoController', 'create'],
+    'deudo/save' => ['DeudoController', 'save'],
+    'deudo/edit' => ['DeudoController', 'edit'],
+    'deudo/update' => ['DeudoController', 'update'],
+    'deudo/delete' => ['DeudoController', 'delete'],
 ];
-
-
-
-
 
 // Obtener ruta y metodo actual
 $uri = $_SERVER['REQUEST_URI'];
+// var_dump($uri);
 $uri = str_replace($base, '', $uri);
 $uri = trim(parse_url($uri, PHP_URL_PATH), '/');
 $method = $_SERVER['REQUEST_METHOD'];
 //var_dump($_SERVER['REQUEST_URI']);
 
+// var_dump($method);
 
 // Separar en partes la ruta para manejar mejor los parametros
 $partes = explode('/', $uri);
+
+// var_dump($partes);
 
 // Inicializa vairables
 $ruta = '';
 $parametro = null;
 
 // Logica para GET con 1 variable (ejemplo: usuario/12)
-if ($method === 'GET' && count($partes) === 2) {
-   
-    $ruta = $partes[0] . '/mostrar';
-    $parametro = $partes[1];
-}else {
+
+if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
+    // var_dump($method);
+    $ruta = $partes[0] . '/' . $partes[1];
+    $parametro = $partes[2];
+} else {
     // sino arma ruta normal
     $ruta = implode('/', $partes);
 }
 
-
-
-
-
-
-
-
+// var_dump($ruta);
 
 // 1️⃣​. Si la ruta esta definida en el arreglo de rutas
 if (isset($routes[$ruta])) {
@@ -92,7 +108,7 @@ if (isset($routes[$ruta])) {
                 }
                 exit;
             } 
-            // 9️⃣. erro el metodo no exite
+            // 9️⃣. error el metodo no exite
             else {
                 echo errorMensaje('405', "Método '$metodo' no existe.");
             }
@@ -111,5 +127,4 @@ if (isset($routes[$ruta])) {
 else {
     echo errorMensaje('404', "Ruta '$ruta' no encontrada.");
 }
-
 ?>
