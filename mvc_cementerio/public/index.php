@@ -17,6 +17,8 @@ $routes = [
     'usuario/changePass' => ['UsuarioController', 'changePass'],
     'usuario/savePass' => ['UsuarioController', 'savePass'],
 
+    'home' => ['homeController', 'index'],
+
     // URL's difunto.
     'difunto' => ['DifuntoController', 'index'],
     'difunto/create' => ['DifuntoController', 'create'],
