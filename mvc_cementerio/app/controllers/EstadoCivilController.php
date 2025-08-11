@@ -104,7 +104,7 @@ class EstadoCivilController extends Control
 
                 $this->loadView("estados_civiles/EstadoCivilForm", [
                     'title' => 'Editar estado civil',
-                    'action' => URL . '' . $id,
+                    'action' => URL . '/estadoCivil/update/' . $id,
                     'values' => $estadoCivil,
                     'errores' => $errores,
                 ]);

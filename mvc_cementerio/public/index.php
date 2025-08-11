@@ -35,6 +35,35 @@ $routes = [
 
     // URL's parcela.
     'parcela' => ['ParcelaController','index'],
+    'parcela/save'=> ['ParcelaController', 'save'],
+    'parcela/create'=> ['ParcelaController', 'create'],
+    'parcela/edit'=> ['ParcelaController', 'edit'],
+    'parcela/update'=> ['ParcelaController', 'update'],
+    'parcela/delete'=> ['ParcelaController', 'delete'],
+
+    // URL's sexo.
+    'sexo' => ['SexoController', 'index'],
+    'sexo/create' => ['SexoController', 'create'],
+    'sexo/save' => ['SexoController', 'save'],
+    'sexo/edit' => ['SexoController', 'edit'],
+    'sexo/update' => ['SexoController', 'update'],
+    'sexo/delete' => ['SexoController', 'delete'],
+
+    // URL's tipos de parcela.
+    'tipoParcela'=> ['TipoParcelaController', 'index'],
+    'tipoParcela/create'=> ['TipoParcelaController', 'create'],
+    'tipoParcela/save'=> ['TipoParcelaController', 'save'],
+    'tipoParcela/edit'=> ['TipoParcelaController', 'edit'],
+    'tipoParcela/update'=> ['TipoParcelaController', 'update'],
+    'tipoParcela/delete'=> ['TipoParcelaController', 'delete'],
+
+    // URL's tipos de usuario.
+    'tipoUsuario'=> ['TipoUsuariosController', 'index'],
+    'tipoUsuario/create'=> ['TipoUsuariosController', 'create'],
+    'tipoUsuario/save'=> ['TipoUsuariosController', 'save'],
+    'tipoUsuario/edit'=> ['TipoUsuariosController', 'edit'],
+    'tipoUsuario/update'=> ['TipoUsuariosController', 'update'],
+    'tipoUsuario/delete'=> ['TipoUsuariosController', 'delete'],
 
     // URL's deudo.
     'deudo' => ['DeudoController', 'index'],

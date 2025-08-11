@@ -26,7 +26,15 @@ class ParcelaModel {
      */
     public function getAllParcelas(): array
     {
-        $stmt = $this->db->prepare("SELECT * FROM parcela");
+        $stmt = $this->db->prepare("SELECT p.*,
+                                                tp.nombre_parcela AS tipo_parcela,
+                                                de.nombre AS nombre_deudo,
+                                                o.descripcion AS orientacion
+                                        FROM parcela p
+                                        LEFT JOIN tipo_parcela tp ON p.id_tipo_parcela = tp.id_tipo_parcela
+                                        LEFT JOIN deudo de ON p.id_deudo = de.id_deudo
+                                        LEFT JOIN orientacion o ON p.id_orientacion = o.id_orientacion
+                                        ");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -55,12 +63,12 @@ class ParcelaModel {
     * @param int $id_orientacion ID de la orientación
     * @return int Resultado de la operación
     */
-    public function insertParcela($id_tipo, $id_deudo, $numero_ubicacion, $hilera, $seccion, $fraccion, $nivel, $id_orientacion): int
+    public function insertParcela($id_tipo_parcela, $id_deudo, $numero_ubicacion, $hilera, $seccion, $fraccion, $nivel, $id_orientacion): int
     {
-        $stmt = $this->db->prepare("INSERT INTO parcela (id_tipo, id_deudo, numero_ubicacion, hilera, seccion, fraccion, nivel, id_orientacion) 
-                                    VALUES (:id_tipo, :id_deudo, :numero_ubicacion, :hilera, :seccion, :fraccion, :nivel, :id_orientacion)");
+        $stmt = $this->db->prepare("INSERT INTO parcela (id_tipo_parcela, id_deudo, numero_ubicacion, hilera, seccion, fraccion, nivel, id_orientacion) 
+                                    VALUES (:id_tipo_parcela, :id_deudo, :numero_ubicacion, :hilera, :seccion, :fraccion, :nivel, :id_orientacion)");
         $stmt->execute([
-            'id_tipo' => $id_tipo,
+            'id_tipo_parcela' => $id_tipo_parcela,
             'id_deudo' => $id_deudo,
             'numero_ubicacion' => $numero_ubicacion,
             'hilera' => $hilera,
@@ -86,14 +94,14 @@ class ParcelaModel {
      * @param int $id_orientacion ID de la orientación
      * @return bool Resultado de la operación
      */
-    public function updateParcela($id_parcela, $id_tipo, $id_deudo, $numero_ubicacion, $hilera, $seccion, $fraccion, $nivel, $id_orientacion): bool
+    public function updateParcela($id_parcela, $id_tipo_parcela, $id_deudo, $numero_ubicacion, $hilera, $seccion, $fraccion, $nivel, $id_orientacion): bool
     {
         $stmt = $this->db->prepare("UPDATE parcela 
-                                    SET id_tipo = :id_tipo, id_deudo = :id_deudo, numero_ubicacion = :numero_ubicacion, hilera = :hilera, seccion = :seccion, fraccion = :fraccion, nivel = :nivel, id_orientacion = :id_orientacion 
+                                    SET id_tipo_parcela = :id_tipo_parcela, id_deudo = :id_deudo, numero_ubicacion = :numero_ubicacion, hilera = :hilera, seccion = :seccion, fraccion = :fraccion, nivel = :nivel, id_orientacion = :id_orientacion 
                                     WHERE id_parcela = :id_parcela");
         $stmt->execute([
             'id_parcela' => $id_parcela,
-            'id_tipo' => $id_tipo,
+            'id_tipo_parcela' => $id_tipo_parcela,
             'id_deudo' => $id_deudo,
             'numero_ubicacion' => $numero_ubicacion,
             'hilera' => $hilera,
