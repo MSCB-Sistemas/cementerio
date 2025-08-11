@@ -1,13 +1,8 @@
-#Para que index.php capture todo desde la raíz#
-#Se enviará cualquier URL a index.php y estará disponible en $_GET['url'].
-
 <IfModule mod_rewrite.c>
-    Options -Multiviews
-    RewriteEngine On
-    RewriteBase /cementerio/mvc_cementerio/public/
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ index.php [QSA,L]
+Options -Multiviews
+RewriteEngine On
+RewriteBase /cementerio/mvc_cementerio/public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
 </IfModule>
-
-

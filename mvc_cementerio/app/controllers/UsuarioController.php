@@ -225,6 +225,42 @@ class UsuarioController extends Control{
             }
         }
     }
+
+    function login() {
+    session_start();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $usuario = $_POST['usuario'] ?? '';
+        $contrasenia = $_POST['contrasenia'] ?? '';
+
+        if (empty($usuario) || empty($contrasenia)) {
+            $error = "Por favor complete ambos campos.";
+        } else {
+            $this->usuario = new UsuarioModel();
+           // $usuarioEncontrado = $this->usuario->verificarLogin($usuario, $contrasenia);
+           $usuarioEncontrado = $this->usuario->verificarLogin($usuario, $contrasenia);
+
+            if ($usuarioEncontrado) {
+                $_SESSION['usuario'] = [
+                    'nombre' => $usuarioEncontrado['nombre'] ?? $usuarioEncontrado['usuario'],
+                    'contrasenia' => $usuarioEncontrado['contrasenia'] ?? 'usuario' 
+                ];
+                header("Location:" . URL  . 'home');
+                exit;
+            } else {
+                $error = "Usuario o contraseña incorrectos.";
+            }
+        }
+
+        // Si hay error, volver a mostrar el formulario con mensaje
+        $datos['title'] = "Login";
+        $datos['error'] = $error;
+
+       header("Location:" .URL );
+    } 
+}
+
+
 }
 ?>
  
