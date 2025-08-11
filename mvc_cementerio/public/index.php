@@ -51,6 +51,7 @@ $uri = $_SERVER['REQUEST_URI'];
 $uri = str_replace($base, '', $uri);
 $uri = trim(parse_url($uri, PHP_URL_PATH), '/');
 $method = $_SERVER['REQUEST_METHOD'];
+//var_dump($_SERVER['REQUEST_URI']);
 
 // var_dump($method);
 
@@ -64,6 +65,7 @@ $ruta = '';
 $parametro = null;
 
 // Logica para GET con 1 variable (ejemplo: usuario/12)
+
 if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
     // var_dump($method);
     $ruta = $partes[0] . '/' . $partes[1];

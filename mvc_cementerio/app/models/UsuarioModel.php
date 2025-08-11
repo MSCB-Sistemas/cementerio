@@ -49,6 +49,23 @@ class UsuarioModel {
         return $stmt->fetch();
     }
 
+
+    // Verificar login
+    function verificarLogin($usuario, $contrasenia) {
+    $query = "SELECT * FROM usuarios WHERE usuario = :usuario LIMIT 1";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindParam(':usuario', $usuario);
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (password_verify($contrasenia, $usuario['contrasenia'])) {
+            return $usuario;
+        }
+    }
+    return false;
+}
+
     /**
      * Summary of insertUsuario
      * @param mixed $usuario
