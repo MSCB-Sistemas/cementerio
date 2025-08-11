@@ -57,6 +57,14 @@ $routes = [
     'tipoParcela/update'=> ['TipoParcelaController', 'update'],
     'tipoParcela/delete'=> ['TipoParcelaController', 'delete'],
 
+    // URL's tipos de usuario.
+    'tipoUsuario'=> ['TipoUsuariosController', 'index'],
+    'tipoUsuario/create'=> ['TipoUsuariosController', 'create'],
+    'tipoUsuario/save'=> ['TipoUsuariosController', 'save'],
+    'tipoUsuario/edit'=> ['TipoUsuariosController', 'edit'],
+    'tipoUsuario/update'=> ['TipoUsuariosController', 'update'],
+    'tipoUsuario/delete'=> ['TipoUsuariosController', 'delete'],
+
     // URL's deudo.
     'deudo' => ['DeudoController', 'index'],
     'deudo/create' => ['DeudoController', 'create'],
