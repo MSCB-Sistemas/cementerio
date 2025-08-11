@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <!-- Header -->
-    <?php require_once APP . '/views/pages/home/Footer.php'; ?>
+    <?php require_once APP . '/views/pages/home/Header.php'; ?>
 <body>
     <!-- Logo -->
     <div class="text-left my-1">
@@ -11,7 +11,8 @@
     </div>
 
     <!-- Sidebar -->
-    <?php require_once APP . '/views/pages/home/Sidebar.php'; ?>
+    <?php require_once APP . '/views/inc/Sidebar.php'; 
+    ?>
        
 
     <!-- Contenido principal -->
