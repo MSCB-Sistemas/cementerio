@@ -54,6 +54,6 @@
                    value="<?= htmlspecialchars($datos['values']['codigo_postal'] ?? '') ?>" required>
         </div>
         <button type="submit" class="btn btn-success">Guardar</button>
-        <a href="<?= URL ?>/deudo" class="btn btn-secondary">Cancelar</a>
+        <a href="<?= URL ?>deudo" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>

@@ -78,6 +78,6 @@
             </div>
         </div>
         <button type="submit" class="btn btn-success">Guardar</button>
-        <a href="<?= URL ?>/parcela" class="btn btn-secondary">Cancelar</a>
+        <a href="<?= URL ?>parcela" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>

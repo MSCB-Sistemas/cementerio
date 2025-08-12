@@ -19,6 +19,6 @@
                    value="<?= htmlspecialchars($datos['values']['descripcion'] ?? '') ?>" required>
         </div>
         <button type="submit" class="btn btn-success">Guardar</button>
-        <a href="<?= URL ?>/estadoCivil" class="btn btn-secondary">Cancelar</a>
+        <a href="<?= URL ?>estadoCivil" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>

@@ -14,13 +14,13 @@ class SexoController extends Control
 
         $datos = [
             'title' => 'Lista de sexos',
-            'urlCrear' => URL . '/sexo/create',
+            'urlCrear' => URL . 'sexo/create',
             'columnas' => ['ID', 'Descripcion'],
             'columnas_claves' => ['id_sexo', 'descripcion'],
             'data' => $sexos,
             'acciones' => function ($fila) {
                 $id = $fila['id_sexo'];
-                $url = URL . '/sexo';
+                $url = URL . 'sexo';
                 return '
                 <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
                 <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
@@ -36,7 +36,7 @@ class SexoController extends Control
     {
         $datos = [
             'title' => 'Crear sexo',
-            'action' => URL . '/sexo/save',
+            'action' => URL . 'sexo/save',
             'values' => [],
             'errores' => [],
         ];
@@ -56,7 +56,7 @@ class SexoController extends Control
             if (!empty($errores)) {
                 $this->loadView('sexos/SexoForm', [
                     'title' => 'Crear sexo',
-                    'action' => URL . '/sexo/save',
+                    'action' => URL . 'sexo/save',
                     'values' => [],
                     'errores' => $errores
                 ]);
@@ -65,7 +65,7 @@ class SexoController extends Control
 
             $id_sexo = $this->model->insertSexo($descripcion);
             if ($id_sexo) {
-                header('Location: ' . URL . '/sexo');
+                header('Location: ' . URL . 'sexo');
                 exit;
             } else {
                 die('Error al guardar el sexo.');
@@ -83,7 +83,7 @@ class SexoController extends Control
 
         $this->loadView("sexos/SexoForm", [
             'title' => 'Editar sexo',
-            'action' => URL . '/sexo/update/' . $id,
+            'action' => URL . 'sexo/update/' . $id,
             'values' => [
                 'descripcion' => $sexo['descripcion'],
             ],
@@ -107,7 +107,7 @@ class SexoController extends Control
 
                 $this->loadView("sexos/SexoForm", [
                     'title' => 'Editar sexo',
-                    'action' => URL . '/sexo/update/' . $id,
+                    'action' => URL . 'sexo/update/' . $id,
                     'values' => $sexo,
                     'errores' => $errores
                 ]);
@@ -115,7 +115,7 @@ class SexoController extends Control
             }
 
             if ($this->model->updateSexo($id, $descripcion)) {
-                header('Location: ' . URL . '/sexo');
+                header('Location: ' . URL . 'sexo');
                 exit;
             } else {
                 die('Error al actualizar el sexo.');
@@ -126,7 +126,7 @@ class SexoController extends Control
     public function delete($id)
     {
         if ($this->model->deleteSexo($id)) {
-            header('Location: ' . URL . '/sexo');
+            header('Location: ' . URL . 'sexo');
             exit;
         } else {
             die('No se pudo eliminar el sexo');

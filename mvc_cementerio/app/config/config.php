@@ -5,8 +5,6 @@
     define('DB_NAME', 'cementerio');
     define('DB_USER', 'root');
     define('DB_PASS', '');
-    
-    // define('URL', 'http://localhost/cementerio/mvc_cementerio');
 
     $protocolo = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
     $host = $_SERVER['HTTP_HOST'];

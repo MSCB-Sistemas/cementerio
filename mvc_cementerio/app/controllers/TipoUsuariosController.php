@@ -14,13 +14,13 @@ class TipoUsuariosController extends Control
 
         $datos = [
             'title' => 'Lista de tipos de usuarios',
-            'urlCrear' => URL . '/tipoUsuario/create',
+            'urlCrear' => URL . 'tipoUsuario/create',
             'columnas' => ['ID', 'Descripcion'],
             'columnas_claves' => ['id_tipo_usuario', 'descripcion'],
             'data' => $tipos_usuarios,
             'acciones' => function ($fila) {
                 $id = $fila['id_tipo_usuario'];
-                $url = URL . '/tipoUsuario';
+                $url = URL . 'tipoUsuario';
                 return '
                 <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
                 <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
@@ -36,7 +36,7 @@ class TipoUsuariosController extends Control
     {
         $datos = [
             'title' => 'Crear tipo usuario',
-            'action' => URL . '/tipoUsuario/save',
+            'action' => URL . 'tipoUsuario/save',
             'values' => [],
             'errores' => [],
         ];
@@ -56,7 +56,7 @@ class TipoUsuariosController extends Control
             if (!empty($errores)) {
                 $this->loadView('tipos_usuarios/TipoUsuarioForm', [
                     'title' => 'Crear tipo de usuario',
-                    'action' => URL . '/tipoUsuario/save',
+                    'action' => URL . 'tipoUsuario/save',
                     'values' => [],
                     'errores' => $errores
                 ]);
@@ -65,7 +65,7 @@ class TipoUsuariosController extends Control
 
             $id_tipo_usuario = $this->model->insertTipoUsuario($descripcion);
             if ($id_tipo_usuario) {
-                header('Location: ' . URL . '/tipoUsuario');
+                header('Location: ' . URL . 'tipoUsuario');
                 exit;
             } else {
                 die('Error al guardar el tipo de usuario.');
@@ -83,7 +83,7 @@ class TipoUsuariosController extends Control
 
         $this->loadView("tipos_usuarios/TipoUsuarioForm", [
             'title' => 'Editar tipo de usuario',
-            'action' => URL . '/tipoUsuario/update/' . $id,
+            'action' => URL . 'tipoUsuario/update/' . $id,
             'values' => [
                 'descripcion' => $tipo_usuario['descripcion'],
             ],
@@ -107,7 +107,7 @@ class TipoUsuariosController extends Control
 
                 $this->loadView("tipos_usuarios/TipoUsuarioForm", [
                     'title' => 'Editar tipo de usuario',
-                    'action' => URL . '/tipoUsuario/update/' . $id,
+                    'action' => URL . 'tipoUsuario/update/' . $id,
                     'values' => $tipo_usuario,
                     'errores' => $errores
                 ]);
@@ -115,7 +115,7 @@ class TipoUsuariosController extends Control
             }
 
             if ($this->model->updateTipoUsuario($id, $descripcion)) {
-                header('Location: ' . URL . '/tipoUsuario');
+                header('Location: ' . URL . 'tipoUsuario');
                 exit;
             } else {
                 die('Error al actualizar el tipo de usuario.');
@@ -126,7 +126,7 @@ class TipoUsuariosController extends Control
     public function delete($id)
     {
         if ($this->model->deleteTipoUsuario($id)) {
-            header('Location: ' . URL . '/tipoUsuario');
+            header('Location: ' . URL . 'tipoUsuario');
             exit;
         } else {
             die('No se pudo eliminar el tipo de usuario.');

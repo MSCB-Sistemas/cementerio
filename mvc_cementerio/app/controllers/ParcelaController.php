@@ -17,12 +17,12 @@ class ParcelaController extends Control {
 
         $datos = [
             'title' => 'Lista de parcelas',
-            'urlCrear' => URL . '/parcela/create',
+            'urlCrear' => URL . 'parcela/create',
             'columnas' => ['ID', 'Tipo', 'Deudo', 'Numero ubicacion', 'Hilera', 'Seccion', 'Fraccion', 'Nivel', 'Orientacion'],
             'columnas_claves' => ['id_parcela', 'tipo_parcela', 'nombre_deudo', 'numero_ubicacion', 'hilera', 'seccion', 'fraccion', 'nivel', 'orientacion'],
             'acciones' => function ($fila) {
                 $id = $fila['id_parcela'];
-                $url = URL . '/parcela';
+                $url = URL . 'parcela';
                 return '
                     <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
                     <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
@@ -42,7 +42,7 @@ class ParcelaController extends Control {
 
         $datos = [
             'title'=> 'Crear parcela',
-            'action'=> URL . '/parcela/save',
+            'action'=> URL . 'parcela/save',
             'values'=> [],
             'errores'=> [],
             'tipos_parcelas'=> $tipos_parcelas,
@@ -75,7 +75,7 @@ class ParcelaController extends Control {
 
                 $this->loadView('parcelas/ParcelaForm', [
                     'title' => 'Crear parcela',
-                    'action' => URL . '/parcela/save',
+                    'action' => URL . 'parcela/save',
                     'values' => $_POST,
                     'errores' => $errores,
                     'tipos_parcelas'=> $tipos_parcelas,
@@ -86,7 +86,7 @@ class ParcelaController extends Control {
             }
 
             if ($this->model->insertParcela($tipo_parcela, $deudo, $nro_ubicacion, $hilera, $seccion, $fraccion, $nivel, $orientacion)) {
-                header("Location: " . URL . "/parcela");
+                header("Location: " . URL . "parcela");
                 exit;
             } else {
                 die("Error al guardar la parcela");
@@ -106,7 +106,7 @@ class ParcelaController extends Control {
 
         $this->loadView('parcelas/ParcelaForm', [
             'title' => 'Editar parcela',
-            'action' => URL .'/parcela/update/' . $id,
+            'action' => URL .'parcela/update/' . $id,
             'values' => [
                 'tipo_parcela' => $parcela['id_tipo_parcela'],
                 'deudo' => $parcela['id_deudo'],
@@ -157,7 +157,7 @@ class ParcelaController extends Control {
 
                 $this->loadView('parcelas/ParcelaForm', [
                     'title' => 'Editar parcela',
-                    'action' => URL . '/parcela/update/' . $id,
+                    'action' => URL . 'parcela/update/' . $id,
                     'values' => $parcela,
                     'errores' => $errores,
                     'tipos_parcelas' => $tipos_parcelas,
@@ -168,7 +168,7 @@ class ParcelaController extends Control {
             }
 
             if ($this->model->updateParcela($id, $tipo_parcela, $deudo, $nro_ubicacion, $hilera, $seccion, $fraccion, $nivel, $orientacion)) {
-                header("Location: " . URL . "/parcela");
+                header("Location: " . URL . "parcela");
                 exit;
             } else {
                 die("Error al actualizar la parcela.");
@@ -178,7 +178,7 @@ class ParcelaController extends Control {
 
     public function delete($id) {
         if ($this->model->deleteParcela($id)) {
-            header("Location: " . URL . "/parcela");
+            header("Location: " . URL . "parcela");
             exit;
         } else {
             die("No se pudo eliminar la parcela");
