@@ -34,7 +34,7 @@
                 </div>
                 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                    <a href="<?= URL ?>/usuario" class="btn btn-outline-secondary me-md-2">
+                    <a href="<?= URL ?>usuario" class="btn btn-outline-secondary me-md-2">
                         <i class="bi bi-x-circle"></i> Cancelar
                     </a>
                     <button type="submit" class="btn btn-primary">

@@ -2,7 +2,7 @@
   <button type="button" class="btn btn-outline-secondary" id="toggleTheme">Cambiar tema</button>
   <?php
   if (isset($datos['title']) && $datos['title'] != "Login") {
-    echo "<a href='" . URL . "/auth/logout' class='btn btn-danger'>Cerrar sesión</a>";
+    echo "<a href='" . URL . "login' class='btn btn-danger'>Cerrar sesión</a>";
   }
   ?>
 </div>
