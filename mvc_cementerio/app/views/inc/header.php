@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es" data-bs-theme="light">
 <head>
@@ -10,6 +9,12 @@
   <title><?= $datos['title'] ?? 'Sin título' ?></title>
 
   <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  
+  <!-- Tema de color -->
   <meta name="theme-color" content="#712cf9">
 
   <?php if (isset($datos['error'])) {
@@ -96,9 +101,24 @@
     .bd-mode-toggle .dropdown-menu .active .bi {
         display:block!important
     }
-</style>
+    
+    /* Estilos adicionales para mejorar la apariencia */
+    .card {
+        border: none;
+        border-radius: 0.5rem;
+    }
+    
+    .card-header {
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+    }
+    
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table thead th {
+        border-bottom: 2px solid #dee2e6;
+    }
+  </style>
 </head>
 <body>
-
-
-
