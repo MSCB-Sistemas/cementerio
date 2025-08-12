@@ -4,7 +4,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sidebar · Bootstrap 5</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -145,33 +144,32 @@
         </div>
       </li>
     </ul>
-  </aside>
 
-  <!-- CONTENIDO -->
-  <section class="flex-grow-1 p-4">
-    <h1 class="h3">Contenido principal</h1>
-    <p>Acá va tu app. El contenido se adapta al lado del sidebar.</p>
-  </section>
+    
+
+        <div class="mt-auto">
+  <!-- Registrar usuario: usar <a> en lugar de <button href> -->
+  <a href="<?= url('login') ?>" class="btn btn-primary w-100 mb-2" id="btnRegistrar">
+    Registrar usuario
+  </a>
+
+  <!-- Cerrar sesión por POST (y cerrando el form) -->
+  <form action="<?= url('usuario/logout') ?>" method="POST" class="d-grid">
+    <!-- Si tenés CSRF: <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf'] ?? '') ?>"> -->
+    <button type="submit" class="btn btn-danger w-100">Cerrar sesión</button>
+  </form>
+</div>
+
+      </div>
+  </aside>
+  
 </main>
 
 <!-- Bootstrap JS (necesario para collapse) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
-
-            <!-- Registro usuario -->
-                <li class="nav-item">
-            <a class="nav-link" href="#" id="nuevoUsuario" role="button"  >
-            Registrar Usuario
-            </a>
-        
-        </ul>
-        <button class="btn btn-checkin">Cerrar sesión</button>
-    </div>
-    <nav>
-        <a href="<?= APP ?>usuario/logout"></a>
-    </nav>
 </html>
+
 
 
         

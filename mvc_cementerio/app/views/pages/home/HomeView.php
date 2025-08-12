@@ -25,3 +25,4 @@
 <!-- Footer -->
     <?php require_once APP . '/views/pages/home/Footer.php'; ?>
 </html>
+
