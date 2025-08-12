@@ -26,6 +26,7 @@ class UsuarioModel {
             u.apellido,
             u.cargo,
             u.sector,
+            u.email,
             tu.descripcion,
             u.activo
         FROM 
@@ -73,20 +74,22 @@ class UsuarioModel {
      * @param mixed $apellido
      * @param mixed $cargo
      * @param mixed $sector
+     * @param mixed $email
      * @param mixed $contrasenia
      * @param mixed $id_tipo_usuario
      * @return bool
      */
-    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $contrasenia, $id_tipo_usuario): bool
+    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $email, $contrasenia, $id_tipo_usuario): bool
     {
-        $stmt = $this->db->prepare("INSERT INTO usuarios (usuario, nombre, apellido, cargo, sector, contrasenia, id_tipo_usuario) 
-                                    VALUES (:usuario, :nombre, :apellido, :cargo, :sector, :contrasenia, :id_tipo_usuario)");
+        $stmt = $this->db->prepare("INSERT INTO usuarios (usuario, nombre, apellido, cargo, sector, email, contrasenia, id_tipo_usuario) 
+                                    VALUES (:usuario, :nombre, :apellido, :cargo, :sector, :email, :contrasenia, :id_tipo_usuario)");
         return $stmt->execute([
             "usuario" => $usuario,
             "nombre" => $nombre,
             "apellido" => $apellido,
             "cargo" => $cargo,
             "sector" => $sector,
+            "email" => $email,
             "contrasenia" => password_hash($contrasenia, PASSWORD_DEFAULT),
             "id_tipo_usuario" => $id_tipo_usuario
         ]);
@@ -101,12 +104,13 @@ class UsuarioModel {
      * @param string $apellido Nuevo apellido
      * @param string $cargo Nuevo cargo
      * @param string $sector Nuevo sector
+     * @param string $email Nuevo email
      * @param string $contrasenia Nueva contraseña
      * @param int $id_tipo_usuario Nuevo tipo de usuario
      * @param bool $activo Estado activo del usuario
      * @return bool Resultado de la actualización
      */
-    public function updateUsuario($id_usuario, $usuario, $nombre, $apellido, $cargo, $sector, $id_tipo_usuario): bool
+    public function updateUsuario($id_usuario, $usuario, $nombre, $apellido, $cargo, $sector, $email , $id_tipo_usuario): bool
     {
         $stmt = $this->db->prepare("UPDATE usuarios 
                                     SET usuario = :usuario, nombre = :nombre, apellido = :apellido, cargo = :cargo, sector = :sector, id_tipo_usuario = :id_tipo_usuario 
@@ -118,6 +122,7 @@ class UsuarioModel {
             "apellido" => $apellido,
             "cargo" => $cargo,
             "sector" => $sector,
+            "email" => $email,
             "id_tipo_usuario" => $id_tipo_usuario,
         ]);
         return $stmt->rowCount() > 0;

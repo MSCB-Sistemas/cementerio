@@ -6,6 +6,10 @@ $base = '/cementerio/mvc_cementerio';
 
 // 📋​ Rutas disponibles: ruta => [Controlador, metodo]
 $routes = [
+
+    '' => ['UsuarioController', 'login'],  // ruta raíz
+    'login' => ['UsuarioController', 'login'],
+
     // URL's usuario.
     'usuario' => ['UsuarioController', 'index'],
     'usuario/create' => ['UsuarioController', 'create'],
@@ -16,6 +20,8 @@ $routes = [
     'usuario/activate' => ['UsuarioController', 'activate'],
     'usuario/changePass' => ['UsuarioController', 'changePass'],
     'usuario/savePass' => ['UsuarioController', 'savePass'],
+
+    'home' => ['homeController', 'index'],
 
     // URL's difunto.
     'difunto' => ['DifuntoController', 'index'],
@@ -35,6 +41,35 @@ $routes = [
 
     // URL's parcela.
     'parcela' => ['ParcelaController','index'],
+    'parcela/save'=> ['ParcelaController', 'save'],
+    'parcela/create'=> ['ParcelaController', 'create'],
+    'parcela/edit'=> ['ParcelaController', 'edit'],
+    'parcela/update'=> ['ParcelaController', 'update'],
+    'parcela/delete'=> ['ParcelaController', 'delete'],
+
+    // URL's sexo.
+    'sexo' => ['SexoController', 'index'],
+    'sexo/create' => ['SexoController', 'create'],
+    'sexo/save' => ['SexoController', 'save'],
+    'sexo/edit' => ['SexoController', 'edit'],
+    'sexo/update' => ['SexoController', 'update'],
+    'sexo/delete' => ['SexoController', 'delete'],
+
+    // URL's tipos de parcela.
+    'tipoParcela'=> ['TipoParcelaController', 'index'],
+    'tipoParcela/create'=> ['TipoParcelaController', 'create'],
+    'tipoParcela/save'=> ['TipoParcelaController', 'save'],
+    'tipoParcela/edit'=> ['TipoParcelaController', 'edit'],
+    'tipoParcela/update'=> ['TipoParcelaController', 'update'],
+    'tipoParcela/delete'=> ['TipoParcelaController', 'delete'],
+
+    // URL's tipos de usuario.
+    'tipoUsuario'=> ['TipoUsuariosController', 'index'],
+    'tipoUsuario/create'=> ['TipoUsuariosController', 'create'],
+    'tipoUsuario/save'=> ['TipoUsuariosController', 'save'],
+    'tipoUsuario/edit'=> ['TipoUsuariosController', 'edit'],
+    'tipoUsuario/update'=> ['TipoUsuariosController', 'update'],
+    'tipoUsuario/delete'=> ['TipoUsuariosController', 'delete'],
 
     // URL's deudo.
     'deudo' => ['DeudoController', 'index'],
@@ -47,13 +82,11 @@ $routes = [
 
 // Obtener ruta y metodo actual
 $uri = $_SERVER['REQUEST_URI'];
-// var_dump($uri);
 $uri = str_replace($base, '', $uri);
-$uri = trim(parse_url($uri, PHP_URL_PATH), '/');
+$path = parse_url($uri, PHP_URL_PATH);
+$uri = trim($path ?? '', '/');
 $method = $_SERVER['REQUEST_METHOD'];
-//var_dump($_SERVER['REQUEST_URI']);
 
-// var_dump($method);
 
 // Separar en partes la ruta para manejar mejor los parametros
 $partes = explode('/', $uri);
