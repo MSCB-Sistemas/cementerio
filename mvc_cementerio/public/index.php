@@ -6,6 +6,10 @@ $base = '/cementerio/mvc_cementerio';
 
 // 📋​ Rutas disponibles: ruta => [Controlador, metodo]
 $routes = [
+
+    '' => ['UsuarioController', 'login'],  // ruta raíz
+    'login' => ['UsuarioController', 'login'],
+
     // URL's usuario.
     'usuario' => ['UsuarioController', 'index'],
     'usuario/create' => ['UsuarioController', 'create'],
@@ -79,13 +83,11 @@ $routes = [
 
 // Obtener ruta y metodo actual
 $uri = $_SERVER['REQUEST_URI'];
-// var_dump($uri);
 $uri = str_replace($base, '', $uri);
-$uri = trim(parse_url($uri, PHP_URL_PATH), '/');
+$path = parse_url($uri, PHP_URL_PATH);
+$uri = trim($path ?? '', '/');
 $method = $_SERVER['REQUEST_METHOD'];
-//var_dump($_SERVER['REQUEST_URI']);
 
-// var_dump($method);
 
 // Separar en partes la ruta para manejar mejor los parametros
 $partes = explode('/', $uri);

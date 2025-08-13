@@ -43,6 +43,12 @@
         </div>
 
         <div class="mb-3">
+            <label for="sector" class="form-label">Dirección de correro electónico</label>
+            <input type="text" class="form-control" id="email" name="email" 
+                   value="<?= htmlspecialchars($datos['values']['email'] ?? '') ?>">
+        </div>
+
+        <div class="mb-3">
             <label for="tipo_usuario" class="form-label">Tipo de usuario</label>
             <div class="input-group">
                 <select class="form-select" id="tipo_usuario" name="tipo_usuario" required>

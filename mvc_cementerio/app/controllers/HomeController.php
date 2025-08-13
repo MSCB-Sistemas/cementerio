@@ -12,7 +12,9 @@ class HomeController extends Control
         $this->loadView('home/HomeView');
     }
 
+
     public function login() {
         $this->loadView('loginView');
     }
 }
+

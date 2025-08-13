@@ -16,7 +16,8 @@ class UsuarioController extends Control{
         $datos = [
             'title' => 'Lista de Usuarios',
             'urlCrear' => URL . 'usuario/create',
-            'columnas' => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Rol', 'Activo'],
+            'columnas' => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Email', 'Rol', 'Activo'],
+
             'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'descripcion', 'activo'],
             'data' => $usuarios,
             'acciones' => function ($fila) {
@@ -58,6 +59,7 @@ class UsuarioController extends Control{
             $apellido = trim($_POST["apellido"] ?? '');
             $cargo = trim($_POST["cargo"] ?? '');
             $sector = trim($_POST["sector"] ?? '');
+            $email = trim($_POST["email"] ?? '');
             $contrasenia = trim($_POST["password"] ?? '');
             $tipoUsuario = $_POST["tipo_usuario"] ?? '';
             $errores = [];
@@ -87,7 +89,8 @@ class UsuarioController extends Control{
             }
             $contrasenia = password_hash($contrasenia, PASSWORD_DEFAULT);
 
-            if ($this->model->insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $contrasenia, $tipoUsuario)) {
+            if ($this->model->insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $email, $contrasenia, $tipoUsuario)) {
+
                 header("Location: " . URL . "usuario");
                 exit;
             } else {
@@ -130,6 +133,7 @@ class UsuarioController extends Control{
             $apellido = trim($_POST["apellido"] ?? '');
             $cargo = trim($_POST["cargo"] ?? '');
             $sector = trim($_POST["sector"] ?? '');
+            $email = trim($_POST["email"] ?? '');
             $tipoUsuario = $_POST["tipo_usuario"] ?? '';
 
             $errores = [];
@@ -150,6 +154,7 @@ class UsuarioController extends Control{
                     'apellido' => $apellido,
                     'cargo' => $cargo,
                     'sector' => $sector,
+                    'email' => $email,
                     'id_tipo_usuario' => $tipoUsuario
                 ];
                 $tipos = $this->tipoUsuariosModel->getAllTiposUsuarios();
@@ -164,7 +169,8 @@ class UsuarioController extends Control{
                 return;
             }
 
-            if ($this->model->updateUsuario($id, $usuario, $nombre, $apellido, $cargo, $sector, $tipoUsuario)) {
+            if ($this->model->updateUsuario($id, $usuario, $nombre, $apellido, $cargo, $sector, $email, $tipoUsuario)) {
+
                 header("Location: " . URL . "usuario");
                 exit;
             } else {
@@ -226,39 +232,45 @@ class UsuarioController extends Control{
         }
     }
 
-    public function login() {
+     public function login() {
+
     session_start();
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $usuario = $_POST['usuario'] ?? '';
-        $contrasenia = $_POST['contrasenia'] ?? '';
+    // Si es GET, mostrar formulario
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $datos['title'] = "login";
+        $datos['error'] = '';
+        $this->loadView('login/Login', $datos);
+        return;
+    }
 
-        if (empty($usuario) || empty($contrasenia)) {
-            $error = "Por favor complete ambos campos.";
+    // Si es POST, procesar login
+    $usuario = trim($_POST['usuario'] ?? '');
+    $contrasenia = trim($_POST['contrasenia'] ?? '');
+    $error = '';
+
+    if (empty($usuario) || empty($contrasenia)) {
+        $error = "Por favor complete ambos campos.";
+    } else {
+        $usuarioEncontrado = $this->model->verificarLogin($usuario, $contrasenia);
+
+        if ($usuarioEncontrado) {
+            $_SESSION['usuario'] = [
+                'nombre' => $usuarioEncontrado['nombre'] ?? $usuarioEncontrado['usuario']
+            ];
+            header("Location: " . URL . "/home");
+            exit;
         } else {
-            $this->usuario = new UsuarioModel();
-           // $usuarioEncontrado = $this->usuario->verificarLogin($usuario, $contrasenia);
-           $usuarioEncontrado = $this->usuario->verificarLogin($usuario, $contrasenia);
-
-            if ($usuarioEncontrado) {
-                $_SESSION['usuario'] = [
-                    'nombre' => $usuarioEncontrado['nombre'] ?? $usuarioEncontrado['usuario'],
-                    'contrasenia' => $usuarioEncontrado['contrasenia'] ?? 'usuario' 
-                ];
-                header("Location:" . URL  . 'home');
-                exit;
-            } else {
-                $error = "Usuario o contraseña incorrectos.";
-            }
+            $error = "Usuario o contraseña incorrectos.";
         }
+    }
 
-        // Si hay error, volver a mostrar el formulario con mensaje
-        $datos['title'] = "Login";
-        $datos['error'] = $error;
-
-       header("Location:" .URL );
-    } 
+    // Si hay error, volver a mostrar formulario con mensaje
+    $datos['title'] = "login";
+    $datos['error'] = $error;
+    $this->loadView('login/Login', $datos);
 }
+
 
 
 }
