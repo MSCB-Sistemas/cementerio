@@ -149,12 +149,12 @@
 
         <div class="mt-auto">
   <!-- Registrar usuario: usar <a> en lugar de <button href> -->
-  <a href="<?= url('login') ?>" class="btn btn-primary w-100 mb-2" id="btnRegistrar">
+  <a href="<?= URL ?>login" class="btn btn-primary w-100 mb-2" id="btnRegistrar">
     Registrar usuario
   </a>
 
   <!-- Cerrar sesión por POST (y cerrando el form) -->
-  <form action="<?= url('usuario/logout') ?>" method="POST" class="d-grid">
+  <form action="<?= URL ?>usuario/logout" method="POST" class="d-grid">
     <!-- Si tenés CSRF: <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf'] ?? '') ?>"> -->
     <button type="submit" class="btn btn-danger w-100">Cerrar sesión</button>
   </form>
