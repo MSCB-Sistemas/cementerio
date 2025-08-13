@@ -17,6 +17,7 @@ class UsuarioController extends Control{
             'title' => 'Lista de Usuarios',
             'urlCrear' => URL . 'usuario/create',
             'columnas' => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Email', 'Rol', 'Activo'],
+
             'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'descripcion', 'activo'],
             'data' => $usuarios,
             'acciones' => function ($fila) {
@@ -89,6 +90,7 @@ class UsuarioController extends Control{
             $contrasenia = password_hash($contrasenia, PASSWORD_DEFAULT);
 
             if ($this->model->insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $email, $contrasenia, $tipoUsuario)) {
+
                 header("Location: " . URL . "usuario");
                 exit;
             } else {
@@ -168,6 +170,7 @@ class UsuarioController extends Control{
             }
 
             if ($this->model->updateUsuario($id, $usuario, $nombre, $apellido, $cargo, $sector, $email, $tipoUsuario)) {
+
                 header("Location: " . URL . "usuario");
                 exit;
             } else {
@@ -230,6 +233,7 @@ class UsuarioController extends Control{
     }
 
      public function login() {
+
     session_start();
 
     // Si es GET, mostrar formulario

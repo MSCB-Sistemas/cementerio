@@ -51,11 +51,10 @@ class SexoModel {
      * @param string $descripcion Descripción del sexo
      * @return bool Resultado de la operación
      */
-    public function insertSexo($id_sexo, $descripcion)
+    public function insertSexo($descripcion)
     {
-        $stmt = $this->db->prepare("INSERT INTO sexo (id_sexo, descripcion) VALUES (:id_sexo, :descripcion)");
+        $stmt = $this->db->prepare("INSERT INTO sexo (descripcion) VALUES (:descripcion)");
         $stmt->execute([
-            'id_sexo' => $id_sexo,
             'descripcion' => $descripcion,
         ]);
         return $this->db->lastInsertId();

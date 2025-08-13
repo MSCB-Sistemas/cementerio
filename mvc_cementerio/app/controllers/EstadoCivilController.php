@@ -13,13 +13,13 @@ class EstadoCivilController extends Control
 
         $datos = [
             'title' => 'Lista de estados civiles',
-            'urlCrear' => URL . '/estadoCivil/create',
+            'urlCrear' => URL . 'estadoCivil/create',
             'columnas' => ['ID', 'Descripcion'],
             'columnas_claves' => ['id_estado_civil', 'descripcion'],
             'data' => $estadosCiviles,
             'acciones' => function ($fila) {
                 $id = $fila['id_estado_civil'];
-                $url = URL . '/estadoCivil';
+                $url = URL . 'estadoCivil';
                 return '
                 <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
                 <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
@@ -35,7 +35,7 @@ class EstadoCivilController extends Control
     {
         $datos = [
             'title' => 'Crear estado civil',
-            'action' => URL . '/estadoCivil/save',
+            'action' => URL . 'estadoCivil/save',
             'values' => [],
             'errores' => [],
         ];
@@ -54,7 +54,7 @@ class EstadoCivilController extends Control
             if (!empty($errores)) {
                 $this->loadView('estados_civiles/EstadoCivilForm', [
                     'title' => 'Crear estado civil',
-                    'action' => URL . '/estadoCivil/save',
+                    'action' => URL . 'estadoCivil/save',
                     'values' => [],
                     'errores' => $errores
                 ]);
@@ -63,7 +63,7 @@ class EstadoCivilController extends Control
 
             $id_estado_civil = $this->model->insertEstadoCivil($descripcion);
             if ($id_estado_civil) {
-                header('Location: ' . URL . '/estadoCivil');
+                header('Location: ' . URL . 'estadoCivil');
                 exit;
             } else {
                 die('Error al guardar el estado civil.');
@@ -81,7 +81,7 @@ class EstadoCivilController extends Control
 
         $this->loadView("estados_civiles/EstadoCivilForm", [
             'title' => 'Editar estado civil',
-            'action' => URL . '/estadoCivil/update/' . $id,
+            'action' => URL . 'estadoCivil/update/' . $id,
             'values' => [
                 'descripcion' => $estadoCivil['descripcion'],
             ],
@@ -104,7 +104,7 @@ class EstadoCivilController extends Control
 
                 $this->loadView("estados_civiles/EstadoCivilForm", [
                     'title' => 'Editar estado civil',
-                    'action' => URL . '' . $id,
+                    'action' => URL . 'estadoCivil/update/' . $id,
                     'values' => $estadoCivil,
                     'errores' => $errores,
                 ]);
@@ -112,7 +112,7 @@ class EstadoCivilController extends Control
             }
 
             if ($this->model->updateEstadoCivil($id, $descripcion)) {
-                header("Location: " . URL . "/estadoCivil");
+                header("Location: " . URL . "estadoCivil");
                 exit;
             } else {
                 die("Error al actualizar el estado civil.");
@@ -128,7 +128,7 @@ class EstadoCivilController extends Control
             die('Error al eliminar el estado civil.');
         }
 
-        header("Location: " . URL . "/estadoCivil");
+        header("Location: " . URL . "estadoCivil");
         exit;
     }
 }

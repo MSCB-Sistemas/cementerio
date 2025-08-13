@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/../config/config.php';
 require_once 'Database.php';
 
 /**
@@ -37,10 +37,10 @@ class TipoParcelaModel {
      * @param int $id_tipo ID del tipo de parcela
      * @return array Detalles del tipo de parcela
      */
-    public function getTipoParcela($id_tipo): array
+    public function getTipoParcela($id_tipo_parcela): array
     {
-        $stmt = $this->db->prepare("SELECT * FROM tipo_parcela WHERE id_tipo = :id_tipo");
-        $stmt->execute(['id_tipo' => $id_tipo]);
+        $stmt = $this->db->prepare("SELECT * FROM tipo_parcela WHERE id_tipo_parcela = :id_tipo_parcela");
+        $stmt->execute(['id_tipo_parcela' => $id_tipo_parcela]);
         return $stmt->fetch();
     }
 
@@ -63,11 +63,11 @@ class TipoParcelaModel {
      * @param string $nombre_parcela Nombre del tipo de parcela
      * @return bool Resultado de la operación
      */
-    public function updateTipoParcela($id_tipo, $nombre_parcela): bool
+    public function updateTipoParcela($id_tipo_parcela, $nombre_parcela): bool
     {
-        $stmt = $this->db->prepare("UPDATE tipo_parcela SET nombre_parcela = :nombre_parcela WHERE id_tipo = :id_tipo");
+        $stmt = $this->db->prepare("UPDATE tipo_parcela SET nombre_parcela = :nombre_parcela WHERE id_tipo_parcela = :id_tipo_parcela");
         $stmt->execute([
-            'id_tipo' => $id_tipo,
+            'id_tipo_parcela' => $id_tipo_parcela,
             'nombre_parcela' => $nombre_parcela
         ]);
         return $stmt->rowCount() > 0;
@@ -78,10 +78,10 @@ class TipoParcelaModel {
      * @param int $id_tipo ID del tipo de parcela a eliminar
      * @return bool Resultado de la operación
      */
-    public function deleteTipoParcela($id_tipo): bool
+    public function deleteTipoParcela($id_tipo_parcela): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM tipo_parcela WHERE id_tipo = :id_tipo");
-        $stmt->execute(['id_tipo' => $id_tipo]);
+        $stmt = $this->db->prepare("DELETE FROM tipo_parcela WHERE id_tipo_parcela = :id_tipo_parcela");
+        $stmt->execute(['id_tipo_parcela' => $id_tipo_parcela]);
         return $stmt->rowCount() > 0;
     }
 }

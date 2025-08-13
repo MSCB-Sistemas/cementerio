@@ -1,6 +1,6 @@
 <?php
 // Carga la configuración del sistema y la clase para conectar a la base de datos
-require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/../config/config.php';
 require_once 'Database.php';
 
 /**

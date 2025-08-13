@@ -22,13 +22,13 @@ class DifuntoController extends Control
 
         $datos = [
             'title' => 'Lista de difuntos',
-            'urlCrear' => URL . '/difunto/create',
+            'urlCrear' => URL . 'difunto/create',
             'columnas' => ['ID', 'Deudo', 'Nombre', 'Apellido', 'DNI', 'Edad', 'Fecha fallecimiento', 'Genero', 'Nacionalidad', 'Estado civil', 'Domicilio', 'Localidad', 'Codigo postal'],
             'columnas_claves' => ['id_difunto', 'nombre_deudo', 'nombre', 'apellido', 'dni', 'edad', 'fecha_fallecimiento', 'sexo', 'nacionalidad', 'estado_civil', 'domicilio', 'localidad', 'codigo_postal'],
             'data' => $difuntos,
             'acciones' => function ($fila) {
                 $id = $fila['id_difunto'];
-                $url = URL . '/difunto';
+                $url = URL . 'difunto';
                 return '
                     <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
                     <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
@@ -49,7 +49,7 @@ class DifuntoController extends Control
 
         $datos = [
             'title' => 'Crear difunto',
-            'action' => URL . '/difunto/save',
+            'action' => URL . 'difunto/save',
             'values' => [],
             'errores' => [],
             'deudos' => $deudos,
@@ -76,6 +76,7 @@ class DifuntoController extends Control
             $domicilio = trim($_POST["domicilio"] ?? '');
             $localidad = trim($_POST["localidad"] ?? '');
             $codigoPostal = trim($_POST["codigo_postal"] ?? '');
+            $errores = [];
 
             if (empty($deudo))
                 $errores[] = "El deudo es obligatorio";
@@ -96,7 +97,7 @@ class DifuntoController extends Control
 
                 $this->loadView('difuntos/DifuntoForm', [
                     'title' => 'Crear difunto',
-                    'action' => URL . '/difunto/save',
+                    'action' => URL . 'difunto/save',
                     'values' => $_POST,
                     'errores' => $errores,
                     'deudos' => $deudos,
@@ -108,7 +109,7 @@ class DifuntoController extends Control
             }
 
             if ($this->model->insertDifunto($deudo, $nombre, $apellido, $dni, $edad, $fechaFallecimiento, $sexo, $nacionalidad, $estadoCivil, $domicilio, $localidad, $codigoPostal)) {
-                header("Location: " . URL . "/difunto");
+                header("Location: " . URL . "difunto");
                 exit;
             } else {
                 die("Error al guardar el difunto");
@@ -130,7 +131,7 @@ class DifuntoController extends Control
 
         $this->loadView('difuntos/DifuntoForm', [
             'title' => 'Editar difunto',
-            'action' => URL . '/difunto/update/' . $id,
+            'action' => URL . 'difunto/update/' . $id,
             'values' => [
                 'deudo' => $difunto['id_deudo'],
                 'nombre' => $difunto['nombre'],
@@ -203,8 +204,8 @@ class DifuntoController extends Control
                 $estadosCiviles = $this->estadoCivilModel->getAllestadosCiviles();
 
                 $this->loadView('difuntos/DifuntoForm', [
-                    'title' => 'Crear difunto',
-                    'action' => URL . '/difunto/update/' . $id,
+                    'title' => 'Editar difunto',
+                    'action' => URL . 'difunto/update/' . $id,
                     'values' => $difunto,
                     'errores' => $errores,
                     'deudos' => $deudos,
@@ -216,7 +217,7 @@ class DifuntoController extends Control
             }
 
             if ($this->model->updateDifunto($id, $deudo, $nombre, $apellido, $dni, $edad, $fechaFallecimiento, $sexo, $nacionalidad, $estadoCivil, $domicilio, $localidad, $codigoPostal)) {
-                header("Location: " . URL . "/difunto");
+                header("Location: " . URL . "difunto");
                 exit;
             } else {
                 die("Error al actualizar el difunto");
@@ -227,7 +228,7 @@ class DifuntoController extends Control
     public function delete($id)
     {
         if ($this->model->deleteDifunto($id)) {
-            header("Location: " . URL . "/difunto");
+            header("Location: " . URL . "difunto");
             exit;
         } else {
             die("No se pudo eliminar al difunto");

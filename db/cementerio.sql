@@ -31,13 +31,13 @@ CREATE TABLE `orientacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 
--- sgcm.tipo_parcela definition
+-- cementerio.tipo_parcela definition
 
 CREATE TABLE `tipo_parcela` (
-  `id_tipo` int NOT NULL AUTO_INCREMENT,
+  `id_tipo_parcela` int NOT NULL AUTO_INCREMENT,
   `nombre_parcela` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NOT NULL,
-  PRIMARY KEY (`id_tipo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+  PRIMARY KEY (`id_tipo_parcela`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 -- sgcm.tipos_usuarios definition
 
@@ -109,11 +109,11 @@ CREATE TABLE `difunto` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 
--- sgcm.parcela definition
+-- cementerio.parcela definition
 
 CREATE TABLE `parcela` (
   `id_parcela` int NOT NULL AUTO_INCREMENT,
-  `id_tipo` int NOT NULL,
+  `id_tipo_parcela` int NOT NULL,
   `id_deudo` int DEFAULT NULL,
   `numero_ubicacion` int DEFAULT NULL,
   `hilera` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
@@ -122,10 +122,10 @@ CREATE TABLE `parcela` (
   `nivel` int DEFAULT NULL,
   `id_orientacion` int DEFAULT NULL,
   PRIMARY KEY (`id_parcela`),
-  KEY `parcela_FK` (`id_tipo`),
+  KEY `parcela_FK` (`id_tipo_parcela`),
   KEY `parcela_FK_1` (`id_deudo`),
   KEY `parcela_FK_2` (`id_orientacion`),
-  CONSTRAINT `parcela_FK` FOREIGN KEY (`id_tipo`) REFERENCES `tipo_parcela` (`id_tipo`),
+  CONSTRAINT `parcela_FK` FOREIGN KEY (`id_tipo_parcela`) REFERENCES `tipo_parcela` (`id_tipo_parcela`),
   CONSTRAINT `parcela_FK_1` FOREIGN KEY (`id_deudo`) REFERENCES `deudo` (`id_deudo`),
   CONSTRAINT `parcela_FK_2` FOREIGN KEY (`id_orientacion`) REFERENCES `orientacion` (`id_orientacion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;

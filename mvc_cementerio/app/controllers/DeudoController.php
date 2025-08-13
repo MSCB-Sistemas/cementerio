@@ -12,12 +12,12 @@ class DeudoController extends Control {
         $deudos = $this->model->getAllDeudos();
         $datos = [
             "title" => "Lista de Deudos",
-            'urlCrear' => URL . '/deudo/create',
+            'urlCrear' => URL . 'deudo/create',
             'columnas' => ['ID', 'Nombre', 'Apellido', 'DNI', 'Teléfono', 'Email', 'Domicilio', 'Codigo Postal'],
             'columnas_claves' => ['id_deudo', 'nombre', 'apellido', 'dni', 'telefono', 'email', 'domicilio', 'codigo_postal'],
             "acciones" => function ($fila) {
                 $id = $fila['id_deudo'];
-                $url = URL . '/deudo';
+                $url = URL . 'deudo';
                 return '
                 <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
                 <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
@@ -35,7 +35,7 @@ class DeudoController extends Control {
         $deudos = $this->model->getAllDeudos();
         $datos = [
             'title' => 'Crear Deudo',
-            'action' => URL . '/deudo/save',
+            'action' => URL . 'deudo/save',
             'values' => [],
             'errores' => [],
             'deudos' => $deudos
@@ -55,8 +55,8 @@ class DeudoController extends Control {
             $domicilio = trim($_POST['domicilio']);
             $localidad = trim($_POST['localidad']);
             $codigo_postal = trim($_POST['codigo_postal']);
-
             $errores = [];
+            
             if (empty($dni)) {
                 $errores[] = "El DNI es obligatorio.";
             }
@@ -85,7 +85,7 @@ class DeudoController extends Control {
             if (!empty($errores)) {
                 $datos = [
                     'title' => 'Crear Deudo',
-                    'action' => URL . '/deudo/save',
+                    'action' => URL . 'deudo/save',
                     'values' => [
                         'dni' => $dni,
                         'nombre' => $nombre,
@@ -104,12 +104,12 @@ class DeudoController extends Control {
 
             $idDeudo = $this->model->insertDeudo($dni, $nombre, $apellido, $telefono, $email, $domicilio, $localidad, $codigo_postal);
             if ($idDeudo) {
-                header('Location: ' . URL . '/deudo');
+                header('Location: ' . URL . 'deudo');
             } else {
                 die('Error al guardar el deudo');
             }
 
-            header('Location: ' . URL . '/deudo');
+            header('Location: ' . URL . 'deudo');
         }
     }
 
@@ -123,7 +123,7 @@ class DeudoController extends Control {
 
         $this->loadView("deudos/DeudoForm", [
             'title' => 'Editar Deudo',
-            'action' => URL . '/deudo/update/' . $id,
+            'action' => URL . 'deudo/update/' . $id,
             'values' => [
                 'dni' => $deudo['dni'],
                 'nombre' => $deudo['nombre'],
@@ -190,7 +190,7 @@ class DeudoController extends Control {
 
                 $this->loadView("deudos/DeudosForm", [
                     'title' => 'Editar Deudo',
-                    'action' => URL . '/deudo/update/' . $id,
+                    'action' => URL . 'deudo/update/' . $id,
                     'values' => $deudo,
                     'errores' => $errores,
                 ]);
@@ -198,7 +198,7 @@ class DeudoController extends Control {
             }
 
             if ($this->model->updateDeudo($id, $dni, $nombre, $apellido, $telefono, $email, $domicilio, $localidad, $codigo_postal)) {
-                header("Location: " . URL . "/deudo");
+                header("Location: " . URL . "deudo");
                 exit;
             } else {
                 die("Error al actualizar el servicio.");
@@ -213,10 +213,8 @@ class DeudoController extends Control {
         if (!$eliminado) {
             die('Error al eliminar el deudo');
         }
-        header("Location: " . URL . "/deudo");
+        header("Location: " . URL . "deudo");
         exit;
     }
-
-    public function show($id) {}
 }
 ?>

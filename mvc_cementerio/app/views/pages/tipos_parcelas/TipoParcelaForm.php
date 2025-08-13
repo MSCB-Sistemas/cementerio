@@ -12,13 +12,13 @@
     <?php endif; ?>
 
     <form action="<?= $datos['action'] ?>" method="POST">
-        <input type="hidden" name="id" value="<?= $values['id_estado_civil'] ?? '' ?>">
+        <input type="hidden" name="id_tipo_parcela" value="<?= $values['id_tipo_parcela'] ?? '' ?>">
         <div class="mb-3">
-            <label for="descripcion" class="form-label">Descripcion</label>
-            <input type="text" class="form-control" id="descripcion" name="descripcion" 
-                   value="<?= htmlspecialchars($datos['values']['descripcion'] ?? '') ?>" required>
+            <label for="nombre_parcela" class="form-label">Nombre de tipo de parcela</label>
+            <input type="text" class="form-control" id="nombre_parcela" name="nombre_parcela" 
+                   value="<?= htmlspecialchars($datos['values']['nombre_parcela'] ?? '') ?>" required>
         </div>
         <button type="submit" class="btn btn-success">Guardar</button>
-        <a href="<?= URL ?>estadoCivil" class="btn btn-secondary">Cancelar</a>
+        <a href="<?= URL ?>tipoParcela" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
