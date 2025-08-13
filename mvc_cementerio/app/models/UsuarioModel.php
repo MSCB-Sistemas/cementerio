@@ -159,4 +159,15 @@ class UsuarioModel {
         $stmt->execute(['id_usuario' => $id_usuario, 'contrasenia'=> $password]);
         return $stmt->rowCount() > 0;
     }
+
+    /**
+     * 
+     * @param mixed $nombre_usuario
+     * @return array|bool
+     */
+    public function getUsuarioByNombreUsuario($nombre_usuario) : array|bool {
+        $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE usuario = :usuario");
+        $stmt->execute(["usuario"=> $nombre_usuario]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

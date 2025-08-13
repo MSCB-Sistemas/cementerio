@@ -5,6 +5,7 @@ class UsuarioController extends Control{
 
     public function __construct()
     {
+        $this->requireLogin();
         $this->model = $this->loadModel("UsuarioModel");
         $this->tipoUsuariosModel = $this->loadModel("TiposUsuariosModel");
     }
@@ -183,24 +184,27 @@ class UsuarioController extends Control{
         }
     }
 
-    public function activate($id) {
-        if($this->model->activateUsuario($id)) {
-            header("Location: ". URL . "usuario");
+    public function activate($id)
+    {
+        if ($this->model->activateUsuario($id)) {
+            header("Location: " . URL . "usuario");
             exit;
         } else {
             die("No se pudo activar al usuario");
         }
     }
 
-    public function changePass($id) {
+    public function changePass($id)
+    {
         $this->loadView('usuarios/UsuarioFormPass', [
             'title' => 'Cambiar clave',
-            'action' => URL .'usuario/savePass/'. $id,
+            'action' => URL . 'usuario/savePass/' . $id,
             'errores' => []
         ]);
     }
 
-    public function savePass($id) {
+    public function savePass($id)
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $password = trim($_POST["password"]);
 
@@ -210,7 +214,7 @@ class UsuarioController extends Control{
             if (!empty($errores)) {
                 $this->loadView("usuarios/UsuarioFormPass", [
                     'title' => 'Cambiar clave',
-                    'action' => URL .'usuario/savePass/'. $id,
+                    'action' => URL . 'usuario/savePass/' . $id,
                     'errores' => $errores
                 ]);
                 return;
@@ -218,49 +222,13 @@ class UsuarioController extends Control{
 
             $password = password_hash($password, PASSWORD_DEFAULT);
             if ($this->model->updatePassword($id, $password)) {
-                header('Location: '. URL . 'usuario');
+                header('Location: ' . URL . 'usuario');
                 exit;
             } else {
                 die("Error al cambiar la clave");
             }
         }
     }
-
-    public function login() {
-    session_start();
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $usuario = $_POST['usuario'] ?? '';
-        $contrasenia = $_POST['contrasenia'] ?? '';
-
-        if (empty($usuario) || empty($contrasenia)) {
-            $error = "Por favor complete ambos campos.";
-        } else {
-            $this->usuario = new UsuarioModel();
-           // $usuarioEncontrado = $this->usuario->verificarLogin($usuario, $contrasenia);
-           $usuarioEncontrado = $this->usuario->verificarLogin($usuario, $contrasenia);
-
-            if ($usuarioEncontrado) {
-                $_SESSION['usuario'] = [
-                    'nombre' => $usuarioEncontrado['nombre'] ?? $usuarioEncontrado['usuario'],
-                    'contrasenia' => $usuarioEncontrado['contrasenia'] ?? 'usuario' 
-                ];
-                header("Location:" . URL  . 'home');
-                exit;
-            } else {
-                $error = "Usuario o contraseña incorrectos.";
-            }
-        }
-
-        // Si hay error, volver a mostrar el formulario con mensaje
-        $datos['title'] = "Login";
-        $datos['error'] = $error;
-
-       header("Location:" .URL );
-    } 
-}
-
-
 }
 ?>
  

@@ -4,6 +4,7 @@ class HomeController extends Control
     private UsuarioModel $model;
     public function __construct()
     {
+        $this->requireLogin();
         $this->model = $this->loadModel("UsuarioModel");
     }
 

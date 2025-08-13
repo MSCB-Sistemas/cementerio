@@ -15,7 +15,7 @@
             <form id="loginForm" method="POST" action="<?= URL ?>home" class="rounded-4 shadow p-4 bg-light text-dark needs-validation" novalidate>
                 <div class="mb-4">
                     <div class="form-floating">
-                        <input type="text" name="usuario" class="form-control border-primary" id="floatingInput" 
+                        <input type="text" name="user" class="form-control border-primary" id="floatingInput" 
                                 placeholder="Usuario" required>
                         <label for="floatingInput">Usuario</label>
                         <div class="invalid-feedback">
@@ -26,7 +26,7 @@
                 
                 <div class="mb-4">
                     <div class="form-floating">
-                        <input type="password" name="contrasenia" class="form-control border-primary" 
+                        <input type="password" name="password" class="form-control border-primary" 
                                 id="floatingPassword" placeholder="Contraseña" required>
                         <label for="floatingPassword">Contraseña</label>
                         <div class="invalid-feedback">

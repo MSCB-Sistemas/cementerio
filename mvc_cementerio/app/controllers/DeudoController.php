@@ -4,6 +4,7 @@ class DeudoController extends Control {
 
     public function __construct()
     {
+        $this->requireLogin();
         $this->model = $this->loadModel("DeudoModel");
     }
 

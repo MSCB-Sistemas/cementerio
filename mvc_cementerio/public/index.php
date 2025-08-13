@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../app/config/config.php';
 require_once __DIR__ . '/../app/config/errores.php';
 require_once __DIR__ . '/../app/lib/Control.php';
 
@@ -6,6 +7,7 @@ $base = '/cementerio/mvc_cementerio';
 
 // 📋​ Rutas disponibles: ruta => [Controlador, metodo]
 $routes = [
+
     // URL's usuario.
     'usuario' => ['UsuarioController', 'index'],
     'usuario/create' => ['UsuarioController', 'create'],
@@ -16,9 +18,9 @@ $routes = [
     'usuario/activate' => ['UsuarioController', 'activate'],
     'usuario/changePass' => ['UsuarioController', 'changePass'],
     'usuario/savePass' => ['UsuarioController', 'savePass'],
-
+    
+    'login' => ['AuthController', 'login'],
     'home' => ['homeController', 'index'],
-    'login' => ['homeController', 'login'],
 
     // URL's difunto.
     'difunto' => ['DifuntoController', 'index'],
