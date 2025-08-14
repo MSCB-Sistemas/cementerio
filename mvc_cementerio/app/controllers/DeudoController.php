@@ -142,7 +142,7 @@ class DeudoController extends Control {
     public function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $dni = trim($_POST['dni'] ?? '');
+            $dni = trim($_POST['dni']);
             $nombre = trim($_POST['nombre'] ?? '');
             $apellido = trim($_POST['apellido'] ?? '');
             $telefono = trim($_POST['telefono'] ?? '');
