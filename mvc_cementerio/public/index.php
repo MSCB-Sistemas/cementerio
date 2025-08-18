@@ -85,22 +85,27 @@ $routes = [
     'deudo/edit' => ['DeudoController', 'edit'],
     'deudo/update' => ['DeudoController', 'update'],
     'deudo/delete' => ['DeudoController', 'delete'],
+
+    //URL's nacionalidades
+    'nacionalidades' => ['NacionalidadesController','index'],
+    'nacionalidades/create' => ['NacionalidadesController', 'create'],
+    'nacionalidades/save' => ['NacionalidadesController', 'save'],
+    'nacionalidades/edit/:id' => ['NacionalidadesController', 'edit'],
+    'nacionalidades/update/:id' => ['NacionalidadesController', 'update'],
+    'nacionalidades/delete/:id' => ['NacionalidadesController', 'delete'],
 ];
 
 // Obtener ruta y metodo actual
 $uri = $_SERVER['REQUEST_URI'];
-// var_dump($uri);
 $uri = str_replace($base, '', $uri);
-$uri = trim(parse_url($uri, PHP_URL_PATH), '/');
+$path = parse_url($uri, PHP_URL_PATH);
+$uri = trim($path ?? '', '/');
 $method = $_SERVER['REQUEST_METHOD'];
-//var_dump($_SERVER['REQUEST_URI']);
 
-// var_dump($method);
 
 // Separar en partes la ruta para manejar mejor los parametros
 $partes = explode('/', $uri);
 
-// var_dump($partes);
 
 // Inicializa vairables
 $ruta = '';
@@ -109,7 +114,6 @@ $parametro = null;
 // Logica para GET con 1 variable (ejemplo: usuario/12)
 
 if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
-    // var_dump($method);
     $ruta = $partes[0] . '/' . $partes[1];
     $parametro = $partes[2];
 } else {
@@ -117,7 +121,6 @@ if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
     $ruta = implode('/', $partes);
 }
 
-// var_dump($ruta);
 
 // 1️⃣​. Si la ruta esta definida en el arreglo de rutas
 if (isset($routes[$ruta])) {
