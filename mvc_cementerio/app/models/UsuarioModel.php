@@ -5,101 +5,163 @@ require_once 'Database.php';
 class UsuarioModel {
     private PDO $db;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->db = Database::connect();
     }
 
-    //Obtener todos los usuarios
+    /** Obtener todos los usuarios */
     public function getAllUsuarios(): array {
-        $sql = "SELECT * FROM usuarios";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare(
+            "SELECT 
+                u.id_usuario,
+                u.usuario,
+                u.nombre,
+                u.apellido,
+                u.cargo,
+                u.sector,
+                u.telefono,
+                u.email,
+                tu.descripcion,
+                u.activo
+            FROM usuarios u
+            JOIN tipos_usuarios tu ON u.id_tipo_usuario = tu.id_tipo_usuario;"
+        );
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+        $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    //Buscar usuario por id
-    public function getUsuarioId($id_usuario) : array {
-        $sql = "SELECT * FROM usuarios WHERE id_usuario = :id_usuario";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute(['id_usuario' => $id_usuario]);
-        return $stmt->fetch();
-    }
-    
-    
-    public function buscarUsuarios(array $filtros): array {
-        $condiciones = [];
-        foreach ($filtros as $campo => $valor) {
-            $condiciones[] = "$campo = :$campo";
-        } 
-        $sql = "SELECT * FROM usuarios";
-        if (!empty($condiciones)) {
-            $sql .= " WHERE " . implode(' AND ', $condiciones);
+        if ($usuarios == false) {
+            return array();
+        } else {
+            // Transformar activo a texto "Si" o "No"
+            foreach ($usuarios as &$usuario) {
+                $usuario['activo'] = $usuario['activo'] == 1 ? 'Si' : 'No';
+            }
+            return $usuarios;
         }
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($filtros);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
-    // Verificar login
-    function verificarLogin($usuario, $contrasenia) {
-    $query = "SELECT * FROM usuarios WHERE usuario = :usuario LIMIT 1";
-    $stmt = $this->db->prepare($query);
-    $stmt->bindParam(':usuario', $usuario);
-    $stmt->execute();
-
-    if ($stmt->rowCount() > 0) {
+    /** Obtener un usuario por ID */
+    public function getUsuarioId($id_usuario): array {
+        $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE id_usuario = :id_usuario");
+        $stmt->execute(array('id_usuario' => $id_usuario));
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (password_verify($contrasenia, $usuario['contrasenia'])) {
+        if ($usuario == false) {
+            return array();
+        } else {
             return $usuario;
         }
     }
-    return false;
-}
 
+    /** Verificar login */
+    public function verificarLogin($usuario, $contrasenia) {
+        $query = "SELECT * FROM usuarios WHERE usuario = :usuario LIMIT 1";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':usuario', $usuario);
+        $stmt->execute();
 
-
-    // Insertar usuario
-    public function insertUsuario($email, $contrasenia) {
-        $hash = password_hash($contrasenia, PASSWORD_DEFAULT);     // Encripta la contraseña
-        $sql = "INSERT INTO usuarios (email, contrasenia) VALUES (:email, :contrasenia)";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([
-            'email'=> $email, 
-            'contrasenia'=> $hash
-        ]);
+        if ($stmt->rowCount() > 0) {
+            $usuarioEncontrado = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (password_verify($contrasenia, $usuarioEncontrado['contrasenia'])) {
+                return $usuarioEncontrado;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
-    //Actualizar usuario
-    public function actualizarUsuario(int $id_usuario, array $datos): bool {
-        // Si se pasa contraseña, la hasheamos
-        if (isset($datos['contrasenia']) && !empty($datos['contrasenia'])) {
-            $datos['contrasenia'] = password_hash($datos['contrasenia'], PASSWORD_DEFAULT);
+    /** Insertar usuario */
+    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $contrasenia, $id_tipo_usuario): bool {
+        $stmt = $this->db->prepare(
+            "INSERT INTO usuarios (usuario, nombre, apellido, cargo, sector, telefono, email, contrasenia, id_tipo_usuario, activo) 
+             VALUES (:usuario, :nombre, :apellido, :cargo, :sector, :telefono, :email, :contrasenia, :id_tipo_usuario, 1)"
+        );
+
+        $contraseniaEncriptada = password_hash($contrasenia, PASSWORD_DEFAULT);
+
+        $resultado = $stmt->execute(array(
+            'usuario' => $usuario,
+            'nombre' => $nombre,
+            'apellido' => $apellido,
+            'cargo' => $cargo,
+            'sector' => $sector,
+            'telefono' => $telefono,
+            'email' => $email,
+            'contrasenia' => $contraseniaEncriptada,
+            'id_tipo_usuario' => $id_tipo_usuario
+        ));
+
+        if ($resultado == true) {
+            return true;
+        } else {
+            return false;
         }
-
-        // Construir los campos dinámicamente
-        $campos = [];
-        foreach ($datos as $campo => $valor) {
-            $campos[] = "$campo = :$campo";
-        }
-
-        // Prepara la consulta con placeholders
-        $sql = "UPDATE usuarios SET " . implode(', ', $campos) . " WHERE id_usuario = :id_usuario";
-        $stmt = $this->db->prepare($sql);
-
-        // Agregar el id_usuario a los datos
-        $datos['id_usuario'] = $id_usuario;
-
-        // Ejecuta sustituyendo los placeholders por los valores del array
-        return $stmt->execute($datos);
     }
 
-    //Eliminar usuario
+    /** Actualizar usuario */
+    public function updateUsuario($id_usuario, $usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $id_tipo_usuario): bool {
+        $stmt = $this->db->prepare(
+            "UPDATE usuarios 
+             SET usuario = :usuario, nombre = :nombre, apellido = :apellido, cargo = :cargo, sector = :sector, id_tipo_usuario = :id_tipo_usuario 
+             WHERE id_usuario = :id_usuario"
+        );
+
+        $stmt->execute(array(
+            'id_usuario' => $id_usuario,
+            'usuario' => $usuario,
+            'nombre' => $nombre,
+            'apellido' => $apellido,
+            'cargo' => $cargo,
+            'sector' => $sector,
+            'telefono' => $telefono,
+            'email' => $email,
+            'id_tipo_usuario' => $id_tipo_usuario
+        ));
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /** Activar usuario */
+    public function activateUsuario($id_usuario): bool {
+        $stmt = $this->db->prepare("UPDATE usuarios SET activo = 1 WHERE id_usuario = :id_usuario");
+        $stmt->execute(array('id_usuario' => $id_usuario));
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /** Eliminar usuario (desactivar) */
     public function deleteUsuario($id_usuario): bool {
-        $sql = "DELETE FROM usuarios WHERE id_usuario = :id_usuario";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute(['id_usuario' => $id_usuario]);
+        $stmt = $this->db->prepare("UPDATE usuarios SET activo = 0 WHERE id_usuario = :id_usuario");
+        $stmt->execute(array('id_usuario' => $id_usuario));
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
+    /** Actualizar contraseña */
+    public function updatePassword($id_usuario, $password): bool {
+        $stmt = $this->db->prepare("UPDATE usuarios SET contrasenia = :contrasenia WHERE id_usuario = :id_usuario");
+        $stmt->execute(array('id_usuario' => $id_usuario, 'contrasenia' => $password));
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
+
+?>

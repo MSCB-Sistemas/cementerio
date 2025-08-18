@@ -1,10 +1,10 @@
 <?php 
 $base = '/cementerio/mvc_cementerio';
-require_once APP . '/views/inc/Header.php' ?>
+require_once APP . '/views/pages/login/Header.php' ?>
 
 <body id="body" class="bg-light text-dark d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <main class="w-100" style="max-width: 600px;">
-        <form id="loginForm" class="rounded-4 shadow p-4 bg-light text-dark" method="POST" action="<?php echo URL; ?>/login">
+        <form id="loginForm" class="rounded-4 shadow p-4 bg-light text-dark" method="POST" action="<?php echo URL; ?>home">
             <div class="d-flex align-items-center justify-content-center mb-4">
                 <h1 class="h2 fw-bold text-black m-0 text-center">Cementerio Municipal<br> San Carlos de Bariloche</h1>
                 <img src="/cementerio/mvc_cementerio/public/img/EscudoBariloche.png" alt="Logo" style="width: 80px; height: 80px; object-fit: contain; margin-left: 20px;">
@@ -27,6 +27,11 @@ require_once APP . '/views/inc/Header.php' ?>
                 <button class="btn btn-success w-100 py-2" type="submit">Iniciar sesión</button>
             </div><br>
             <div>
+                <div class="text-center mb-3">
+                <a href="<?= URL ?>usuario/create" class="btn btn-link">Registrar Nuevo Usuario</a>
+            </div>
+
+            <div></div>
                 <?php if (!empty($error)): ?>
                     <div class="alert alert-danger"><?= $error ?></div>
                 <?php endif; ?>
@@ -34,4 +39,4 @@ require_once APP . '/views/inc/Header.php' ?>
         </form>
     </main>
 
-<?php require_once APP . '/views/inc/Footer.php' ?>
+<?php require_once APP . '/views/pages/login/Footer.php' ?>
