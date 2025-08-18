@@ -361,4 +361,5 @@ class UsuarioController extends Control {
         $this->loadView('login/Login', $datos);
     }
 }
+
 ?>
