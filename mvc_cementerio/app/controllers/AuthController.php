@@ -1,7 +1,7 @@
 <?php
 class AuthController extends Control {
     public function login() {
-        $datos = ['title' => 'login'];
+        $datos = ['title' => 'Login'];
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
