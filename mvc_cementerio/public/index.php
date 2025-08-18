@@ -78,6 +78,14 @@ $routes = [
     'deudo/edit' => ['DeudoController', 'edit'],
     'deudo/update' => ['DeudoController', 'update'],
     'deudo/delete' => ['DeudoController', 'delete'],
+
+    //URL's nacionalidades
+    'nacionalidades' => ['NacionalidadesController','index'],
+    'nacionalidades/create' => ['NacionalidadesController', 'create'],
+    'nacionalidades/save' => ['NacionalidadesController', 'save'],
+    'nacionalidades/edit/:id' => ['NacionalidadesController', 'edit'],
+    'nacionalidades/update/:id' => ['NacionalidadesController', 'update'],
+    'nacionalidades/delete/:id' => ['NacionalidadesController', 'delete'],
 ];
 
 // Obtener ruta y metodo actual
