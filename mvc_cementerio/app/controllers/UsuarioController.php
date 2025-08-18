@@ -3,9 +3,7 @@ class UsuarioController extends Control{
     private UsuarioModel $model;
     private TiposUsuariosModel $tipoUsuariosModel;
 
-    public function __construct()
-    {
-        $this->requireLogin();
+    public function __construct() {
         $this->model = $this->loadModel("UsuarioModel");
         $this->tipoUsuariosModel = $this->loadModel("TiposUsuariosModel");
     }
@@ -14,24 +12,23 @@ class UsuarioController extends Control{
     {
         $usuarios = $this->model->getAllUsuarios();
 
-        $datos = [
-            'title' => 'Lista de Usuarios',
-            'urlCrear' => URL . 'usuario/create',
-            'columnas' => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Rol', 'Activo'],
-            'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'descripcion', 'activo'],
-            'data' => $usuarios,
-            'acciones' => function ($fila) {
-                $id = $fila['id_usuario'];
-                $url = URL . 'usuario';
-                return '
-                    <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-primary">Editar</a>
-                    <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-danger">Eliminar</a>
-                    <a href="' . $url . '/activate/' . $id . '" class="btn btn-sm btn-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</a>
-                    <a href="' . $url . '/changePass/' . $id . '" class="btn btn-sm btn-warning">Cambiar clave</a>
-                ';
-            },
-            'errores' => [],
-        ];
+        $datos = array();
+        $datos['title'] = 'Lista de Usuarios';
+        $datos['urlCrear'] = URL . 'usuario/create';
+        $datos['columnas'] = array('ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Telefono', 'Email', 'Rol', 'Activo');
+        $datos['columnas_claves'] = array('id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'telefono', 'email', 'descripcion', 'activo');
+        $datos['data'] = $usuarios;
+        $datos['acciones'] = function ($fila) {
+            $id = $fila['id_usuario'];
+            $url = URL . 'usuario';
+            return '
+                <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
+                <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
+                <a href="' . $url . '/activate/' . $id . '" class="btn btn-sm btn-outline-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</a>
+                <a href="' . $url . '/changePass/' . $id . '" class="btn btn-sm btn-outline-warning">Cambiar clave</a>
+            ';
+        };
+        $datos['errores'] = array();
 
         $this->loadView('partials/tablaAbm', $datos);
     }
@@ -184,45 +181,47 @@ class UsuarioController extends Control{
         }
     }
 
-    public function activate($id)
-    {
-        if ($this->model->activateUsuario($id)) {
-            header("Location: " . URL . "usuario");
+    public function activate($id) {
+        $activado = $this->model->activateUsuario($id);
+        if ($activado == true) {
+            header("Location: ". URL . "usuario");
             exit;
         } else {
             die("No se pudo activar al usuario");
         }
     }
 
-    public function changePass($id)
-    {
-        $this->loadView('usuarios/UsuarioFormPass', [
-            'title' => 'Cambiar clave',
-            'action' => URL . 'usuario/savePass/' . $id,
-            'errores' => []
-        ]);
+    public function changePass($id) {
+        $datos = array();
+        $datos['title'] = 'Cambiar clave';
+        $datos['action'] = URL .'usuario/savePass/'. $id;
+        $datos['errores'] = array();
+
+        $this->loadView('usuarios/UsuarioFormPass', $datos);
     }
 
-    public function savePass($id)
-    {
+    public function savePass($id) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $password = trim($_POST["password"]);
 
             $errores = [];
             if (empty($password)) $errores[] = "El campo nueva contrasenia es obligatorio.";
 
-            if (!empty($errores)) {
-                $this->loadView("usuarios/UsuarioFormPass", [
-                    'title' => 'Cambiar clave',
-                    'action' => URL . 'usuario/savePass/' . $id,
-                    'errores' => $errores
-                ]);
+            if (count($errores) > 0) {
+                $datos = array();
+                $datos['title'] = 'Cambiar clave';
+                $datos['action'] = URL .'usuario/savePass/'. $id;
+                $datos['errores'] = $errores;
+
+                $this->loadView("usuarios/UsuarioFormPass", $datos);
                 return;
             }
 
-            $password = password_hash($password, PASSWORD_DEFAULT);
-            if ($this->model->updatePassword($id, $password)) {
-                header('Location: ' . URL . 'usuario');
+            $passwordEncriptada = password_hash($password, PASSWORD_DEFAULT);
+            $actualizado = $this->model->updatePassword($id, $passwordEncriptada);
+
+            if ($actualizado == true) {
+                header('Location: '. URL . 'usuario');
                 exit;
             } else {
                 die("Error al cambiar la clave");

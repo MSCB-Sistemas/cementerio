@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../app/config/config.php';
 require_once __DIR__ . '/../app/config/errores.php';
 require_once __DIR__ . '/../app/lib/Control.php';
 
@@ -7,6 +6,9 @@ $base = '/cementerio/mvc_cementerio';
 
 // 📋​ Rutas disponibles: ruta => [Controlador, metodo]
 $routes = [
+
+    '' => ['UsuarioController', 'login'],  // ruta raíz
+    'login' => ['UsuarioController', 'login'],
 
     // URL's usuario.
     'usuario' => ['UsuarioController', 'index'],
@@ -18,8 +20,7 @@ $routes = [
     'usuario/activate' => ['UsuarioController', 'activate'],
     'usuario/changePass' => ['UsuarioController', 'changePass'],
     'usuario/savePass' => ['UsuarioController', 'savePass'],
-    
-    'login' => ['AuthController', 'login'],
+
     'home' => ['homeController', 'index'],
 
     // URL's difunto.
@@ -53,14 +54,6 @@ $routes = [
     'sexo/edit' => ['SexoController', 'edit'],
     'sexo/update' => ['SexoController', 'update'],
     'sexo/delete' => ['SexoController', 'delete'],
-
-    // URL's pagos
-    'pago' => ['PagoController', 'index'],
-    'pago/create' => ['PagoController', 'create'],
-    'pago/save' => ['PagoController', 'save'],
-    'pago/edit' => ['PagoController', 'edit'],
-    'pago/update' => ['PagoController', 'update'],
-    'pago/delete' => ['PagoController', 'delete'],
 
     // URL's tipos de parcela.
     'tipoParcela'=> ['TipoParcelaController', 'index'],

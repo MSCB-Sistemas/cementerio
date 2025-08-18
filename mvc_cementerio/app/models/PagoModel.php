@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/config/config.php';
 require_once 'Database.php';
 
 /**
@@ -27,14 +27,7 @@ class PagoModel {
      */
     public function getAllPagos(): array
     {
-        $stmt = $this->db->prepare("SELECT p.*,
-                                    de.nombre as nombre_deudo,
-                                    p.id_parcela AS parcela,
-                                    u.usuario AS usuario
-                                    FROM pago p
-                                    LEFT JOIN deudo de ON p.id_deudo = de.id_deudo
-                                    LEFT JOIN parcela pa ON p.id_parcela = pa.id_parcela
-                                    LEFT JOIN usuarios u ON p.id_usuario = u.id_usuario");
+        $stmt = $this->db->prepare("SELECT * FROM pago");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

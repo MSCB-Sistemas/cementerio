@@ -5,7 +5,6 @@ class EstadoCivilController extends Control
 
     public function __construct()
     {
-        $this->requireLogin();
         $this->model = $this->loadModel("EstadoCivilModel");
     }
     public function index()
