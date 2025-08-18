@@ -3,7 +3,9 @@ class UsuarioController extends Control{
     private UsuarioModel $model;
     private TiposUsuariosModel $tipoUsuariosModel;
 
-    public function __construct() {
+    public function __construct()
+    {
+        $this->requireLogin();
         $this->model = $this->loadModel("UsuarioModel");
         $this->tipoUsuariosModel = $this->loadModel("TiposUsuariosModel");
     }
@@ -15,17 +17,17 @@ class UsuarioController extends Control{
         $datos = [
             'title' => 'Lista de Usuarios',
             'urlCrear' => URL . 'usuario/create',
-            'columnas' => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Telefono', 'Email', 'Rol', 'Activo'],
-            'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'telefono', 'email', 'descripcion', 'activo'],
+            'columnas' => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Rol', 'Activo'],
+            'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'descripcion', 'activo'],
             'data' => $usuarios,
             'acciones' => function ($fila) {
                 $id = $fila['id_usuario'];
                 $url = URL . 'usuario';
                 return '
-                    <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
-                    <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
-                    <a href="' . $url . '/activate/' . $id . '" class="btn btn-sm btn-outline-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</a>
-                    <a href="' . $url . '/changePass/' . $id . '" class="btn btn-sm btn-outline-warning">Cambiar clave</a>
+                    <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-primary">Editar</a>
+                    <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-danger">Eliminar</a>
+                    <a href="' . $url . '/activate/' . $id . '" class="btn btn-sm btn-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</a>
+                    <a href="' . $url . '/changePass/' . $id . '" class="btn btn-sm btn-warning">Cambiar clave</a>
                 ';
             },
             'errores' => [],
@@ -182,24 +184,27 @@ class UsuarioController extends Control{
         }
     }
 
-    public function activate($id) {
+    public function activate($id)
+    {
         if ($this->model->activateUsuario($id)) {
-            header("Location: ". URL . "usuario");
+            header("Location: " . URL . "usuario");
             exit;
         } else {
             die("No se pudo activar al usuario");
         }
     }
 
-    public function changePass($id) {
+    public function changePass($id)
+    {
         $this->loadView('usuarios/UsuarioFormPass', [
-            'title'=> 'Cambiar clave',
-            'action' => URL .'usuario/savePass/'. $id,
+            'title' => 'Cambiar clave',
+            'action' => URL . 'usuario/savePass/' . $id,
             'errores' => []
         ]);
     }
 
-    public function savePass($id) {
+    public function savePass($id)
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $password = trim($_POST["password"]);
 
@@ -209,15 +214,15 @@ class UsuarioController extends Control{
             if (!empty($errores)) {
                 $this->loadView("usuarios/UsuarioFormPass", [
                     'title' => 'Cambiar clave',
-                    'action'=> URL .'usuario/savePass/'. $id,
-                    'errores' => $errores,
+                    'action' => URL . 'usuario/savePass/' . $id,
+                    'errores' => $errores
                 ]);
                 return;
             }
 
             $password = password_hash($password, PASSWORD_DEFAULT);
             if ($this->model->updatePassword($id, $password)) {
-                header('Location: '. URL . 'usuario');
+                header('Location: ' . URL . 'usuario');
                 exit;
             } else {
                 die("Error al cambiar la clave");

@@ -124,8 +124,7 @@ class UsuarioModel {
      * @param int $id_usuario ID del usuario a activar.
      * @return bool True si se activó el usuario, false en caso contrario.
      */
-    public function activateUsuario($id_usuario): bool
-    {
+    public function activateUsuario($id_usuario) : bool {
         $stmt = $this->db->prepare("UPDATE usuarios SET activo = 1 WHERE id_usuario = :id_usuario");
         $stmt->execute(['id_usuario' => $id_usuario]);
         return $stmt->rowCount() > 0;
@@ -138,10 +137,20 @@ class UsuarioModel {
      * @param  mixed $password  Nueva contraseña del usuario.
      * @return bool True si se actualizó la contraseña, false en caso contrario.
      */
-    public function updatePassword($id_usuario, $password): bool
-    {
+    public function updatePassword($id_usuario, $password) : bool {
         $stmt = $this->db->prepare("UPDATE usuarios SET contrasenia = :contrasenia WHERE id_usuario = :id_usuario");
-        $stmt->execute(['id_usuario' => $id_usuario, 'contrasenia' => $password]);
+        $stmt->execute(['id_usuario' => $id_usuario, 'contrasenia'=> $password]);
         return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * 
+     * @param mixed $nombre_usuario
+     * @return array|bool
+     */
+    public function getUsuarioByNombreUsuario($nombre_usuario) : array|bool {
+        $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE usuario = :usuario");
+        $stmt->execute(["usuario"=> $nombre_usuario]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
