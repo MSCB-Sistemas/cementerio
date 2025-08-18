@@ -42,8 +42,6 @@ class PagoController extends Control {
         $usuarios = $this->usuarioModel->getAllUsuarios();
         $values['id_usuario'] = $_SESSION['usuario_id'];
 
-        var_dump($values);
-
         $datos = [
             'title' => 'Crear pago',
             'action' => URL . 'pago/save',
@@ -104,6 +102,8 @@ class PagoController extends Control {
 
     public function edit($id) {
         $pago = $this->model->getPago($id);
+        $deudos = $this->deudoModel->getAllDeudos();
+        $parcelas = $this->parcelaModel->getAllParcelas();
 
         if (!$pago) {
             die("Pago no encontrado");
@@ -111,7 +111,7 @@ class PagoController extends Control {
 
         $this->loadView("pagos/PagosForm", [
             'title' => 'Editar pago',
-            'action' => URL . 'pago/update' . $id,
+            'action' => URL . 'pago/update/' . $id,
             'values' => [
                 'deudo' => $pago['id_deudo'],
                 'parcela' => $pago['id_parcela'],
@@ -119,10 +119,72 @@ class PagoController extends Control {
                 'importe' => $pago['importe'],
                 'recargo' => $pago['recargo'],
                 'total' => $pago['total'],
-                'usuario' => $pago['usuario'],
             ],
             'errores' => [],
+            'deudos'=> $deudos,
+            'parcelas'=> $parcelas
         ]);
+    }
+
+    public function update($id) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $deudo = $_POST['deudo'] ?? '';
+            $parcela = $_POST['parcela'] ?? '';
+            $fecha_pago = trim($_POST['fecha_pago'] ?? '');
+            $importe = trim($_POST['importe'] ?? '');
+            $recargo = trim($_POST['recargo'] ?? '');
+            $total = trim($_POST['total'] ?? '');
+            $usuario = $_SESSION['usuario_id'];
+            $errores = [];
+
+            if (empty($deudo)) $errores[] = 'El deudo es obligatorio';
+            if (empty($parcela)) $errores[] = 'La parcela es obligatoria.';
+            if (empty($fecha_pago)) $errores[] = 'La fecha es obligatoria';
+            if (empty($importe)) $errores[] = 'El importe es obligatorio';
+            if (empty($recargo)) $errores[] = 'El recargo es obligatorio';
+            if (empty($total)) $errores[] = 'El total es obligatorio';
+
+            if (!empty($errores)) {
+                $pago = [
+                    'id_pago' => $id,
+                    'id_deudo' => $deudo,
+                    'id_parcela'=> $parcela,
+                    'fecha_pago'=> $fecha_pago,
+                    'importe' => $importe,
+                    'recargo'=> $recargo,
+                    'total'=> $total,
+                ];
+
+                $deudos = $this->deudoModel->getAllDeudos();
+                $parcelas = $this->parcelaModel->getAllParcelas();
+
+                $this->loadView('pagos/PagosForm', [
+                    'title' => 'Editar pago',
+                    'action' => URL . 'pago/update/' . $id,
+                    'values' => $pago,
+                    'errores' => $errores,
+                    'deudos'=> $deudos,
+                    'parcelas'=> $parcelas,
+                ]);
+                return;
+            }
+
+            if ($this->model->updatePago($id, $deudo, $parcela, $fecha_pago, $importe, $recargo, $total, $usuario)) {
+                header("Location: " . URL . "pago");
+                exit;
+            } else {
+                die("Error al actualizar el pago.");
+            }
+        }
+    }
+
+    public function delete($id) {
+        if ($this->model->deletePago($id)) {
+            header("Location: " . URL . "pago");
+            exit;
+        } else {
+            die("No se pudo eliminar el pago");
+        }
     }
 }
 ?>
