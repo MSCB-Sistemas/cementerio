@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es" data-bs-theme="light">
 <head>
@@ -10,13 +9,80 @@
   <title><?= $datos['title'] ?? 'Sin título' ?></title>
 
   <!-- Bootstrap CSS -->
-  <meta name="theme-color" content="#712cf9">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  
+  <!-- Tema de color (cambiado a naranja) -->
+  <meta name="theme-color" content="#fd7e14">
 
   <?php if (isset($datos['error'])) {
     $error = $datos['error'];
   } ?>
 
   <style>
+    :root {
+      --bs-primary: #fd7e14;
+      --bs-primary-rgb: 253, 126, 20;
+      --bs-primary-bg-subtle: #fff3e8;
+      --bs-border-color: #dee2e6;
+    }
+    
+    .bg-primary {
+      background-color: var(--bs-primary) !important;
+    }
+    
+    .btn-primary {
+      --bs-btn-bg: var(--bs-primary);
+      --bs-btn-border-color: var(--bs-primary);
+      --bs-btn-hover-bg: #e67312;
+      --bs-btn-hover-border-color: #dc6e11;
+      --bs-btn-active-bg: #d46910;
+      --bs-btn-active-border-color: #c9640f;
+      --bs-btn-disabled-bg: var(--bs-primary);
+      --bs-btn-disabled-border-color: var(--bs-primary);
+    }
+    
+    .btn-outline-primary {
+      --bs-btn-color: var(--bs-primary);
+      --bs-btn-border-color: var(--bs-primary);
+      --bs-btn-hover-bg: var(--bs-primary);
+      --bs-btn-hover-border-color: var(--bs-primary);
+      --bs-btn-active-bg: var(--bs-primary);
+      --bs-btn-active-border-color: var(--bs-primary);
+      --bs-btn-disabled-color: var(--bs-primary);
+      --bs-btn-disabled-border-color: var(--bs-primary);
+    }
+    
+    .alert-primary {
+      --bs-alert-color: #6c3400;
+      --bs-alert-bg: var(--bs-primary-bg-subtle);
+      --bs-alert-border-color: #fdd0a8;
+    }
+    
+    .text-primary {
+      color: var(--bs-primary) !important;
+    }
+    
+    .border-primary {
+      border-color: var(--bs-primary) !important;
+    }
+    
+    .nav-pills {
+      --bs-nav-pills-link-active-bg: var(--bs-primary);
+    }
+    
+    .form-check-input:checked {
+      background-color: var(--bs-primary);
+      border-color: var(--bs-primary);
+    }
+    
+    .dropdown-item.active, .dropdown-item:active {
+      background-color: var(--bs-primary);
+    }
+    
+    /* Estilos base que tenías */
     .bd-placeholder-img {
         font-size:1.125rem;
         text-anchor:middle;
@@ -34,10 +100,10 @@
     .b-example-divider {
         width:100%;
         height:3rem;
-        background-color:#0000001a;
+        background-color:rgba(0, 0, 0, 0.1);
         border:solid rgba(0,0,0,.15);
         border-width:1px 0;
-        box-shadow:inset 0 .5em 1.5em #0000001a,inset 0 .125em .5em #00000026
+        box-shadow:inset 0 .5em 1.5em rgba(0, 0, 0, 0.1),inset 0 .125em .5em rgba(0, 0, 0, 0.15)
     }
     
     .b-example-vr {
@@ -69,19 +135,21 @@
         -webkit-overflow-scrolling:touch
     }
     
+    /* Actualizado a naranja */
     .btn-bd-primary {
-        --bd-violet-bg: #712cf9;
-        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+        --bd-violet-bg: var(--bs-primary);
+        --bd-violet-rgb: var(--bs-primary-rgb);
         --bs-btn-font-weight: 600;
         --bs-btn-color: var(--bs-white);
         --bs-btn-bg: var(--bd-violet-bg);
         --bs-btn-border-color: var(--bd-violet-bg);
         --bs-btn-hover-color: var(--bs-white);
-        --bs-btn-hover-bg: #6528e0;
-        --bs-btn-hover-border-color: #6528e0;
+        --bs-btn-hover-bg: #e67312;
+        --bs-btn-hover-border-color: #dc6e11;
         --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
         --bs-btn-active-color: var(--bs-btn-hover-color);
-        --bs-btn-active-bg: #5a23c8;--bs-btn-active-border-color: #5a23c8
+        --bs-btn-active-bg: #d46910;
+        --bs-btn-active-border-color: #c9640f;
     }
     
     .bd-mode-toggle {
@@ -96,9 +164,32 @@
     .bd-mode-toggle .dropdown-menu .active .bi {
         display:block!important
     }
-</style>
+    
+    /* Estilos adicionales */
+    .card {
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    
+    .card-header {
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+        background-color: var(--bs-primary);
+        color: white;
+        font-weight: 500;
+    }
+    
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table thead th {
+        border-bottom: 2px solid var(--bs-border-color);
+        background-color: #f8f9fa;
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: rgba(253, 126, 20, 0.05);
+    }
+  </style>
 </head>
-<body>
-
-
-
