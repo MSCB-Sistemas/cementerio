@@ -49,23 +49,6 @@ class UsuarioModel {
         return $stmt->fetch();
     }
 
-
-    // Verificar login
-    function verificarLogin($usuario, $contrasenia) {
-    $query = "SELECT * FROM usuarios WHERE usuario = :usuario LIMIT 1";
-    $stmt = $this->db->prepare($query);
-    $stmt->bindParam(':usuario', $usuario);
-    $stmt->execute();
-
-    if ($stmt->rowCount() > 0) {
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (password_verify($contrasenia, $usuario['contrasenia'])) {
-            return $usuario;
-        }
-    }
-    return false;
-}
-
     /**
      * Summary of insertUsuario
      * @param mixed $usuario
@@ -131,24 +114,34 @@ class UsuarioModel {
     public function deleteUsuario($id_usuario): bool
     {
         $stmt = $this->db->prepare("UPDATE usuarios SET activo = 0 WHERE id_usuario = :id_usuario");
-        $stmt->execute(array('id_usuario' => $id_usuario));
-
-        if ($stmt->rowCount() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        $stmt->execute(['id_usuario' => $id_usuario]);
+        return $stmt->rowCount() > 0;
     }
 
-    /** Actualizar contraseña */
-    public function updatePassword($id_usuario, $password): bool {
-        $stmt = $this->db->prepare("UPDATE usuarios SET contrasenia = :contrasenia WHERE id_usuario = :id_usuario");
-        $stmt->execute(array('id_usuario' => $id_usuario, 'contrasenia' => $password));
+    /**
+     * Activa un usuario de la base de datos por su ID.
+     *
+     * @param int $id_usuario ID del usuario a activar.
+     * @return bool True si se activó el usuario, false en caso contrario.
+     */
+    public function activateUsuario($id_usuario): bool
+    {
+        $stmt = $this->db->prepare("UPDATE usuarios SET activo = 1 WHERE id_usuario = :id_usuario");
+        $stmt->execute(['id_usuario' => $id_usuario]);
+        return $stmt->rowCount() > 0;
+    }
 
-        if ($stmt->rowCount() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+    /**
+     * Actualiza la contraseña de un usuario.
+     *
+     * @param  mixed $id_usuario ID del usuario cuya contraseña se actualizará.
+     * @param  mixed $password  Nueva contraseña del usuario.
+     * @return bool True si se actualizó la contraseña, false en caso contrario.
+     */
+    public function updatePassword($id_usuario, $password): bool
+    {
+        $stmt = $this->db->prepare("UPDATE usuarios SET contrasenia = :contrasenia WHERE id_usuario = :id_usuario");
+        $stmt->execute(['id_usuario' => $id_usuario, 'contrasenia' => $password]);
+        return $stmt->rowCount() > 0;
     }
 }
