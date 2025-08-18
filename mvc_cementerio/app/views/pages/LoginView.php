@@ -47,6 +47,7 @@
                         <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
                     </button>
                 </div>
+                
                 <?php if (!empty($error)): ?>
                     <div class="alert alert-danger mt-4 mb-0">
                         <?= htmlspecialchars($error) ?>

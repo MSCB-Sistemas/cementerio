@@ -16,9 +16,7 @@ class HomeController extends Control
         $this->loadView('home/HomeView', $datos);
     }
 
-
     public function login() {
         $this->loadView('loginView', '', 'login');
     }
 }
-

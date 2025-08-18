@@ -1,4 +1,10 @@
-<div class="position-fixed bottom-0 end-0 mb-3 me-3 d-flex align-items-center gap-2">
+
+  <div class="position-fixed bottom-0 end-0 mb-3 me-3 d-flex align-items-center gap-2">
+    <?php 
+      if (isset($datos['title']) && $datos['title'] != "Login"){
+        echo "<a href='" . URL . "/auth/logout' class='btn btn-danger'>Cerrar sesión</a>";
+      }
+    ?>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
