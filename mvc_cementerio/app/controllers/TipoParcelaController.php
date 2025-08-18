@@ -5,7 +5,6 @@ class TipoParcelaController extends Control
 
     public function __construct()
     {
-        $this->requireLogin();
         $this->model = $this->loadModel("TipoParcelaModel");
     }
 

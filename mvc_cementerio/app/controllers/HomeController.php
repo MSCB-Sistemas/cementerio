@@ -4,21 +4,17 @@ class HomeController extends Control
     private UsuarioModel $model;
     public function __construct()
     {
-        $this->requireLogin();
         $this->model = $this->loadModel("UsuarioModel");
     }
 
     public function index()
     {
-        $datos = [
-            'title' => 'Home',
-        ];
-        $this->loadView('home/HomeView', $datos);
+        $this->loadView('home/HomeView');
     }
 
 
     public function login() {
-        $this->loadView('loginView', '', 'login');
+        $this->loadView('loginView');
     }
 }
 
