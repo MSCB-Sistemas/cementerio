@@ -83,9 +83,25 @@ $routes = [
     'nacionalidades' => ['NacionalidadesController','index'],
     'nacionalidades/create' => ['NacionalidadesController', 'create'],
     'nacionalidades/save' => ['NacionalidadesController', 'save'],
-    'nacionalidades/edit/:id' => ['NacionalidadesController', 'edit'],
-    'nacionalidades/update/:id' => ['NacionalidadesController', 'update'],
-    'nacionalidades/delete/:id' => ['NacionalidadesController', 'delete'],
+    'nacionalidades/edit' => ['NacionalidadesController', 'edit'],
+    'nacionalidades/update' => ['NacionalidadesController', 'update'],
+    'nacionalidades/delete' => ['NacionalidadesController', 'delete'],
+
+    //URL's orientaciones
+    'orientaciones' => ['OrientacionController', 'index'],
+    'orientaciones/create' => ['OrientacionController', 'create'],
+    'orientaciones/save' => ['OrientacionController', 'save'],
+    'orientaciones/edit' => ['OrientacionController', 'edit'],
+    'orientaciones/update' => ['OrientacionController', 'update'],
+    'orientaciones/delete' => ['OrientacionController', 'delete'],
+
+    //URL's ubicaciones
+    'ubicacion' => ['UbicacionDifuntoController', 'index'],
+    'ubicacion/create' => ['UbicacionDifuntoController', 'create'],
+    'ubicacion/save' => ['UbicacionDifuntoController', 'save'],
+    'ubicacion/edit' => ['UbicacionDifuntoController', 'edit'],
+    'ubicacion/update' => ['UbicacionDifuntoController', 'update'],
+    'ubicacion/delete' => ['UbicacionDifuntoController', 'delete'],
 ];
 
 // Obtener ruta y metodo actual
