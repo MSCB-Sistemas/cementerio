@@ -1,96 +1,131 @@
 <?php
-class UsuarioController extends Control{
+class UsuarioController extends Control {
     private UsuarioModel $model;
     private TiposUsuariosModel $tipoUsuariosModel;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->model = $this->loadModel("UsuarioModel");
         $this->tipoUsuariosModel = $this->loadModel("TiposUsuariosModel");
     }
 
-    public function index()
-    {
+    public function index() {
         $usuarios = $this->model->getAllUsuarios();
 
-        $datos = [
-            'title' => 'Lista de Usuarios',
-            'urlCrear' => URL . 'usuario/create',
-            'columnas' => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Email', 'Rol', 'Activo'],
-
-            'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'descripcion', 'activo'],
-            'data' => $usuarios,
-            'acciones' => function ($fila) {
-                $id = $fila['id_usuario'];
-                $url = URL . 'usuario';
-                return '
-                    <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
-                    <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
-                    <a href="' . $url . '/activate/' . $id . '" class="btn btn-sm btn-outline-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</a>
-                    <a href="' . $url . '/changePass/' . $id . '" class="btn btn-sm btn-outline-warning">Cambiar clave</a>
-                ';
-            },
-            'errores' => [],
-        ];
+        $datos = array();
+        $datos['title'] = 'Lista de Usuarios';
+        $datos['urlCrear'] = URL . 'usuario/create';
+        $datos['columnas'] = array('ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Telefono', 'Email', 'Rol', 'Activo');
+        $datos['columnas_claves'] = array('id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'telefono', 'email', 'descripcion', 'activo');
+        $datos['data'] = $usuarios;
+        $datos['acciones'] = function ($fila) {
+            $id = $fila['id_usuario'];
+            $url = URL . 'usuario';
+            return '
+                <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
+                <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
+                <a href="' . $url . '/activate/' . $id . '" class="btn btn-sm btn-outline-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</a>
+                <a href="' . $url . '/changePass/' . $id . '" class="btn btn-sm btn-outline-warning">Cambiar clave</a>
+            ';
+        };
+        $datos['errores'] = array();
 
         $this->loadView('partials/tablaAbm', $datos);
     }
 
-    public function create()
-    {
+    public function create() {
         $tipos = $this->tipoUsuariosModel->getAllTiposUsuarios();
-        $datos = [
-            'title' => 'Crear usuario',
-            'action' => URL . 'usuario/save',
-            'values' => [],
-            'errores' => [],
-            'tipos' => $tipos,
-            'update' => false
-        ];
+
+        $datos = array();
+        $datos['title'] = 'Crear usuario';
+        $datos['action'] = URL . 'usuario/save';
+        $datos['values'] = array();
+        $datos['errores'] = array();
+        $datos['tipos'] = $tipos;
+        $datos['update'] = false;
 
         $this->loadView('usuarios/UsuarioForm', $datos);
     }
 
-    public function save()
-    {
+    public function save() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $usuario = trim($_POST["usuario"] ?? '');
-            $nombre = trim($_POST["nombre"] ?? '');
-            $apellido = trim($_POST["apellido"] ?? '');
-            $cargo = trim($_POST["cargo"] ?? '');
-            $sector = trim($_POST["sector"] ?? '');
-            $email = trim($_POST["email"] ?? '');
-            $contrasenia = trim($_POST["password"] ?? '');
-            $tipoUsuario = $_POST["tipo_usuario"] ?? '';
-            $errores = [];
+            $usuario = '';
+            if (isset($_POST['usuario'])) {
+                $usuario = trim($_POST['usuario']);
+            }
+            $nombre = '';
+            if (isset($_POST['nombre'])) {
+                $nombre = trim($_POST['nombre']);
+            }
+            $apellido = '';
+            if (isset($_POST['apellido'])) {
+                $apellido = trim($_POST['apellido']);
+            }
+            $cargo = '';
+            if (isset($_POST['cargo'])) {
+                $cargo = trim($_POST['cargo']);
+            }
+            $sector = '';
+            if (isset($_POST['sector'])) {
+                $sector = trim($_POST['sector']);
+            }
+            $telefono = '';
+            if (isset($_POST['telefono'])) {
+                $telefono = trim($_POST['telefono']);
+            }
+            $email = '';
+            if (isset($_POST['email'])) {
+                $email = trim($_POST['email']);
+            }
+            $contrasenia = '';
+            if (isset($_POST['password'])) {
+                $contrasenia = trim($_POST['password']);
+            }
+            $tipoUsuario = '';
+            if (isset($_POST['tipo_usuario'])) {
+                $tipoUsuario = $_POST['tipo_usuario'];
+            }
 
-            if (empty($usuario))
-                $errores[] = "El usuario es obligatorio.";
-            if (empty($nombre))
-                $errores[] = "El nombre es obligatorio.";
-            if (empty($apellido))
-                $errores[] = "El apellido es obligatorio.";
-            if (empty($contrasenia))
-                $errores[] = "El nombre es obligatorio.";
-            if (empty($tipoUsuario))
+            $errores = array();
+
+            if ($usuario == '') {
+                $errores[] = "Ingrese un usuario.";
+            } 
+
+            if ($nombre == '') {
+                $errores[] = "Ingrese un nombre.";
+            }
+
+            if ($apellido == '') {
+                $errores[] = "Ingrese un apellido.";
+            }
+
+            if ($contrasenia == '') {
+                $errores[] = "Ingrese una contrasenia.";
+            }
+
+            if ($tipoUsuario == '') {
                 $errores[] = "Debe seleccionar un tipo de usuario.";
+            }
 
-            if (!empty($errores)) {
+            if (count($errores) > 0) {
                 $tipos = $this->tipoUsuariosModel->getAllTiposUsuarios();
-                $this->loadView('usuarios/UsuarioForm', [
-                    'title' => 'Crear nuevo usuario',
-                    'action' => URL . 'usuario/save',
-                    'values' => $_POST,
-                    'errores' => $errores,
-                    'tipos' => $tipos,
-                    'update' => false
-                ]);
+                $datos = array();
+                $datos['title'] = 'Crear nuevo usuario';
+                $datos['action'] = URL . 'usuario/save';
+                $datos['values'] = $_POST;
+                $datos['errores'] = $errores;
+                $datos['tipos'] = $tipos;
+                $datos['update'] = false;
+
+                $this->loadView('usuarios/UsuarioForm', $datos);
                 return;
             }
-            $contrasenia = password_hash($contrasenia, PASSWORD_DEFAULT);
 
-            if ($this->model->insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $email, $contrasenia, $tipoUsuario)) {
+            $contraseniaEncriptada = password_hash($contrasenia, PASSWORD_DEFAULT);
 
+            $insertado = $this->model->insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $contraseniaEncriptada, $tipoUsuario);
+
+            if ($insertado == true) {
                 header("Location: " . URL . "usuario");
                 exit;
             } else {
@@ -99,78 +134,114 @@ class UsuarioController extends Control{
         }
     }
 
-    public function edit($id)
-    {
+    public function edit($id) {
         $usuario = $this->model->getUsuarioId($id);
         $tipos = $this->tipoUsuariosModel->getAllTiposUsuarios();
 
-        if (!$usuario) {
+        if ($usuario == false) {
             die("Usuario no encontrado");
         }
 
-        $this->loadView("usuarios/UsuarioForm", [
-            'title' => "Editar usuario",
-            'action' => URL . 'usuario/update/' . $id,
-            'values' => [
-                'usuario' => $usuario['usuario'],
-                'nombre' => $usuario['nombre'],
-                'apellido' => $usuario['apellido'],
-                'cargo' => $usuario['cargo'],
-                'sector' => $usuario['sector'],
-                'id_tipo_usuario' => $usuario['id_tipo_usuario'],
-            ],
-            'errores' => [],
-            'tipos' => $tipos,
-            'update' => true
-        ]);
+        $datos = array();
+        $datos['title'] = "Editar usuario";
+        $datos['action'] = URL . 'usuario/update/' . $id;
+        $datos['values'] = array(
+            'usuario' => $usuario['usuario'],
+            'nombre' => $usuario['nombre'],
+            'apellido' => $usuario['apellido'],
+            'cargo' => $usuario['cargo'],
+            'sector' => $usuario['sector'],
+            'id_tipo_usuario' => $usuario['id_tipo_usuario']
+        );
+        $datos['errores'] = array();
+        $datos['tipos'] = $tipos;
+        $datos['update'] = true;
+
+        $this->loadView("usuarios/UsuarioForm", $datos);
     }
 
-    public function update($id)
-    {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $usuario = trim($_POST["usuario"] ?? '');
-            $nombre = trim($_POST["nombre"] ?? '');
-            $apellido = trim($_POST["apellido"] ?? '');
-            $cargo = trim($_POST["cargo"] ?? '');
-            $sector = trim($_POST["sector"] ?? '');
-            $email = trim($_POST["email"] ?? '');
-            $tipoUsuario = $_POST["tipo_usuario"] ?? '';
+    public function update($id) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $usuario = '';
+            if (isset($_POST['usuario'])) {
+                $usuario = trim($_POST['usuario']);
+            }
+            $nombre = '';
+            if (isset($_POST['nombre'])) {
+                $nombre = trim($_POST['nombre']);
+            }
+            $apellido = '';
+            if (isset($_POST['apellido'])) {
+                $apellido = trim($_POST['apellido']);
+            }
+            $cargo = '';
+            if (isset($_POST['cargo'])) {
+                $cargo = trim($_POST['cargo']);
+            }
+            $sector = '';
+            if (isset($_POST['sector'])) {
+                $sector = trim($_POST['sector']);
+            }
+            $telefono = '';
+            if (isset($_POST['telefono'])) {
+                $telefono = trim($_POST['telefono']);
+            }
+            $email = '';
+            if (isset($_POST['email'])) {
+                $email = trim($_POST['email']);
+            }
+            $tipoUsuario = '';
+            if (isset($_POST['tipo_usuario'])) {
+                $tipoUsuario = $_POST['tipo_usuario'];
+            }
 
-            $errores = [];
-            if (empty($usuario))
+            $errores = array();
+
+            if ($usuario == '') {
                 $errores[] = "El usuario es obligatorio.";
-            if (empty($nombre))
-                $errores[] = "El nombre es obligatorio.";
-            if (empty($apellido))
-                $errores[] = "El apellido es obligatorio.";
-            if (empty($tipoUsuario))
-                $errores[] = "Debe seleccionar un tipo de usuario.";
+            }
 
-            if (!empty($errores)) {
-                $usuario = [
-                    'id_usuario' => $id,
-                    'usuario' => $usuario,
-                    'nombre' => $nombre,
-                    'apellido' => $apellido,
-                    'cargo' => $cargo,
-                    'sector' => $sector,
-                    'email' => $email,
-                    'id_tipo_usuario' => $tipoUsuario
-                ];
+            if ($nombre == '') {
+                $errores[] = "El nombre es obligatorio.";
+            }
+
+            if ($apellido == '') {
+                $errores[] = "El apellido es obligatorio.";
+            }
+
+            if ($tipoUsuario == '') {
+                $errores[] = "Debe seleccionar un tipo de usuario.";
+            }
+
+            if (count($errores) > 0) {
+                $usuarioArray = array();
+                $usuarioArray['id_usuario'] = $id;
+                $usuarioArray['usuario'] = $usuario;
+                $usuarioArray['nombre'] = $nombre;
+                $usuarioArray['apellido'] = $apellido;
+                $usuarioArray['cargo'] = $cargo;
+                $usuarioArray['sector'] = $sector;
+                $usuarioArray['telefono'] = $telefono;
+                $usuarioArray['email'] = $email;
+                $usuarioArray['id_tipo_usuario'] = $tipoUsuario;
+
                 $tipos = $this->tipoUsuariosModel->getAllTiposUsuarios();
-                $this->loadView('usuario/UsuarioForm', [
-                    'title' => 'Editar usuario',
-                    'action' => URL . 'usuario/update/' . $id,
-                    'values' => $usuario,
-                    'errores' => $errores,
-                    'tipos' => $tipos,
-                    'update' => true
-                ]);
+
+                $datos = array();
+                $datos['title'] = 'Editar usuario';
+                $datos['action'] = URL . 'usuario/update/' . $id;
+                $datos['values'] = $usuarioArray;
+                $datos['errores'] = $errores;
+                $datos['tipos'] = $tipos;
+                $datos['update'] = true;
+
+                $this->loadView('usuarios/UsuarioForm', $datos);
                 return;
             }
 
-            if ($this->model->updateUsuario($id, $usuario, $nombre, $apellido, $cargo, $sector, $email, $tipoUsuario)) {
+            $actualizado = $this->model->updateUsuario($id, $usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $tipoUsuario);
 
+            if ($actualizado == true) {
                 header("Location: " . URL . "usuario");
                 exit;
             } else {
@@ -179,9 +250,9 @@ class UsuarioController extends Control{
         }
     }
 
-    public function delete($id)
-    {
-        if ($this->model->deleteUsuario($id)) {
+    public function delete($id) {
+        $eliminado = $this->model->deleteUsuario($id);
+        if ($eliminado == true) {
             header("Location: " . URL . "usuario");
             exit;
         } else {
@@ -190,7 +261,8 @@ class UsuarioController extends Control{
     }
 
     public function activate($id) {
-        if($this->model->activateUsuario($id)) {
+        $activado = $this->model->activateUsuario($id);
+        if ($activado == true) {
             header("Location: ". URL . "usuario");
             exit;
         } else {
@@ -199,31 +271,40 @@ class UsuarioController extends Control{
     }
 
     public function changePass($id) {
-        $this->loadView('usuarios/UsuarioFormPass', [
-            'title' => 'Cambiar clave',
-            'action' => URL .'usuario/savePass/'. $id,
-            'errores' => []
-        ]);
+        $datos = array();
+        $datos['title'] = 'Cambiar clave';
+        $datos['action'] = URL .'usuario/savePass/'. $id;
+        $datos['errores'] = array();
+
+        $this->loadView('usuarios/UsuarioFormPass', $datos);
     }
 
     public function savePass($id) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $password = trim($_POST["password"]);
+            $password = '';
+            if (isset($_POST['password'])) {
+                $password = trim($_POST['password']);
+            }
 
-            $errores = [];
-            if (empty($password)) $errores[] = "El campo nueva contrasenia es obligatorio.";
+            $errores = array();
+            if ($password == '') {
+                $errores[] = "El campo nueva contrasenia es obligatorio.";
+            }
 
-            if (!empty($errores)) {
-                $this->loadView("usuarios/UsuarioFormPass", [
-                    'title' => 'Cambiar clave',
-                    'action' => URL .'usuario/savePass/'. $id,
-                    'errores' => $errores
-                ]);
+            if (count($errores) > 0) {
+                $datos = array();
+                $datos['title'] = 'Cambiar clave';
+                $datos['action'] = URL .'usuario/savePass/'. $id;
+                $datos['errores'] = $errores;
+
+                $this->loadView("usuarios/UsuarioFormPass", $datos);
                 return;
             }
 
-            $password = password_hash($password, PASSWORD_DEFAULT);
-            if ($this->model->updatePassword($id, $password)) {
+            $passwordEncriptada = password_hash($password, PASSWORD_DEFAULT);
+            $actualizado = $this->model->updatePassword($id, $passwordEncriptada);
+
+            if ($actualizado == true) {
                 header('Location: '. URL . 'usuario');
                 exit;
             } else {
@@ -232,47 +313,52 @@ class UsuarioController extends Control{
         }
     }
 
-     public function login() {
+    public function login() {
+        session_start();
 
-    session_start();
-
-    // Si es GET, mostrar formulario
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $datos['title'] = "login";
-        $datos['error'] = '';
-        $this->loadView('login/Login', $datos);
-        return;
-    }
-
-    // Si es POST, procesar login
-    $usuario = trim($_POST['usuario'] ?? '');
-    $contrasenia = trim($_POST['contrasenia'] ?? '');
-    $error = '';
-
-    if (empty($usuario) || empty($contrasenia)) {
-        $error = "Por favor complete ambos campos.";
-    } else {
-        $usuarioEncontrado = $this->model->verificarLogin($usuario, $contrasenia);
-
-        if ($usuarioEncontrado) {
-            $_SESSION['usuario'] = [
-                'nombre' => $usuarioEncontrado['nombre'] ?? $usuarioEncontrado['usuario']
-            ];
-            header("Location: " . URL . "/home");
-            exit;
-        } else {
-            $error = "Usuario o contraseña incorrectos.";
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $datos = array();
+            $datos['title'] = 'login';
+            $datos['error'] = '';
+            $this->loadView('login/Login', $datos);
+            return;
         }
+
+        $usuario = '';
+        if (isset($_POST['usuario'])) {
+            $usuario = trim($_POST['usuario']);
+        }
+
+        $contrasenia = '';
+        if (isset($_POST['contrasenia'])) {
+            $contrasenia = trim($_POST['contrasenia']);
+        }
+
+        $error = '';
+
+        if ($usuario == '' || $contrasenia == '') {
+            $error = "Por favor complete ambos campos.";
+        } else {
+            $usuarioEncontrado = $this->model->verificarLogin($usuario, $contrasenia);
+
+            if ($usuarioEncontrado != false) {
+                $_SESSION['usuario'] = array();
+                $_SESSION['usuario']['id'] = $usuarioEncontrado['id_usuario'];
+                $_SESSION['usuario']['nombre'] = $usuarioEncontrado['nombre'];
+                $_SESSION['usuario']['rol'] = $usuarioEncontrado['descripcion'];
+                $_SESSION['usuario']['activo'] = $usuarioEncontrado['activo'];
+
+                header("Location: " . URL . "/home");
+                exit;
+            } else {
+                $error = "Usuario o contraseña incorrectos.";
+            }
+        }
+
+        $datos = array();
+        $datos['title'] = 'login';
+        $datos['error'] = $error;
+        $this->loadView('login/Login', $datos);
     }
-
-    // Si hay error, volver a mostrar formulario con mensaje
-    $datos['title'] = "login";
-    $datos['error'] = $error;
-    $this->loadView('login/Login', $datos);
-}
-
-
-
 }
 ?>
- 

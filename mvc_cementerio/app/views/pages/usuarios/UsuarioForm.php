@@ -43,7 +43,13 @@
         </div>
 
         <div class="mb-3">
-            <label for="sector" class="form-label">Dirección de correro electónico</label>
+            <label for="sector" class="form-label">Número de Teléfono</label>
+            <input type="text" class="form-control" id="telefono" name="telefono" 
+                   value="<?= htmlspecialchars($datos['values']['telefono'] ?? '') ?>">
+        </div>
+
+        <div class="mb-3">
+            <label for="sector" class="form-label">Dirección de correo electónico</label>
             <input type="text" class="form-control" id="email" name="email" 
                    value="<?= htmlspecialchars($datos['values']['email'] ?? '') ?>">
         </div>

@@ -22,7 +22,6 @@ $routes = [
     'usuario/savePass' => ['UsuarioController', 'savePass'],
 
     'home' => ['homeController', 'index'],
-    'login' => ['homeController', 'login'],
 
     // URL's difunto.
     'difunto' => ['DifuntoController', 'index'],
@@ -92,7 +91,6 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Separar en partes la ruta para manejar mejor los parametros
 $partes = explode('/', $uri);
 
-// var_dump($partes);
 
 // Inicializa vairables
 $ruta = '';
@@ -101,7 +99,6 @@ $parametro = null;
 // Logica para GET con 1 variable (ejemplo: usuario/12)
 
 if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
-    // var_dump($method);
     $ruta = $partes[0] . '/' . $partes[1];
     $parametro = $partes[2];
 } else {
@@ -109,7 +106,6 @@ if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
     $ruta = implode('/', $partes);
 }
 
-// var_dump($ruta);
 
 // 1️⃣​. Si la ruta esta definida en el arreglo de rutas
 if (isset($routes[$ruta])) {
