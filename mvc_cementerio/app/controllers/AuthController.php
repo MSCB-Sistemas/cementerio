@@ -5,9 +5,9 @@ class AuthController extends Control {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $user = $_POST['user'] ?? '';
-            $password = trim($_POST['password'] ?? '');
-            $remember = isset($_POST['remember']) ? true : false;
+            $user = $_POST['user'];
+            $password = trim($_POST['password']);
+            $remember = isset($_POST['remember']);
 
             if (empty($user) || empty($password)) {
                 $datos['error'] = 'Debe ingresar usuario y contraseña';
@@ -39,7 +39,7 @@ class AuthController extends Control {
             }
         } else {
             $this->checkRememberMeToken();
-            $this->loadView('loginView', $datos,'login');
+            $this->loadView('loginView', $datos, 'login');
         }
     }
 

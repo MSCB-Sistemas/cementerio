@@ -48,6 +48,7 @@
                     <li><a href="<?= URL ?>sexo" class="nav-link text-white">Sexos</a></li>
                     <li><a href="<?= URL ?>tipoParcela" class="nav-link text-white">Tipos de parcela</a></li>
                     <li><a href="<?= URL ?>tipoUsuario" class="nav-link text-white">Tipos de usuario</a></li>
+                    <li><a href="<?= URL ?>pago" class="nav-link text-white">Pagos</a></li>
                 </ul>
             </div>
         </li>

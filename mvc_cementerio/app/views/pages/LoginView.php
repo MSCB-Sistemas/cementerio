@@ -12,7 +12,7 @@
                 </div>
             </div>
 
-            <form id="loginForm" method="POST" action="<?= URL ?>home" class="rounded-4 shadow p-4 bg-light text-dark needs-validation" novalidate>
+            <form id="loginForm" method="POST" action="<?= URL ?>login" class="rounded-4 shadow p-4 bg-light text-dark needs-validation" novalidate>
                 <div class="mb-4">
                     <div class="form-floating">
                         <input type="text" name="user" class="form-control border-primary" id="floatingInput" 
@@ -27,7 +27,7 @@
                 <div class="mb-4">
                     <div class="form-floating">
                         <input type="password" name="password" class="form-control border-primary" 
-                                id="floatingPassword" placeholder="Contraseña" required>
+                                id="floatingPassword" placeholder="Password" required>
                         <label for="floatingPassword">Contraseña</label>
                         <div class="invalid-feedback">
                             Por favor ingrese su contraseña
