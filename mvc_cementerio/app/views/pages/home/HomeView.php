@@ -14,6 +14,11 @@
     <?php require_once APP . '/views/inc/Sidebar.php'; 
     ?>
        
+    <div class= "upper-right">
+        <div class="button locales prominent">
+            <div class="locale-current">
+
+    </div>
 
     <!-- Contenido principal -->
     <main class="container my-5">
