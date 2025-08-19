@@ -45,7 +45,10 @@
                     <li><a href="<?= URL ?>difunto" class="nav-link text-white">Difuntos</a></li>
                     <li><a href="<?= URL ?>estadoCivil" class="nav-link text-white">Estados Civiles</a></li>
                     <li><a href="<?= URL ?>parcela" class="nav-link text-white">Parcelas</a></li>
+                    <li><a href="<?= URL ?>ubicacion" class="nav-link text-white">Ubicaciones</a></li>
+                    <li><a href="<?= URL ?>orientaciones" class="nav-link text-white">Orientaciones</a></li>
                     <li><a href="<?= URL ?>sexo" class="nav-link text-white">Sexos</a></li>
+                    <li><a href="<?= URL ?>nacionalidades" class="nav-link text-white">Nacionalidades</a></li>
                     <li><a href="<?= URL ?>tipoParcela" class="nav-link text-white">Tipos de parcela</a></li>
                     <li><a href="<?= URL ?>tipoUsuario" class="nav-link text-white">Tipos de usuario</a></li>
                     <li><a href="<?= URL ?>pago" class="nav-link text-white">Pagos</a></li>

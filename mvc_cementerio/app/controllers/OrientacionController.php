@@ -3,6 +3,7 @@ class OrientacionController extends Control {
     private OrientacionModel $model;
 
     public function __construct(){
+        $this->requireLogin();
        $this->model = $this->loadModel("OrientacionModel"); 
     }
 

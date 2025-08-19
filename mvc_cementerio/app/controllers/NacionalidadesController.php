@@ -3,6 +3,7 @@ class NacionalidadesController extends Control {
     private NacionalidadesModel $model;
 
      public function __construct() {
+        $this->requireLogin();
         $this->model = $this->loadModel("NacionalidadesModel");
     }
 
