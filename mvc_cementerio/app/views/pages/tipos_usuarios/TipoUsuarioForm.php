@@ -1,24 +1,42 @@
 <div class="container mt-5">
-    <h2><?= $datos['title'] ?></h2>
-
-    <?php if (!empty($datos['errores'])): ?>
-        <div class="alert alert-danger">
-            <ul>
-                <?php foreach ($datos['errores'] as $e): ?>
-                    <li><?= htmlspecialchars($e) ?></li>
-                <?php endforeach ?>
-            </ul>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0"><?= $datos['title'] ?></h2>
         </div>
-    <?php endif; ?>
-
-    <form action="<?= $datos['action'] ?>" method="POST">
-        <input type="hidden" name="id_tipo_usuario" value="<?= $values['id_tipo_usuario'] ?? '' ?>">
-        <div class="mb-3">
-            <label for="descripcion" class="form-label">Nombre de tipo de usuario</label>
-            <input type="text" class="form-control" id="descripcion" name="descripcion" 
-                   value="<?= htmlspecialchars($datos['values']['descripcion'] ?? '') ?>" required>
+        
+        <div class="card-body">
+            <?php if (!empty($datos['errores'])): ?>
+                <div class="alert alert-danger">
+                    <h5 class="alert-heading">Errores encontrados</h5>
+                    <ul class="mb-0">
+                        <?php foreach ($datos['errores'] as $e): ?>
+                            <li><?= htmlspecialchars($e) ?></li>
+                        <?php endforeach ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+            
+            <form action="<?= $datos['action'] ?>" method="POST" class="needs-validation" novalidate>
+                <input type="hidden" name="id_tipo_usuario" value="<?= $values['id_tipo_usuario'] ?? '' ?>">
+                
+                <div class="mb-3">
+                    <label for="descripcion" class="form-label fw-bold">Nombre de Tipo de Usuario</label>
+                    <input type="text" class="form-control" id="descripcion" name="descripcion" 
+                           value="<?= htmlspecialchars($datos['values']['descripcion'] ?? '') ?>" required>
+                    <div class="invalid-feedback">
+                        Por favor ingrese un nombre válido para el tipo de usuario
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="<?= URL ?>tipoUsuario" class="btn btn-outline-secondary me-md-2">
+                        <i class="bi bi-arrow-left-circle"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Guardar
+                    </button>
+                </div>
+            </form>
         </div>
-        <button type="submit" class="btn btn-success">Guardar</button>
-        <a href="<?= URL ?>tipoUsuario" class="btn btn-secondary">Cancelar</a>
-    </form>
+    </div>
 </div>

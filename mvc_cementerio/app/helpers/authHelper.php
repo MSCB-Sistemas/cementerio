@@ -9,7 +9,7 @@ function requireLogin()
 {
     session_start();
     if (!isset($_SESSION['usuario_id'])) {
-        header('Location: ' . URL . '/auth/login');
+        header('Location: ' . URL . 'login');
         exit;
     }
 }
