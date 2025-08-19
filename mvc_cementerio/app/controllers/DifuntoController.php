@@ -9,6 +9,7 @@ class DifuntoController extends Control
 
     public function __construct()
     {
+        $this->requireLogin();
         $this->model = $this->loadModel("DifuntoModel");
         $this->deudoModel = $this->loadModel("DeudoModel");
         $this->nacionalidadesModel = $this->loadModel("NacionalidadesModel");
