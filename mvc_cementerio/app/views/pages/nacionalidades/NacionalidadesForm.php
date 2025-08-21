@@ -17,7 +17,7 @@
         </div>
         <div>
             <button type="submit" class="btn btn-success">Guardar</button>
-            <a href="<?= URL ?>/nacionalidades" class="btn btn-secondary">Cancelar</a>
+            <a href="<?= URL ?>nacionalidades" class="btn btn-secondary">Cancelar</a>
         </div>
     </form>
 
