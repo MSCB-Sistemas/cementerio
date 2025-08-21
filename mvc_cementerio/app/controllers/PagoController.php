@@ -19,8 +19,8 @@ class PagoController extends Control {
         $datos = [
             'title' => 'Lista de pagos',
             'urlCrear'=> URL . 'pago/create',
-            'columnas' => ['ID', 'Deudo', 'Parcela', 'Fecha de pago', 'Importe', 'Recargo', 'Total', 'Usuario'],
-            'columnas_claves' => ['id_pago', 'nombre_deudo', 'parcela', 'fecha_pago', 'importe', 'recargo', 'total', 'usuario'],
+            'columnas' => ['ID', 'Deudo', 'Parcela', 'Fecha de pago', 'Fecha de vencimiento', 'Importe', 'Recargo', 'Total', 'Usuario'],
+            'columnas_claves' => ['id_pago', 'nombre_deudo', 'parcela', 'fecha_pago', 'fecha_vencimiento','importe', 'recargo', 'total', 'usuario'],
             'acciones'=> function ($fila) {
                 $id = $fila['id_pago'];
                 $url = URL . 'pago';
@@ -60,6 +60,7 @@ class PagoController extends Control {
             $deudo = $_POST['deudo'] ?? '';
             $parcela = $_POST['parcela'] ?? '';
             $fecha_pago = trim($_POST['fecha_pago'] ?? '');
+            $fecha_vencimiento = trim($_POST['fecha_vencimiento'] ?? '');
             $importe = trim($_POST['importe'] ?? '');
             $recargo = trim($_POST['recargo'] ?? '');
             $total = trim($_POST['total'] ?? '');
@@ -69,6 +70,7 @@ class PagoController extends Control {
             if (empty($deudo)) $errores[] = 'El deudo es obligatorio';
             if (empty($parcela)) $errores[] = 'La parcela es obligatoria';
             if (empty($fecha_pago)) $errores[] = 'La fecha es obligatoria';
+            if (empty($fecha_vencimiento)) $errores[] = 'La fecha de vencimiento es obligatoria';
             if (empty($importe)) $errores[] = 'El importe es obligatorio';
             if (empty($recargo)) $errores[] = 'El recargo es obligatorio';
             if (empty($total)) $errores[] = 'El total es obligatorio';
@@ -91,7 +93,7 @@ class PagoController extends Control {
                 return;
             }
 
-            if ($this->model->insertPago($deudo, $parcela, $fecha_pago, $importe, $recargo, $total, $usuario)) {
+            if ($this->model->insertPago($deudo, $parcela, $fecha_pago, $fecha_vencimiento, $importe, $recargo, $total, $usuario)) {
                 header("Location: " . URL . "pago");
                 exit;
             } else {
@@ -116,6 +118,7 @@ class PagoController extends Control {
                 'deudo' => $pago['id_deudo'],
                 'parcela' => $pago['id_parcela'],
                 'fecha_pago' => $pago['fecha_pago'],
+                'fecha_vencimiento' => $pago['fecha_vencimiento'],
                 'importe' => $pago['importe'],
                 'recargo' => $pago['recargo'],
                 'total' => $pago['total'],
@@ -131,6 +134,7 @@ class PagoController extends Control {
             $deudo = $_POST['deudo'] ?? '';
             $parcela = $_POST['parcela'] ?? '';
             $fecha_pago = trim($_POST['fecha_pago'] ?? '');
+            $fecha_vencimiento = trim($_POST['fecha_vencimiento'] ?? '');
             $importe = trim($_POST['importe'] ?? '');
             $recargo = trim($_POST['recargo'] ?? '');
             $total = trim($_POST['total'] ?? '');
@@ -140,6 +144,7 @@ class PagoController extends Control {
             if (empty($deudo)) $errores[] = 'El deudo es obligatorio';
             if (empty($parcela)) $errores[] = 'La parcela es obligatoria.';
             if (empty($fecha_pago)) $errores[] = 'La fecha es obligatoria';
+            if (empty($fecha_vencimiento)) $errores[] = 'La fecha de vencimiento es obligatoria';
             if (empty($importe)) $errores[] = 'El importe es obligatorio';
             if (empty($recargo)) $errores[] = 'El recargo es obligatorio';
             if (empty($total)) $errores[] = 'El total es obligatorio';
@@ -150,6 +155,7 @@ class PagoController extends Control {
                     'id_deudo' => $deudo,
                     'id_parcela'=> $parcela,
                     'fecha_pago'=> $fecha_pago,
+                    'fecha_vencimiento' => $fecha_vencimiento,
                     'importe' => $importe,
                     'recargo'=> $recargo,
                     'total'=> $total,
@@ -169,7 +175,7 @@ class PagoController extends Control {
                 return;
             }
 
-            if ($this->model->updatePago($id, $deudo, $parcela, $fecha_pago, $importe, $recargo, $total, $usuario)) {
+            if ($this->model->updatePago($id, $deudo, $parcela, $fecha_pago, $fecha_vencimiento, $importe, $recargo, $total, $usuario)) {
                 header("Location: " . URL . "pago");
                 exit;
             } else {
