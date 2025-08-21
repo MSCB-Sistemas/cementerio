@@ -19,8 +19,16 @@ class EstadisticasModel extends Control {
         }
     }
 
-    public function getDeudosMorosos() {
-        
+    public function getDeudosMorosos($fecha_vencimiento, $fecha_actual) {
+        $this->establecerFechasPorDefecto($fecha_actual, $fecha_vencimiento);
+
+        $stmt = $this->db->prepare("SELECT p.*, d.dni FROM pago p
+                                        INNER JOIN deudo d
+                                        ON p.id_deudo = d.id_deudo
+                                        WHERE DATE(fecha_pago)");
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getDefuncionesEntreFechas($fecha_inicio, $fecha_fin, $sort_col, $sort_dir, $limite, $offset) {
