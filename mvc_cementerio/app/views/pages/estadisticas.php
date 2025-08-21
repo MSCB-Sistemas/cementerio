@@ -42,7 +42,7 @@ $filtrar = isset($_GET['filtrar']); // Detecta si se envió el formulario con el
     <?php endif; ?>
 
     <table class="table table-bordered table-striped">
-        <thead class="table-dark text-black">
+        <thead class="th a">
             <tr>
                 <th><?= generarOrdenLink('fecha_fallecimiento', 'Fecha Fallecimiento', $datos) ?></th>
                 <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
@@ -110,7 +110,8 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
     $query_params['sort_dir'] = $direccion_siguiente;
 
     $link = '?' . http_build_query($query_params);
-    return "<a href=\"$link\">$etiqueta</a>";
+
+    return "<a href=\"$link\" style=\"color: white; text-decoration: none;\">$etiqueta</a>";
 }
 ?>
 
