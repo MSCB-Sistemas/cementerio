@@ -1,8 +1,7 @@
 <?php
 
-// Variables para filtrar y error
 $error = '';
-$filtrar = isset($_GET['filtrar']); // Detecta si se envió el formulario con el botón "Filtrar"
+$filtrar = isset($_GET['filtrar']);
 
 ?>
     <link rel="stylesheet" href="<?= URL . '/public/css/estadisticas.css' ?>">
@@ -12,78 +11,130 @@ $filtrar = isset($_GET['filtrar']); // Detecta si se envió el formulario con el
             <button class="nav-link active" id="tablas-tab" data-bs-toggle="tab" data-bs-target="#tablas" type="button" role="tab">Padron difuntos</button>
         </li>
         <li class="nav-item">
+            <button class="nav-link" id="morosos-tab" data-bs-toggle="tab" data-bs-target="#morosos" type="button" role="tab">Deudores Morosos
+                <?php if (!empty($datos['total_morosos']) && $datos['total_morosos'] > 0): ?>
+                    <span class="badge bg-danger ms-1"><?= $datos['total_morosos'] ?></span>
+                <?php endif?>
+            </button>
+        </li>
+        <li class="nav-item">
             <button class="nav-link" id="resumen-tab" data-bs-toggle="tab" data-bs-target="#resumen" type="button" role="tab">Resumen</button>
         </li>
     </ul>
 
-    <div class="tab-content mt-4">
-        <div class="tab-pane fade show active" id="tablas" role="tabpanel">
-            <!-- Formulario de filtros -->
+<div class="tab-content mt-4">
+    <!-- Pestania Padron difuntos -->
+    <div class="tab-pane fade show active" id="tablas" role="tabpanel">
         <form method="GET" class="row g-3 mb-4 justify-content-center">
             <div class="col-auto">
                 <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
-                <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" value="<?php if(!empty($datos['fecha_inicio'])){echo htmlspecialchars($datos['fecha_inicio']);} ?>">
+                <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" value="<?php echo !empty($datos['fecha_inicio']) ? htmlspecialchars($datos['fecha_inicio']) : '' ?>">
             </div>
 
             <div class="col-auto">
                 <label for="fecha_fin" class="form-label">Fecha Fin</label>
-                <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" value="<?php if(!empty($datos['fecha_fin'])){echo htmlspecialchars($datos['fecha_fin']);} ?>">
+                <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" value="<?php echo !empty($datos['fecha_fin']) ? htmlspecialchars($datos['fecha_fin']) : '' ?>">
             </div>
 
             <div class="col-auto align-self-end">
-                <!-- Boton con name="filtrar" para detectar submit intencional -->
                 <button type="submit" name="filtrar" class="btn btn-primary">Filtrar</button>
             </div>
         </form>
 
-    <!-- Mostrar error solo si hay -->
-    <?php if ($error): ?>
-        <div class="alert alert-warning text-center"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
+        <!-- Mostrar error solo si hay -->
+        <?php if ($error): ?>
+            <div class="alert alert-warning text-center"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
 
-    <table class="table table-bordered table-striped">
-        <thead class="th a">
-            <tr>
-                <th><?= generarOrdenLink('fecha_fallecimiento', 'Fecha Fallecimiento', $datos) ?></th>
-                <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
-                <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
-                <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>
-                <th><?= generarOrdenLink('descripcion', 'Sexo', $datos) ?></th>
-                <th><?= generarOrdenLink('domicilio', 'Domicilio', $datos) ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (!empty($datos['movimientos'])): ?>
-                <?php foreach ($datos['movimientos'] as $m): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($m['fecha_fallecimiento']) ?></td>
-                        <td><?= htmlspecialchars($m['nombre']) ?></td>
-                        <td><?= htmlspecialchars($m['apellido']) ?></td>
-                        <td><?= htmlspecialchars($m['dni']) ?></td>
-                        <td><?= htmlspecialchars($m['descripcion']) ?></td>
-                        <td><?= htmlspecialchars($m['domicilio']) ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
+        <table class="table table-bordered table-striped">
+            <thead class="th a">
                 <tr>
-                    <td colspan="5" class="text-center text-muted">No se encontraron resultados.</td>
+                    <th><?= generarOrdenLink('fecha_fallecimiento', 'Fecha Fallecimiento', $datos) ?></th>
+                    <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
+                    <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
+                    <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>
+                    <th><?= generarOrdenLink('descripcion', 'Sexo', $datos) ?></th>
+                    <th><?= generarOrdenLink('domicilio', 'Domicilio', $datos) ?></th>
                 </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-    <?php if (!empty($datos['total_paginas']) && ($datos['total_paginas']) > 1): ?>
-        <ul class="pagination">
-            <?php for ($i = 1; $i <= $datos['total_paginas']; $i++): ?>
-                <li>
-                    <a href="?<?= http_build_query(array_merge($_GET, ['pagina' => $i])) ?>"
-                        class="pagina-link <?php if((!empty($datos['pagina_actual']) && $i == ($datos['pagina_actual'])) || (empty($datos['pagina_actual']) && $i == 1)){echo 'pagina-activa';}?>">
-                            <?= $i ?>
-                    </a>
+            </thead>
+            <tbody>
+                <?php if (!empty($datos['movimientos'])): ?>
+                    <?php foreach ($datos['movimientos'] as $m): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($m['fecha_fallecimiento']) ?></td>
+                            <td><?= htmlspecialchars($m['nombre']) ?></td>
+                            <td><?= htmlspecialchars($m['apellido']) ?></td>
+                            <td><?= htmlspecialchars($m['dni']) ?></td>
+                            <td><?= htmlspecialchars($m['descripcion']) ?></td>
+                            <td><?= htmlspecialchars($m['domicilio']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No se encontraron resultados.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
 
-                </li>
-            <?php endfor; ?>
-        </ul>
-    <?php endif; ?>
+        <?php if (!empty($datos['total_paginas']) && ($datos['total_paginas']) > 1): ?>
+            <ul class="pagination">
+                <?php for ($i = 1; $i <= $datos['total_paginas']; $i++): ?>
+                    <li class="page-item <?= ($i == $datos['pagina_actual']) ? 'active' : '' ?>">
+                        <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $i])) ?>">
+                            <?= $i ?>
+                        </a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
+
+    <!-- Pestania para deudores morosos-->
+    <div class="tab-pane fade show active" id="morosos" role="tabpanel">
+        <?php if (!empty($datos['deudores_morosos'])): ?>
+            <table class="table table-bordered table-striped">
+                <thead class="th a">
+                    <tr>
+                    <th><?= generarOrdenLink('DNI', 'DNI', $datos) ?></th>
+                    <th><?= generarOrdenLink('Nombre', 'Nombre', $datos) ?></th>
+                    <th><?= generarOrdenLink('Apellido', 'Apellido', $datos) ?></th>
+                    <th><?= generarOrdenLink('Fecha de vencimiento', 'Fecha vencimiento', $datos) ?></th>
+                    <th><?= generarOrdenLink('Monto', 'Total', $datos) ?></th>
+                    <th><?= generarOrdenLink('Dias de Mora', 'Dia/s de mora', $datos) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($datos['deudores_morosos'] as $moroso): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($moroso['dni']) ?></td>
+                            <td><?= htmlspecialchars($moroso['nombre']) ?></td>
+                            <td><?= htmlspecialchars($moroso['apellido']) ?></td>
+                            <td class="text-danger fw-bold">
+                                <?= date('d/m/Y', strtotime($moroso['fecha_vencimiento'])) ?>
+                            </td>
+                            <td>$<?= number_format($moroso['total'], 2) ?></td>
+                            <td><?php $dias_mora = floor((time() - strtotime($moroso['fecha_vencimiento'])) / (60 * 60 * 24));
+                            echo '<span class="badge bg-danger">' . $dias_mora . ' dia/s</span>'; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <div class="text-center py-4">
+                <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                <p class="text-muted">No hay deudores morosos</p>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Pestania de resumen -->
+    <div class="tab-pane fade" id="resumen" role="tabpanel">
+        <div class="alert alert-info">
+            Contenido de resumen --pendiente--
+        </div>
+    </div>
 </div>
 
 <?php
@@ -116,10 +167,7 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
 ?>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('form-filtro-resumen');
-    const contenedor = document.getElementById('contenedor-resumen');
-
+document.addEventListener('DOMContentLoaded', function() {
     // Restaurar el tab activo guardado
     const lastTab = localStorage.getItem('activeTab');
     if (lastTab) {
@@ -137,27 +185,5 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
             localStorage.setItem('activeTab', activeTab);
         });
     });
-
-    // AJAX filtrado
-    if (form && contenedor) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(form);
-
-            fetch('resumen_datos.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.text())
-            .then(html => {
-                contenedor.innerHTML = html;
-            })
-            .catch(err => {
-                contenedor.innerHTML = "<p class='text-danger'>Error al cargar datos</p>";
-                console.error(err);
-            });
-        });
-    }
 });
 </script>

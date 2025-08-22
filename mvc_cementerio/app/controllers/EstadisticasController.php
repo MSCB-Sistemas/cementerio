@@ -15,26 +15,30 @@ class EstadisticasController extends Control {
         $sort_dir = !empty($_GET['sort_dir']) && in_array($_GET['sort_dir'], ['ASC', 'DESC']);
 
         $pagina = !empty($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
-        $limite = 10;
+        $limite = 14;
         $offset = ($pagina - 1) * $limite;
 
-        $movimientos = $this->model->getDefuncionesEntreFechas(
+        $defunciones = $this->model->getDefuncionesEntreFechas(
             $fecha_inicio, $fecha_fin, $sort_col, $sort_dir, $limite, $offset
         );
 
-        $total_resultados = $this->model->getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin);
-        $total_paginas = max(1, ceil($total_resultados / $limite));
+        $deudores_morosos = $this->model->getDeudosMorosos();
+
+        $total_defunciones = $this->model->getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin);
+        $total_paginas = max(1, ceil($total_defunciones / $limite));
 
         $datos = [
             'title' => 'Estadisticas',
-            'movimientos' => $movimientos,
+            'movimientos' => $defunciones,
+            'deudores_morosos' => $deudores_morosos,
             'fecha_inicio' => $fecha_inicio,
             'fecha_fin' => $fecha_fin,
             'sort_col' => $sort_col,
             'sort_dir' => $sort_dir,
             'pagina_actual' => $pagina,
             'total_paginas' => $total_paginas,
-            'total_resultados' => $total_resultados
+            'total_resultados' => $total_defunciones,
+            'total_morosos' => count($deudores_morosos)
         ];
 
         $this->loadView("estadisticas", $datos);

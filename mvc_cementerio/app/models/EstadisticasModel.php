@@ -19,13 +19,14 @@ class EstadisticasModel extends Control {
         }
     }
 
-    public function getDeudosMorosos($fecha_vencimiento, $fecha_actual) {
-        $this->establecerFechasPorDefecto($fecha_actual, $fecha_vencimiento);
-
-        $stmt = $this->db->prepare("SELECT p.*, d.dni FROM pago p
-                                        INNER JOIN deudo d
-                                        ON p.id_deudo = d.id_deudo
-                                        WHERE DATE(fecha_pago)");
+    public function getDeudosMorosos() {
+        $fecha_actual = date('Y-m-d');
+        
+        $stmt = $this->db->prepare("SELECT p.*, d.dni, d.nombre, d.apellido FROM pago p
+                                        INNER JOIN deudo d ON p.id_deudo = d.id_deudo
+                                        WHERE p.fecha_vencimiento < :fecha_actual
+                                        ORDER BY p.fecha_vencimiento DESC");
+        $stmt->bindParam(":fecha_actual", $fecha_actual, PDO::PARAM_STR);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -56,18 +57,25 @@ class EstadisticasModel extends Control {
     }
 
     public function getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin) {
-        $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
+        try {
+            $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
 
-        $stmt = $this->db->prepare("SELECT * FROM difunto 
-                                    WHERE DATE(fecha_fallecimiento) 
-                                    BETWEEN :inicio AND :fin");
+            $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM difunto 
+                                        WHERE DATE(fecha_fallecimiento) 
+                                        BETWEEN :inicio AND :fin");
 
-        $stmt->bindValue(':inicio', $fecha_inicio);
-        $stmt->bindValue(':fin', $fecha_fin);
-        $stmt->execute();
+            $stmt->bindValue(':inicio', $fecha_inicio);
+            $stmt->bindValue(':fin', $fecha_fin);
+            $stmt->execute();
 
-        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-        return (int)$resultado['total'];
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return isset($resultado['total']) ? (int)$resultado['total'] : 0;
+
+        } catch (PDOException $e) {
+            error_log("Error en getTotalDefuncionesEntreFechas: " . $e->getMessage());
+            return 0;
+        }
     }
 }
 
