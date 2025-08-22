@@ -48,6 +48,10 @@
                             <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
                         </button>
                     </div>
+
+                    <div class="text-center mt-3">
+                        <a href="<?= URL ?>usuario/create" class="btn btn-link">Registrar Nuevo Usuario</a>
+                    </div>
                     
                     <?php if (!empty($error)): ?>
                         <div class="alert alert-danger mt-4 mb-0">

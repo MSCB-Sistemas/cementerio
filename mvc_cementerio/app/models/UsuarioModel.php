@@ -8,8 +8,7 @@ class UsuarioModel {
     /* Constructor
      * Inicializa la conexión a la base de datos
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->db = Database::connect();
     }
 
@@ -17,8 +16,7 @@ class UsuarioModel {
      * Obtener todos los usuarios
      * @return array Lista de usuarios
      */
-    public function getAllUsuarios(): array
-    {
+    public function getAllUsuarios(): array {
         $stmt = $this->db->prepare("SELECT 
             u.id_usuario,
             u.usuario,
@@ -26,16 +24,33 @@ class UsuarioModel {
             u.apellido,
             u.cargo,
             u.sector,
+            u.telefono,
+            u.email,
             tu.descripcion,
             u.activo
         FROM 
             usuarios u
         JOIN 
-            tipos_usuarios tu ON u.id_tipo_usuario = tu.id_tipo_usuario;
-        ");
+            tipos_usuarios tu ON u.id_tipo_usuario = tu.id_tipo_usuario;");
+        
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$usuarios) {
+            return [];
+        }
+
+        // Convertir activo: 1 → "Si", 0 → "No" usando if...else
+        foreach ($usuarios as &$usuario) {
+            if ($usuario['activo'] === 1) {
+                $usuario['activo'] = "Si";
+            } else {
+                $usuario['activo'] = "No";
+            }
+        }
+        return $usuarios;
     }
+
 
     /** 
      * Obtener un usuario por su ID
@@ -49,6 +64,8 @@ class UsuarioModel {
         return $stmt->fetch();
     }
 
+    
+
     /**
      * Summary of insertUsuario
      * @param mixed $usuario
@@ -60,16 +77,18 @@ class UsuarioModel {
      * @param mixed $id_tipo_usuario
      * @return bool
      */
-    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $contrasenia, $id_tipo_usuario): bool
+    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $contrasenia, $id_tipo_usuario): bool
     {
-        $stmt = $this->db->prepare("INSERT INTO usuarios (usuario, nombre, apellido, cargo, sector, contrasenia, id_tipo_usuario) 
-                                    VALUES (:usuario, :nombre, :apellido, :cargo, :sector, :contrasenia, :id_tipo_usuario)");
+        $stmt = $this->db->prepare("INSERT INTO usuarios (usuario, nombre, apellido, cargo, sector, telefono, email, contrasenia, id_tipo_usuario) 
+                                    VALUES (:usuario, :nombre, :apellido, :cargo, :sector, :telefono, :email, :contrasenia, :id_tipo_usuario)");
         return $stmt->execute([
             "usuario" => $usuario,
             "nombre" => $nombre,
             "apellido" => $apellido,
             "cargo" => $cargo,
             "sector" => $sector,
+            'telefono' => $telefono,
+            'email' => $email,
             "contrasenia" => password_hash($contrasenia, PASSWORD_DEFAULT),
             "id_tipo_usuario" => $id_tipo_usuario
         ]);
@@ -89,10 +108,10 @@ class UsuarioModel {
      * @param bool $activo Estado activo del usuario
      * @return bool Resultado de la actualización
      */
-    public function updateUsuario($id_usuario, $usuario, $nombre, $apellido, $cargo, $sector, $id_tipo_usuario): bool
+    public function updateUsuario($id_usuario, $usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $id_tipo_usuario): bool
     {
         $stmt = $this->db->prepare("UPDATE usuarios 
-                                    SET usuario = :usuario, nombre = :nombre, apellido = :apellido, cargo = :cargo, sector = :sector, id_tipo_usuario = :id_tipo_usuario 
+                                    SET usuario = :usuario, nombre = :nombre, apellido = :apellido, cargo = :cargo, sector = :sector, telefono = :telefono, email = :email, id_tipo_usuario = :id_tipo_usuario 
                                     WHERE id_usuario = :id_usuario");
         $stmt->execute([
             "id_usuario" => $id_usuario,
@@ -101,6 +120,8 @@ class UsuarioModel {
             "apellido" => $apellido,
             "cargo" => $cargo,
             "sector" => $sector,
+            'telefono' => $telefono,
+            'email' => $email,
             "id_tipo_usuario" => $id_tipo_usuario,
         ]);
         return $stmt->rowCount() > 0;
