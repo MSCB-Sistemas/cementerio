@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../app/config/config.php';
 require_once __DIR__ . '/../app/config/errores.php';
 require_once __DIR__ . '/../app/lib/Control.php';
+#require_once __DIR__ . '/../tests/auditoria_smoke.php';
 
 $base = '/cementerio/mvc_cementerio';
 
@@ -19,9 +20,13 @@ $routes = [
     'usuario/changePass' => ['UsuarioController', 'changePass'],
     'usuario/savePass' => ['UsuarioController', 'savePass'],
     
+    // URL's login
     '' => ['AuthController', 'login'],
     'login' => ['AuthController', 'login'],
     'home' => ['homeController', 'index'],
+
+    // URL's auditoria.
+    'auditoria' => ['AuditoriaController', 'index'],
 
     // URL's difunto.
     'difunto' => ['DifuntoController', 'index'],

@@ -36,6 +36,7 @@ class ParcelaModel {
                                         LEFT JOIN orientacion o ON p.id_orientacion = o.id_orientacion
                                         ");
         $stmt->execute();
+        
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -110,6 +111,7 @@ class ParcelaModel {
             'nivel' => $nivel,
             'id_orientacion' => $id_orientacion
         ]);
+
         return $stmt->rowCount() > 0;
     }
 
