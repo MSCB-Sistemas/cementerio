@@ -21,6 +21,7 @@ $routes = [
     
     '' => ['AuthController', 'login'],
     'login' => ['AuthController', 'login'],
+    'logout' => ['AuthController', 'logout'],
     'home' => ['homeController', 'index'],
     'estadisticas' => ['EstadisticasController', 'index'],
 
