@@ -25,7 +25,7 @@ $filtrar = isset($_GET['filtrar']);
 <div class="tab-content mt-4">
     <!-- Pestania Padron difuntos -->
     <div class="tab-pane fade show active" id="tablas" role="tabpanel">
-        <form method="GET" class="row g-3 mb-4 justify-content-center">
+        <form method="GET" class="row g-3 mb-4">
             <div class="col-auto">
                 <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
                 <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" value="<?php echo !empty($datos['fecha_inicio']) ? htmlspecialchars($datos['fecha_inicio']) : '' ?>">
@@ -96,6 +96,7 @@ $filtrar = isset($_GET['filtrar']);
             <table class="table table-bordered table-striped">
                 <thead class="th a">
                     <tr>
+                    <th><?= generarOrdenLink('Parcela', 'Parcela', $datos) ?></th>
                     <th><?= generarOrdenLink('DNI', 'DNI', $datos) ?></th>
                     <th><?= generarOrdenLink('Nombre', 'Nombre', $datos) ?></th>
                     <th><?= generarOrdenLink('Apellido', 'Apellido', $datos) ?></th>
@@ -107,6 +108,7 @@ $filtrar = isset($_GET['filtrar']);
                 <tbody>
                     <?php foreach ($datos['deudores_morosos'] as $moroso): ?>
                         <tr>
+                        <td><?= htmlspecialchars($moroso['id_parcela']) ?></td>
                             <td><?= htmlspecialchars($moroso['dni']) ?></td>
                             <td><?= htmlspecialchars($moroso['nombre']) ?></td>
                             <td><?= htmlspecialchars($moroso['apellido']) ?></td>
