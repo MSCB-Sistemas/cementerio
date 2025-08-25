@@ -107,7 +107,7 @@ $filtrar = isset($_GET['filtrar']);
             <table class="table table-bordered table-striped" id="tabla-morosos">
                 <thead class="th a">
                     <tr>
-                        <th>Estado</th>
+                        <th><?= generarOrdenLink('Estado', 'Estado', $datos)?></th>
                         <th><?= generarOrdenLink('Parcela', 'Parcela', $datos) ?></th>
                         <th><?= generarOrdenLink('DNI', 'DNI', $datos) ?></th>
                         <th><?= generarOrdenLink('Nombre', 'Nombre', $datos) ?></th>
@@ -115,7 +115,7 @@ $filtrar = isset($_GET['filtrar']);
                         <th><?= generarOrdenLink('Fecha de vencimiento', 'Fecha vencimiento', $datos) ?></th>
                         <th><?= generarOrdenLink('Monto', 'Total', $datos) ?></th>
                         <th><?= generarOrdenLink('Dias de Mora', 'Dia/s de mora', $datos) ?></th>
-                        <th>Acciones</th>
+                        <th><?= generarOrdenLink('Acciones', 'Acciones', $datos)?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -283,7 +283,7 @@ document.getElementById('ver-activos').addEventListener('click', function() {
 document.getElementById('ver-inactivos').addEventListener('click', function() {
     this.classList.add('active');
     document.getElementById('ver-activos').classList.remove('active');
-    
+
     document.querySelectorAll('.fila-moroso').forEach(fila => {
         if (fila.getAttribute('data-estado') === 'inactivo') {
             fila.style.display = '';
