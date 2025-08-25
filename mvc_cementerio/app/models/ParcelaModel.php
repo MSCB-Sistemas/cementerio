@@ -70,7 +70,6 @@ class ParcelaModel {
     {
         $sql = "INSERT INTO parcela (id_tipo_parcela, id_deudo, numero_ubicacion, hilera, seccion, fraccion, nivel, id_orientacion) 
                 VALUES (:id_tipo_parcela, :id_deudo, :numero_ubicacion, :hilera, :seccion, :fraccion, :nivel, :id_orientacion)";
-
         $stmt = $this->db->prepare($sql);
 
         $parametros = [
@@ -100,7 +99,6 @@ class ParcelaModel {
        
     }
 
-
     /** 
      * Actualiza una parcela existente
      * @param int $id_parcela ID de la parcela a actualizar
@@ -119,7 +117,6 @@ class ParcelaModel {
         $sql = "UPDATE parcela 
                 SET id_tipo_parcela = :id_tipo_parcela, id_deudo = :id_deudo, numero_ubicacion = :numero_ubicacion, hilera = :hilera, seccion = :seccion, fraccion = :fraccion, nivel = :nivel, id_orientacion = :id_orientacion 
                 WHERE id_parcela = :id_parcela";
-
         $stmt = $this->db->prepare($sql);
         
         $parametros = [
@@ -133,7 +130,6 @@ class ParcelaModel {
             'nivel' => $nivel,
             'id_orientacion' => $id_orientacion
         ];        
-
         $stmt->execute($parametros);
 
         // aquí registramos la auditoría

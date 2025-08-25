@@ -42,7 +42,6 @@ class AuditoriaHelper {
                 error_log("Error al insertar auditoría: " . implode(" | ", $stmt->errorInfo()));
                 return false;
             }
-            echo "Auditoría insertada correctamente";
             return true;
 
         } catch (Exception $e) {
