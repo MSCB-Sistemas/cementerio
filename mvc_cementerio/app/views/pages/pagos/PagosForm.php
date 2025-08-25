@@ -58,7 +58,16 @@
                             <input type="date" class="form-control" id="fecha_pago" name="fecha_pago" 
                                    value="<?= htmlspecialchars($datos['values']['fecha_pago'] ?? '') ?>" required>
                             <div class="invalid-feedback">
-                                Por favor ingrese el número de ubicación
+                                Por favor ingrese la fecha de pago
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fecha_vencimiento" class="form-label fw-bold">Fecha de vencimiento</label>
+                            <input type="date" class="form-control" id="fecha_pago" name="fecha_vencimiento" 
+                                   value="<?= htmlspecialchars($datos['values']['fecha_vencimiento'] ?? '') ?>" required>
+                            <div class="invalid-feedback">
+                                Por favor ingrese la fecha de vencimiento
                             </div>
                         </div>
                         
@@ -67,7 +76,7 @@
                             <input type="number" class="form-control" id="hilera" name="importe" 
                                    value="<?= htmlspecialchars($datos['values']['importe'] ?? '') ?>" required>
                             <div class="invalid-feedback">
-                                Por favor ingrese la hilera
+                                Por favor ingrese el importe
                             </div>
                         </div>
                     </div>

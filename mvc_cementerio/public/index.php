@@ -23,6 +23,7 @@ $routes = [
     'login' => ['AuthController', 'login'],
     'logout' => ['AuthController', 'logout'],
     'home' => ['homeController', 'index'],
+    'estadisticas' => ['EstadisticasController', 'index'],
 
     // URL's difunto.
     'difunto' => ['DifuntoController', 'index'],
