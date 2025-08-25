@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 require_once 'Database.php';
-require_once 'AuditoriaModel.php'
 
 /**
  * Modelo ParcelaModel
@@ -13,7 +12,6 @@ class ParcelaModel {
      * Conexión a la base de datos
      */
     private PDO $db;
-    //private AuditoriaModel $auditoriaModel
 
     /*
      * Constructor
@@ -39,7 +37,10 @@ class ParcelaModel {
                                         ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
-        registrarAuditoria($id_auditoria, $id_usuario, $sql, "ParcelaController", "Select")
+
+        // aquí registramos la auditoría
+       
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
