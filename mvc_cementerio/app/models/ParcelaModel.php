@@ -13,6 +13,7 @@ class ParcelaModel {
      * Conexión a la base de datos
      */
     private PDO $db;
+    //private AuditoriaModel $auditoriaModel
 
     /*
      * Constructor

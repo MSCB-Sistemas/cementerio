@@ -34,18 +34,18 @@ class AuditoriaController extends Control{
      */
     public function registrarAuditoria($id_auditoria, $id_usuario, $query_sql, $controller, $action): array
     {
-        $id_auditoria = $this->insertAuditoria($id_auditoria, $id_usuario, $query_sql, $controller, $action);
+        $id_auditoria = $this->model->insertAuditoria($id_auditoria, $id_usuario, $query_sql, $controller, $action);
         if($id_auditoria){
             return [
                 'status' => 'success',
                 'id_auditoria' => $id_auditoria,
                 'message' => 'Auditoria registrada correctamente',
-            ]
+            ];
         }else {
             return [
                 'status' => 'error',
                 'message' => 'Error al registrar la auditoria',
-            ]
+            ];
         }
     }
 }
