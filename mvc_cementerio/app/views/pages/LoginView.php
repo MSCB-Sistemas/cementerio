@@ -39,7 +39,7 @@
                     <div class="mb-4 form-check">
                         <input class="form-check-input" type="checkbox" name="remember" id="remember">
                         <label class="form-check-label" for="remember">
-                            Recuerdame
+                            Recordar datos
                         </label>
                     </div>
                     
@@ -47,10 +47,6 @@
                         <button class="btn btn-primary btn-lg py-2" type="submit">
                             <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
                         </button>
-                    </div>
-
-                    <div class="text-center mt-3">
-                        <a href="<?= URL ?>usuario/create" class="btn btn-link">Registrar Nuevo Usuario</a>
                     </div>
                     
                     <?php if (!empty($error)): ?>
