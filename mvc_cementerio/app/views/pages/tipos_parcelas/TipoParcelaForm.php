@@ -29,12 +29,13 @@
                 </div>
                 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                    <a href="<?= URL ?>tipoParcela" class="btn btn-outline-secondary me-md-2">
-                        <i class="bi bi-x-circle"></i> Cancelar
                     </a>
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-save"></i> Guardar
                     </button>
+                    <a href="<?= URL ?>tipoParcela" class="btn btn-outline-secondary me-md-2">
+                        <i class="bi bi-x-circle"></i> Cancelar  
+                    </a>                  
                 </div>
             </form>
         </div>

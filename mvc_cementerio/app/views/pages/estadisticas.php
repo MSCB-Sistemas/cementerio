@@ -18,6 +18,9 @@ $filtrar = isset($_GET['filtrar']);
             </button>
         </li>
         <li class="nav-item">
+            <button class="nav-link" id="vendidas-tab" data-bs-toggle="tab" data-bs-target="#vendidas" type="button" role="tab">Parcelas Vendidas</button>
+        </li>
+        <li class="nav-item">
             <button class="nav-link" id="resumen-tab" data-bs-toggle="tab" data-bs-target="#resumen" type="button" role="tab">Resumen</button>
         </li>
     </ul>
@@ -127,6 +130,44 @@ $filtrar = isset($_GET['filtrar']);
             <div class="text-center py-4">
                 <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
                 <p class="text-muted">No hay deudores morosos</p>
+            </div>
+        <?php endif; ?>
+    </div>
+
+
+    <!-- Pestaña de Parcelas Vendidas -->
+    <div class="tab-pane fade" id="vendidas" role="tabpanel">
+        <?php if (!empty($datos['parcelas_vendidas'])): ?>
+            <table class="table table-bordered table-striped">
+                <thead class="th a">
+                    <tr>
+                        <th><?= generarOrdenLink('id_parcela', 'Parcela', $datos) ?></th>
+                        <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
+                        <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
+                        <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>    
+                        <th><?= generarOrdenLink('monto', 'Monto', $datos) ?></th>                             
+                        <th><?= generarOrdenLink('fecha_venta', 'Fecha de Venta', $datos) ?></th>    
+                        <th><?= generarOrdenLink('fecha_vencimiento', 'Fecha de Vencimiento', $datos) ?></th>                
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($datos['parcelas_vendidas'] as $venta): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($venta['id_parcela']) ?></td>
+                            <td><?= htmlspecialchars($venta['nombre']) ?></td>
+                            <td><?= htmlspecialchars($venta['apellido']) ?></td>
+                            <td><?= htmlspecialchars($venta['dni']) ?></td> 
+                            <td>$<?= number_format($venta['monto'], 2) ?></td>          
+                            <td><?= date('d/m/Y', strtotime($venta['fecha_venta'])) ?></td>  
+                            <td><?= date('d/m/Y', strtotime($venta['fecha_vencimiento'])) ?></td>            
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <div class="text-center py-4">
+                <i class="fas fa-info-circle text-info fa-3x mb-3"></i>
+                <p class="text-muted">No hay parcelas vendidas registradas</p>
             </div>
         <?php endif; ?>
     </div>

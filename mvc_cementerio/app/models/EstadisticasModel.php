@@ -77,6 +77,32 @@ class EstadisticasModel extends Control {
             return 0;
         }
     }
+
+    public function getParcelasVendidas($fecha_inicio, $fecha_fin) {
+        $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
+
+        try {
+            $stmt = $this->db->prepare("
+                SELECT p.id_parcela, d.nombre, d.apellido, d.dni, pgo.total as monto, pgo.fecha_pago as fecha_venta, pgo.fecha_vencimiento
+                FROM pago pgo
+                INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
+                INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
+                WHERE DATE(pgo.fecha_pago) BETWEEN :inicio AND :fin
+                ORDER BY pgo.fecha_pago DESC
+            ");
+
+            $stmt->bindValue(':inicio', $fecha_inicio);
+            $stmt->bindValue(':fin', $fecha_fin);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            error_log("Error en getParcelasVendidas: " . $e->getMessage());
+            return [];
+        }
+    }
+
 }
 
 ?>

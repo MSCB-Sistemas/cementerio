@@ -27,6 +27,10 @@ class EstadisticasController extends Control {
         $total_defunciones = $this->model->getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin);
         $total_paginas = max(1, ceil($total_defunciones / $limite));
 
+        $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin);
+        $total_parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin);
+
+
         $datos = [
             'title' => 'Estadisticas',
             'movimientos' => $defunciones,
@@ -38,7 +42,9 @@ class EstadisticasController extends Control {
             'pagina_actual' => $pagina,
             'total_paginas' => $total_paginas,
             'total_resultados' => $total_defunciones,
-            'total_morosos' => count($deudores_morosos)
+            'total_morosos' => count($deudores_morosos),
+            'parcelas_vendidas' => $parcelas_vendidas,
+            'total_parcelas_vendidas' => $total_parcelas_vendidas
         ];
 
         $this->loadView("estadisticas", $datos);
