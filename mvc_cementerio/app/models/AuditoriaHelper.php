@@ -13,6 +13,11 @@ class AuditoriaHelper {
                 $this->db = Database::connect();
             }
 
+            // si no viene usuario explícito, lo sacamos de la sesión
+            if ($id_usuario === null && isset($_SESSION['id_usuario'])) {
+                $id_usuario = $_SESSION['id_usuario'];
+            }
+
             $sql = "INSERT INTO auditoria (id_usuario, creado_en, query_sql, parametros, controller, accion) 
                     VALUES (:id_usuario, :creado_en, :query_sql, :parametros, :controller, :accion)";
 
@@ -33,7 +38,7 @@ class AuditoriaHelper {
 
             $stmt = $db->prepare($sql);
             return $stmt->execute($paramsInsert);
-            
+
         } catch (Exception $e) {
             error_log("Error en auditoría: " . $e->getMessage());
             return false;

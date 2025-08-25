@@ -39,7 +39,7 @@ class ParcelaModel {
         $stmt->execute();
 
         // aquí registramos la auditoría
-       
+       Auditoria::log(null, $sql, "ParcelaController", "Select"); // el helper busca $_SESSION['id_usuario']
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
