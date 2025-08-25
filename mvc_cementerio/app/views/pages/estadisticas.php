@@ -91,7 +91,7 @@ $filtrar = isset($_GET['filtrar']);
     </div>
 
     <!-- Pestania para deudores morosos-->
-    <div class="tab-pane fade show active" id="morosos" role="tabpanel">
+    <div class="tab-pane fade" id="morosos" role="tabpanel">
         <?php if (!empty($datos['deudores_morosos'])): ?>
             <table class="table table-bordered table-striped">
                 <thead class="th a">
