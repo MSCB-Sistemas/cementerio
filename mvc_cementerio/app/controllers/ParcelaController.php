@@ -4,7 +4,6 @@ class ParcelaController extends Control {
     private TipoParcelaModel $tipoParcelaModel;
     private DeudoModel $deudoModel;
     private OrientacionModel $orientacionModel;
-    private AuditoriaModel $auditoriaModel;
 
     public function __construct()
     {
@@ -13,7 +12,6 @@ class ParcelaController extends Control {
         $this->tipoParcelaModel = $this->loadModel("TipoParcelaModel");
         $this->deudoModel = $this->loadModel("DeudoModel");
         $this->orientacionModel = $this->loadModel("OrientacionModel");
-        $this->auditoriaModel = $this->loadModel("AuditoriaModel");
     }
 
     public function index()
@@ -176,38 +174,8 @@ class ParcelaController extends Control {
                 return;
             }
 
-            $query = $this->model->updateParcela(
-                $id, 
-                $tipo_parcela, 
-                $deudo, 
-                $nro_ubicacion, 
-                $hilera, 
-                $seccion, 
-                $fraccion, 
-                $nivel, 
-                $orientacion
-            );
-
-            if ($query) {
-                // Armar query para auditoría (con valores reales)
-                $query = "UPDATE parcela SET 
-                            id_tipo_parcela = $tipo_parcela, 
-                            id_deudo = $deudo, 
-                            numero_ubicacion = '$nro_ubicacion', 
-                            hilera = '$hilera', 
-                            seccion = '$seccion', 
-                            fraccion = '$fraccion', 
-                            nivel = $nivel, 
-                            id_orientacion = $orientacion 
-                        WHERE id_parcela = $id";
-
-                // Guarda en auditoria
-                $this->AuditoriaModel = registrarAuditoria(
-                    $id_usuario = $_SESSION['id_usuario'],  //id usuario
-                    $id_sesion = $_SESSION['id_sesion'], //id sesion
-                    $query = $id_sesion = $_SESSION['querys'] //querys
-                );
-
+            if ($this->model->updateParcela($id, $tipo_parcela, $deudo, $nro_ubicacion, $hilera, $seccion, $fraccion, $nivel, $orientacion)) 
+            {
                 header("Location: " . URL . "parcela");
                 exit;
             } else {

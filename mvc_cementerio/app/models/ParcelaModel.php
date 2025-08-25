@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
-require_once 'AuditoriaHelper.php';
+require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /**
@@ -84,23 +84,20 @@ class ParcelaModel {
             'id_orientacion' => $id_orientacion
         ];
 
-        if($stmt->execute($parametros)){
-            if (isset($_SESSION['id_usuario'])) {   
-                    $id_usuario = $_SESSION['id_usuario'];
-            } else {$id_usuario = null; }
+        $stmt->execute($parametros);
 
-            // aquí registramos la auditoría
-            AuditoriaHelper::log(
-                $id_usuario,                // usuario actual
-                $sql,                       // Query SQL ejecutada
-                $parametros,                // Parámetros
-                "ParcelaModel",             // Modelo
-                "Insert"                    // Accion
-            );
-            return (int) $this->db->lastInsertId();
-        }else{
-            return 0; // o lanzar una excepción
-        }
+        // aquí registramos la auditoría
+        //var_dump( "Entró a AuditoriaHelper::log");
+        //var_dump($_SESSION);
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "ParcelaModel",             // Modelo
+            "Insert"                    // Accion
+        );
+        return (int) $this->db->lastInsertId();
+       
     }
 
 
@@ -124,7 +121,8 @@ class ParcelaModel {
                 WHERE id_parcela = :id_parcela";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([
+        
+        $parametros = [
             'id_parcela' => $id_parcela,
             'id_tipo_parcela' => $id_tipo_parcela,
             'id_deudo' => $id_deudo,
@@ -134,8 +132,18 @@ class ParcelaModel {
             'fraccion' => $fraccion,
             'nivel' => $nivel,
             'id_orientacion' => $id_orientacion
-        ]);
+        ];        
 
+        $stmt->execute($parametros);
+
+        // aquí registramos la auditoría
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "ParcelaModel",             // Modelo
+            "Update"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
@@ -146,8 +154,20 @@ class ParcelaModel {
      */
     public function deleteParcela($id_parcela): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM parcela WHERE id_parcela = :id_parcela");
-        $stmt->execute(['id_parcela' => $id_parcela]);
+        $sql = "DELETE FROM parcela WHERE id_parcela = :id_parcela";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['id_parcela' => $id_parcela];
+
+        $stmt->execute($parametros);
+
+        // aquí registramos la auditoría
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "ParcelaModel",             // Modelo
+            "Delete"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 }

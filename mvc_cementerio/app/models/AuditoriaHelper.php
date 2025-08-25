@@ -5,7 +5,7 @@ class AuditoriaHelper {
     public static function log(
         ?int $id_usuario, 
         string $query_sql, 
-        array $parametros = [], 
+        array $parametros, 
         string $model, 
         string $accion
     ): bool {
@@ -37,7 +37,13 @@ class AuditoriaHelper {
             ];
 
             $stmt = $db->prepare($sql);
-            return $stmt->execute($paramsInsert);
+
+            if (!$stmt->execute($paramsInsert)) {
+                error_log("Error al insertar auditoría: " . implode(" | ", $stmt->errorInfo()));
+                return false;
+            }
+            echo "Auditoría insertada correctamente";
+            return true;
 
         } catch (Exception $e) {
             error_log("Error en auditoría: " . $e->getMessage());
