@@ -92,23 +92,41 @@ $filtrar = isset($_GET['filtrar']);
 
     <!-- Pestania para deudores morosos-->
     <div class="tab-pane fade" id="morosos" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary active" id="ver-activos">
+                    <i class="fas fa-toggle-on me-1"></i> Ver activos
+                </button>
+                <button type="button" class="btn btn-outline-secondary" id="ver_inactivos">
+                    <i class="fas fa-toggle-off me-1"></i> Ver inactivos
+                </button>
+            </div>
+        </div>
+
         <?php if (!empty($datos['deudores_morosos'])): ?>
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped" id="tabla-morosos">
                 <thead class="th a">
                     <tr>
-                    <th><?= generarOrdenLink('Parcela', 'Parcela', $datos) ?></th>
-                    <th><?= generarOrdenLink('DNI', 'DNI', $datos) ?></th>
-                    <th><?= generarOrdenLink('Nombre', 'Nombre', $datos) ?></th>
-                    <th><?= generarOrdenLink('Apellido', 'Apellido', $datos) ?></th>
-                    <th><?= generarOrdenLink('Fecha de vencimiento', 'Fecha vencimiento', $datos) ?></th>
-                    <th><?= generarOrdenLink('Monto', 'Total', $datos) ?></th>
-                    <th><?= generarOrdenLink('Dias de Mora', 'Dia/s de mora', $datos) ?></th>
+                        <th>Estado</th>
+                        <th><?= generarOrdenLink('Parcela', 'Parcela', $datos) ?></th>
+                        <th><?= generarOrdenLink('DNI', 'DNI', $datos) ?></th>
+                        <th><?= generarOrdenLink('Nombre', 'Nombre', $datos) ?></th>
+                        <th><?= generarOrdenLink('Apellido', 'Apellido', $datos) ?></th>
+                        <th><?= generarOrdenLink('Fecha de vencimiento', 'Fecha vencimiento', $datos) ?></th>
+                        <th><?= generarOrdenLink('Monto', 'Total', $datos) ?></th>
+                        <th><?= generarOrdenLink('Dias de Mora', 'Dia/s de mora', $datos) ?></th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($datos['deudores_morosos'] as $moroso): ?>
-                        <tr>
-                        <td><?= htmlspecialchars($moroso['id_parcela']) ?></td>
+                    <?php foreach ($datos['deudores_morosos'] as $index => $moroso):
+                        $estado = 'activo'; 
+                    ?>
+                        <tr class="fila-moroso" data-estado="<?= $estado ?>">
+                            <td class="text-center">
+                                <span class="badge estado-badge bg-success">Activo</span>
+                            </td>
+                            <td><?= htmlspecialchars($moroso['id_parcela']) ?></td>
                             <td><?= htmlspecialchars($moroso['dni']) ?></td>
                             <td><?= htmlspecialchars($moroso['nombre']) ?></td>
                             <td><?= htmlspecialchars($moroso['apellido']) ?></td>
@@ -117,7 +135,14 @@ $filtrar = isset($_GET['filtrar']);
                             </td>
                             <td>$<?= number_format($moroso['total'], 2) ?></td>
                             <td><?php $dias_mora = floor((time() - strtotime($moroso['fecha_vencimiento'])) / (60 * 60 * 24));
-                            echo '<span class="badge bg-danger">' . $dias_mora . ' dia/s</span>'; ?>
+                                echo '<span class="badge bg-danger">' . $dias_mora . ' dia/s</span>'; ?>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-toggle-estado <?= $estado == 'activo' ? 'btn-warning' : 'btn-success' ?>" 
+                                        data-id="<?= $index ?>"
+                                        data-estado-actual="<?= $estado ?>">
+                                    <i class="fas fa-toggle-off"></i> Desactivar
+                                </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -186,6 +211,85 @@ document.addEventListener('DOMContentLoaded', function() {
             const activeTab = e.target.getAttribute('data-bs-target');
             localStorage.setItem('activeTab', activeTab);
         });
+    });
+});
+
+const botonesEstado = document.querySelectorAll('.btn-toggle-estado');
+botonesEstado.forEach(boton => {
+    boton.addEventListener('click', function() {
+        const idDeuda = this.getAttribute('data-id');
+        const estadoActual = this.getAttribute('data-estado-actual');
+        const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
+
+        // Aca va un ajax.
+        console.log('Cambiando estado de deuda ${idDeuda} de ${estadoActual} a ${nuevoEstado}');
+
+        setTimeout(() => {
+            this.setAttribute('data-estado-actual', nuevoEstado);
+
+            const fila = this.closest('.fila-moroso');
+
+            if (nuevoEstado === 'activo') {
+                this.classList.remove('btn-success');
+                this.classList.add('btn-warning');
+                this.innerHTML = '<i class="fas fa-toggle-off"></i> Desactivar';
+
+                const badge = fila.querySelector('.estado-badge');
+                badge.classList.remove('bg-secondary');
+                badge.classList.add('bg-success');
+                badge.textContent = 'Activo';
+
+                fila.setAttribute('data-estado', 'activo');
+
+                if (document.getElementById('ver-activos').classList.contains('active')) {
+                    fila.style.display = '';
+                }
+
+            } else {
+                this.classList.remove('btn-warning');
+                this.classList.add('btn-success');
+                this.innerHTML = '<i class="fas fa-toggle-off"></i> Activar';
+
+                const badge = fila.querySelector('.estado-badge');
+                badge.classList.remove('bg-success');
+                badge.classList.add('bg-secondary');
+                badge.textContent = 'Inactivo';
+
+                fila.setAttribute('data-estado', 'inactivo');
+
+                if (document.getElementById('ver-activos').classList.contains('active')) {
+                    fila.style.display = 'none';
+                }
+            }
+
+            alert("Deuda ${nuevoEstado === 'activo' ? 'activada' : 'desactivada'} correctamente");
+        }, 300);
+    });
+});
+
+document.getElementById('ver-activos').addEventListener('click', function() {
+    this.classList.add('active');
+    document.getElementById('ver-inactivos').classList.remove('active');
+
+    document.querySelectorAll('.fila-moroso').forEach(fila => {
+        if (fila.getAttribute('data-estado') === 'activo') {
+            fila.style.display = '';
+        } else {
+            fila.style.display = 'none';
+        }
+    });
+});
+
+document.getElementById('ver-inactivos').addEventListener('click', function() {
+    this.classList.add('active');
+    document.getElementById('ver-activos').classList.remove('active');
+    
+    document.querySelectorAll('.fila-moroso').forEach(fila => {
+        if (fila.getAttribute('data-estado') === 'inactivo') {
+            fila.style.display = '';
+        } else {
+            fila.style.display = 'none';
+        }
     });
 });
 </script>
