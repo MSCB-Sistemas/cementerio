@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
+require_once 'AuditoriaHelper.php';
 require_once 'Database.php';
 
 /**
@@ -83,23 +84,23 @@ class ParcelaModel {
             'id_orientacion' => $id_orientacion
         ];
 
-        $stmt->execute($parametros);
+        if($stmt->execute($parametros)){
+            if (isset($_SESSION['id_usuario'])) {   
+                    $id_usuario = $_SESSION['id_usuario'];
+            } else {$id_usuario = null; }
 
-        if (isset($_SESSION['id_usuario'])) {   
-                $id_usuario = $_SESSION['id_usuario'];
-        } else {
-            $id_usuario = null;
+            // aquí registramos la auditoría
+            AuditoriaHelper::log(
+                $id_usuario,                // usuario actual
+                $sql,                       // Query SQL ejecutada
+                $parametros,                // Parámetros
+                "ParcelaModel",             // Modelo
+                "Insert"                    // Accion
+            );
+            return (int) $this->db->lastInsertId();
+        }else{
+            return 0; // o lanzar una excepción
         }
-
-        // aquí registramos la auditoría
-        AuditoriaHelper::log(
-            $id_usuario;                // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "ParcelaModel",             // Modelo
-            "Insert"                    // Accion
-        );
-        return (int) $this->db->lastInsertId();
     }
 
 

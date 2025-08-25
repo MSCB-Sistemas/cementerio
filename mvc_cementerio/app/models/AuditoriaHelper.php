@@ -6,7 +6,7 @@ class AuditoriaHelper {
         ?int $id_usuario, 
         string $query_sql, 
         array $parametros = [], 
-        string $controller, 
+        string $model, 
         string $accion
     ): bool {
         try {
@@ -18,8 +18,8 @@ class AuditoriaHelper {
                 $id_usuario = $_SESSION['id_usuario'];
             }
 
-            $sql = "INSERT INTO auditoria (id_usuario, creado_en, query_sql, parametros, controller, accion) 
-                    VALUES (:id_usuario, :creado_en, :query_sql, :parametros, :controller, :accion)";
+            $sql = "INSERT INTO auditoria (id_usuario, creado_en, query_sql, parametros, model, accion) 
+                    VALUES (:id_usuario, :creado_en, :query_sql, :parametros, :model, :accion)";
 
             if (!empty($parametros)){
                 $parametrosJSON = json_encode($parametros, JSON_UNESCAPED_UNICODE);
@@ -32,7 +32,7 @@ class AuditoriaHelper {
                 'creado_en'  => date('Y-m-d H:i:s'),
                 'query_sql'  => $query_sql,
                 'parametros' => $parametrosJSON,
-                'controller' => $controller,
+                'model' => $model,
                 'accion'     => $accion
             ];
 

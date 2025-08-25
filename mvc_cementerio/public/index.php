@@ -25,9 +25,6 @@ $routes = [
     'login' => ['AuthController', 'login'],
     'home' => ['homeController', 'index'],
 
-    // URL's auditoria.
-    'auditoria' => ['AuditoriaController', 'index'],
-
     // URL's difunto.
     'difunto' => ['DifuntoController', 'index'],
     'difunto/create' => ['DifuntoController', 'create'],
