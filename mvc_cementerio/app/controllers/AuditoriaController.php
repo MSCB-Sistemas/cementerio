@@ -32,9 +32,9 @@ class AuditoriaController extends Control{
      * Registrar una auditoria. 
      * @return Devuelve su status e Id insertado.
      */
-    public function registrarAuditoria($id_sesion, $id_usuario, $creado_en, $query_sql, $controller, $action): array
+    public function registrarAuditoria($id_auditoria, $id_usuario, $query_sql, $controller, $action): array
     {
-        $id_auditoria = $this->insertAuditoria($id_sesion, $id_usuario, $creado_en, $query_sql, $controller, $action);
+        $id_auditoria = $this->insertAuditoria($id_auditoria, $id_usuario, $query_sql, $controller, $action);
         if($id_auditoria){
             return [
                 'status' => 'success',
@@ -48,8 +48,6 @@ class AuditoriaController extends Control{
             ]
         }
     }
-
-
 }
 
 ?>

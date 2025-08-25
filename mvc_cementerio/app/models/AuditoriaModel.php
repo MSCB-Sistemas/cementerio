@@ -35,7 +35,7 @@ class AuditoriaModel {
      * @param int $id_auditoria ID de la auditoria a buscar
      * @return array|false Devuelve array o false si no existe.
      */
-    public getAuditoria($id_auditoria): array
+    public function getAuditoria($id_auditoria): array|false
     {
         $stmt = $this->db->prepare("SELECT * FROM auditoria WHERE id_auditoria = :id_auditoria");
         $stmt->execute(['id_auditoria' => $id_auditoria]);
@@ -57,14 +57,14 @@ class AuditoriaModel {
      * @param $action Nombre de la acción
      * @return int ID de la nueva auditoria insertada o false si falla
      */
-    public function insertAuditoria($id_auditoria, $id_usuario, $query_sql, $controller, $accion): int
+    public function insertAuditoria($id_auditoria, $id_usuario, $query_sql, $controller, $accion): int|false
     {
         $sql = "INSERT INTO auditoria (id_auditoria, id_usuario, creado_en, query_sql, controller, accion) 
                                 VALUES (:id_auditoria, :id_usuario, :creado_en, :query_sql, :controller, :accion)";
         $params = [
             'id_auditoria' => $id_auditoria,
             'id_usuario' => $id_usuario,
-            'creado_en' => $creado_en->format('Y-m-d H:i:s'), // Formateamos a string
+            'creado_en' => $creado_en->date('Y-m-d H:i:s'), // Formateamos a string
             'query_sql' => $query_sql
             'controller' => $controller,
             'accion' => $accion

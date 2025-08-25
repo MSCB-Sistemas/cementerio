@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 require_once 'Database.php';
+require_once 'AuditoriaModel.php'
 
 /**
  * Modelo ParcelaModel
@@ -26,7 +27,7 @@ class ParcelaModel {
      */
     public function getAllParcelas(): array
     {
-        $stmt = $this->db->prepare("SELECT p.*,
+        $sql = "SELECT p.*,
                                                 tp.nombre_parcela AS tipo_parcela,
                                                 de.nombre AS nombre_deudo,
                                                 o.descripcion AS orientacion
@@ -34,9 +35,10 @@ class ParcelaModel {
                                         LEFT JOIN tipo_parcela tp ON p.id_tipo_parcela = tp.id_tipo_parcela
                                         LEFT JOIN deudo de ON p.id_deudo = de.id_deudo
                                         LEFT JOIN orientacion o ON p.id_orientacion = o.id_orientacion
-                                        ");
+                                        ";
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
-        
+        registrarAuditoria($id_auditoria, $id_usuario, $sql, "ParcelaController", "Select")
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
