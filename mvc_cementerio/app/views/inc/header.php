@@ -14,7 +14,6 @@
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
   
-  <!-- Tema de color (cambiado a naranja) -->
   <meta name="theme-color" content="#fd7e14">
 
   <?php if (isset($datos['error'])) {
@@ -82,7 +81,6 @@
       background-color: var(--bs-primary);
     }
     
-    /* Estilos base que tenías */
     .bd-placeholder-img {
         font-size:1.125rem;
         text-anchor:middle;
@@ -135,7 +133,6 @@
         -webkit-overflow-scrolling:touch
     }
     
-    /* Actualizado a naranja */
     .btn-bd-primary {
         --bd-violet-bg: var(--bs-primary);
         --bd-violet-rgb: var(--bs-primary-rgb);
@@ -165,7 +162,6 @@
         display:block!important
     }
     
-    /* Estilos adicionales */
     .card {
         border: none;
         border-radius: 0.5rem;
