@@ -78,21 +78,33 @@ class EstadisticasModel extends Control {
         }
     }
 
-    public function getParcelasVendidas($fecha_inicio, $fecha_fin) {
+    public function getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido = '') {
         $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
 
         try {
-            $stmt = $this->db->prepare("
+            $sql = "
                 SELECT p.id_parcela, d.nombre, d.apellido, d.dni, pgo.total as monto, pgo.fecha_pago as fecha_venta, pgo.fecha_vencimiento
                 FROM pago pgo
                 INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
                 INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
                 WHERE DATE(pgo.fecha_pago) BETWEEN :inicio AND :fin
-                ORDER BY pgo.fecha_pago DESC
-            ");
+            ";
+
+            if (!empty($letra_apellido)) {
+                $sql .= " AND d.apellido LIKE :letra_apellido";
+            }
+
+            $sql .= " ORDER BY pgo.fecha_pago DESC";
+
+            $stmt = $this->db->prepare($sql);
 
             $stmt->bindValue(':inicio', $fecha_inicio);
             $stmt->bindValue(':fin', $fecha_fin);
+
+            if (!empty($letra_apellido)) {
+                $stmt->bindValue(':letra_apellido', $letra_apellido . '%');
+            }
+
             $stmt->execute();
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -102,6 +114,62 @@ class EstadisticasModel extends Control {
             return [];
         }
     }
+
+    public function getParcelasVendidasPorDatosParcela($filtros = []) {
+    try {
+        $sql = "
+            SELECT p.id_parcela, d.nombre, d.apellido, d.dni, pgo.total as monto, pgo.fecha_pago as fecha_venta, pgo.fecha_vencimiento
+            FROM pago pgo
+            INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
+            INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
+            WHERE 1=1
+        ";
+
+        $params = [];
+
+        if (!empty($filtros['tipo_parcela'])) {
+            $sql .= " AND p.tipo = :tipo_parcela";
+            $params[':tipo_parcela'] = $filtros['tipo_parcela'];
+        }
+
+        if (!empty($filtros['seccion'])) {
+            $sql .= " AND p.seccion = :seccion";
+            $params[':seccion'] = $filtros['seccion'];
+        }
+
+        if (!empty($filtros['fraccion'])) {
+            $sql .= " AND p.fraccion = :fraccion";
+            $params[':fraccion'] = $filtros['fraccion'];
+        }
+
+        if (!empty($filtros['orientacion'])) {
+            $sql .= " AND p.orientacion = :orientacion";
+            $params[':orientacion'] = $filtros['orientacion'];
+        }
+
+        if (!empty($filtros['hilera'])) {
+            $sql .= " AND p.hilera = :hilera";
+            $params[':hilera'] = $filtros['hilera'];
+        }
+
+        if (!empty($filtros['ubicacion'])) {
+            $sql .= " AND p.ubicacion = :ubicacion";
+            $params[':ubicacion'] = $filtros['ubicacion'];
+        }
+
+        $sql .= " ORDER BY pgo.fecha_pago DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    } catch (PDOException $e) {
+        error_log("Error en getParcelasVendidasPorDatosParcela: " . $e->getMessage());
+        return [];
+    }
+}
+
 
 }
 

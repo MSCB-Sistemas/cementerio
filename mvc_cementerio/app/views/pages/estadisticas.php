@@ -1,9 +1,8 @@
 <?php
-
 $error = '';
-$filtrar = isset($_GET['filtrar']);
-
+$buscar = isset($_GET['buscar']);
 ?>
+
     <link rel="stylesheet" href="<?= URL . '/public/css/estadisticas.css' ?>">
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -26,7 +25,7 @@ $filtrar = isset($_GET['filtrar']);
     </ul>
 
 <div class="tab-content mt-4">
-    <!-- Pestania Padron difuntos -->
+    <!-- Pestaña Padron difuntos -->
     <div class="tab-pane fade show active" id="tablas" role="tabpanel">
         <form method="GET" class="row g-3 mb-4">
             <div class="col-auto">
@@ -40,7 +39,7 @@ $filtrar = isset($_GET['filtrar']);
             </div>
 
             <div class="col-auto align-self-end">
-                <button type="submit" name="filtrar" class="btn btn-primary">Filtrar</button>
+                <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
             </div>
         </form>
 
@@ -93,7 +92,7 @@ $filtrar = isset($_GET['filtrar']);
         <?php endif; ?>
     </div>
 
-    <!-- Pestania para deudores morosos-->
+    <!-- Pestaña para deudores morosos-->
     <div class="tab-pane fade show active" id="morosos" role="tabpanel">
         <?php if (!empty($datos['deudores_morosos'])): ?>
             <table class="table table-bordered table-striped">
@@ -137,6 +136,100 @@ $filtrar = isset($_GET['filtrar']);
 
     <!-- Pestaña de Parcelas Vendidas -->
     <div class="tab-pane fade" id="vendidas" role="tabpanel">
+        <!-- Seleccionar tipo de filtro de búsqueda -->
+        <div class="mb-4">
+            <label for="tipo_filtro" class="form-label">Seleccionar filtro de búsqueda:</label>
+            <select id="tipo_filtro" class="form-select w-auto" onchange="mostrarFiltro()">
+                <option value="">Seleccionar...</option>
+                <option value="lista_completa">Listado de Parcelas</option>
+                <option value="filtro_fecha">Por Fecha de Venta</option>
+                <option value="filtro_parcela">Por Datos de Parcela</option>
+                <option value="filtro_titular">Por Titular</option>
+            </select>
+    </div>
+
+        <!-- Filtro por Fecha -->
+        <div id="filtro_fecha" class="filtro-box mb-4">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <label for="fecha_inicio" class="form-label">Desde</label>
+                    <input type="date" class="form-control" name="fecha_inicio" value="<?= htmlspecialchars($_GET['fecha_inicio'] ?? '') ?>">
+                </div>
+                <div class="col-md-3">
+                    <label for="fecha_fin" class="form-label">Hasta</label>
+                    <input type="date" class="form-control" name="fecha_fin" value="<?= htmlspecialchars($_GET['fecha_fin'] ?? '') ?>">
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Filtro por Datos de Parcela -->
+        <div id="filtro_parcela" class="filtro-box mb-4" style="display: none;">
+            <form method="GET" class="row g-3">
+                <div class="col-md-2">
+                    <label for="tipo_parcela" class="form-label">Tipo</label>
+                    <select name="tipo_parcela" class="form-select">
+                        <option value="">Seleccionar...</option>
+                        <option value="N">Nicho</option>
+                        <option value="F">Fosa</option>
+                        <option value="P">Panteón</option>
+                        <option value="O">Osario</option>
+                        <option value="E">Especial</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="seccion" class="form-label">Sección</label>
+                    <input type="text" class="form-control" name="seccion">
+                </div>
+                <div class="col-md-2">
+                    <label for="fraccion" class="form-label">Fracción</label>
+                    <input type="text" class="form-control" name="fraccion">
+                </div>
+                <div class="col-md-2">
+                    <label for="orientacion" class="form-label">Orientación</label>
+                    <select name="orientacion" class="form-select">
+                        <option value="">Seleccionar...</option>
+                        <option value="N">Norte</option>
+                        <option value="S">Sur</option>
+                        <option value="E">Este</option>
+                        <option value="O">Oeste</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="hilera" class="form-label">Hilera</label>
+                    <input type="text" class="form-control" name="hilera">
+                </div>
+                <div class="col-md-2">
+                    <label for="ubicacion" class="form-label">Nº de Ubicación</label>
+                    <input type="text" class="form-control" name="ubicacion">
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Filtro por Titular -->
+        <div id="filtro_titular" class="filtro-box mb-4" style="display: none;">
+            <form method="GET" class="row g-3">
+                <div class="col-md-2">
+                    <label for="letra_apellido" class="form-label">Apellido Titular (A-Z)</label>
+                    <select name="letra_apellido" class="form-select">
+                        <option value="">Seleccionar...</option>
+                        <?php foreach (range('A', 'Z') as $letra): ?>
+                            <option value="<?= $letra ?>" <?= (isset($datos['letra_apellido']) && $datos['letra_apellido'] === $letra) ? 'selected' : '' ?>><?= $letra ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Mostrar datos -->
         <?php if (!empty($datos['parcelas_vendidas'])): ?>
             <table class="table table-bordered table-striped">
                 <thead class="th a">
@@ -172,7 +265,8 @@ $filtrar = isset($_GET['filtrar']);
         <?php endif; ?>
     </div>
 
-    <!-- Pestania de resumen -->
+
+    <!-- Pestaña de resumen -->
     <div class="tab-pane fade" id="resumen" role="tabpanel">
         <div class="alert alert-info">
             Contenido de resumen --pendiente--
@@ -210,23 +304,49 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
 ?>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Restaurar el tab activo guardado
-    const lastTab = localStorage.getItem('activeTab');
-    if (lastTab) {
-        const tabElement = document.querySelector(`[data-bs-target="${lastTab}"]`);
-        if (tabElement) {
-            new bootstrap.Tab(tabElement).show();
+    document.addEventListener('DOMContentLoaded', function() {
+        // Restaurar el tab activo guardado
+        const lastTab = localStorage.getItem('activeTab');
+        if (lastTab) {
+            const tabElement = document.querySelector(`[data-bs-target="${lastTab}"]`);
+            if (tabElement) {
+                new bootstrap.Tab(tabElement).show();
+            }
+        }
+
+        // Escuchar cambio de pestaña y guardarlo
+        const tabLinks = document.querySelectorAll('[data-bs-toggle="tab"]');
+        tabLinks.forEach(tab => {
+            tab.addEventListener('shown.bs.tab', function(e) {
+                const activeTab = e.target.getAttribute('data-bs-target');
+                localStorage.setItem('activeTab', activeTab);
+            });
+        });
+    });
+
+    // Función para mostrar el filtro seleccionado
+    function mostrarFiltro() {
+        const seleccion = document.getElementById('tipo_filtro').value;
+        const filtros = document.querySelectorAll('.filtro-box');
+
+        filtros.forEach(f => f.style.display = 'none');
+
+        // Si se elige "lista_completa", recarga sin parámetros
+    if (seleccion === 'lista_completa') {
+        window.location.href = window.location.pathname + '?tab=vendidas';
+        return;
+    }
+
+        if (!seleccion) return; // No mostrar nada si no hay selección
+
+        const filtroSeleccionado = document.getElementById(seleccion);
+        if (filtroSeleccionado) {
+            filtroSeleccionado.style.display = 'block';
         }
     }
 
-    // Escuchar cambio de pestaña y guardarlo
-    const tabLinks = document.querySelectorAll('[data-bs-toggle="tab"]');
-    tabLinks.forEach(tab => {
-        tab.addEventListener('shown.bs.tab', function(e) {
-            const activeTab = e.target.getAttribute('data-bs-target');
-            localStorage.setItem('activeTab', activeTab);
-        });
+    document.addEventListener('DOMContentLoaded', function () {
+        mostrarFiltro();
     });
-});
+
 </script>

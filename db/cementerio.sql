@@ -31,6 +31,11 @@ CREATE TABLE `orientacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 
+LOCK TABLES `orientacion` WRITE;
+INSERT INTO `orientacion` VALUES (1,'Norte'),(2,'Sur'),(3,'Este'),(4,'Oeste');
+UNLOCK TABLES;
+
+
 -- cementerio.tipo_parcela definition
 
 CREATE TABLE `tipo_parcela` (
@@ -38,6 +43,10 @@ CREATE TABLE `tipo_parcela` (
   `nombre_parcela` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NOT NULL,
   PRIMARY KEY (`id_tipo_parcela`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+
+LOCK TABLES `tipo_parcela` WRITE;
+INSERT INTO `tipo_parcela` VALUES (1,'Nicho'),(2,'Fosa'),(3,'Panteon'),(4,'Osario'),(5,'Especial');
+UNLOCK TABLES;
 
 -- sgcm.tipos_usuarios definition
 
