@@ -79,7 +79,7 @@ class DeudoModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "DeudoModel",               // Modelo
+            "Deudo Model",               // Modelo
             "Insert"                    // Accion
         );
         return (int) $this->db->lastInsertId();
@@ -122,7 +122,7 @@ class DeudoModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "DeudoModel",               // Modelo
+            "Deudo Model",               // Modelo
             "Update"                    // Accion
         );
         return $stmt->rowCount() > 0;
@@ -145,7 +145,7 @@ class DeudoModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "DeudoModel",             // Modelo
+            "Deudo Model",             // Modelo
             "Delete"                    // Accion
         );
         return $stmt->rowCount() > 0;

@@ -63,7 +63,7 @@ class EstadoCivilModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "EstadoCivilModel",         // Modelo
+            "Estado Civil Model",         // Modelo
             "Insert"                    // Accion
         );
         return $this->db->lastInsertId();
@@ -92,7 +92,7 @@ class EstadoCivilModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "EstadoCivilModel",         // Modelo
+            "Estado Civil Model",         // Modelo
             "Update"                    // Accion
         );
         return $stmt->rowCount() > 0;
@@ -114,7 +114,7 @@ class EstadoCivilModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "EstadoCivilModel",         // Modelo
+            "Estado Civil Model",         // Modelo
             "Delete"                    // Accion
         );
         return $stmt->rowCount() > 0;

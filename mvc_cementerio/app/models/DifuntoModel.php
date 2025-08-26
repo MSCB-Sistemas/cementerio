@@ -94,7 +94,7 @@ class DifuntoModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "DifuntoModel",             // Modelo
+            "Difunto Model",             // Modelo
             "Insert"                    // Accion
         );
         return $this->db->lastInsertId();
@@ -146,7 +146,7 @@ class DifuntoModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "DifuntoModel",             // Modelo
+            "Difunto Model",             // Modelo
             "Update"                    // Accion
         );
         return $stmt->rowCount() > 0;
@@ -168,7 +168,7 @@ class DifuntoModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "DifuntoModel",             // Modelo
+            "Difunto Model",             // Modelo
             "Update"                    // Accion
         );
         return $stmt->rowCount() > 0;
