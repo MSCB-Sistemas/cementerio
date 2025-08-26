@@ -15,6 +15,8 @@ class EstadisticasController extends Control {
         $sort_col = !empty($_GET['sort_col']) ? $_GET['sort_col'] : 'fecha';
         $sort_dir = !empty($_GET['sort_dir']) && in_array($_GET['sort_dir'], ['ASC', 'DESC']);
 
+        $sort_dir = strtoupper($_GET['sort_dir'] ?? 'ASC');
+
         $pagina = !empty($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
         $limite = 14;
         $offset = ($pagina - 1) * $limite;

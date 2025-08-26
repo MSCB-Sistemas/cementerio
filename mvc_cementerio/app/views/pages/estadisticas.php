@@ -94,7 +94,7 @@ $filtrar = isset($_GET['filtrar']);
     </div>
 
     <!-- Pestania para deudores morosos-->
-    <div class="tab-pane fade show active" id="morosos" role="tabpanel">
+    <div class="tab-pane fade" id="morosos" role="tabpanel">
         <?php if (!empty($datos['deudores_morosos'])): ?>
             <table class="table table-bordered table-striped">
                 <thead class="th a">
@@ -135,16 +135,16 @@ $filtrar = isset($_GET['filtrar']);
     </div>
      
     <!-- Pestania de traslados -->
-     <div class="tab-pane fade show active" id="traslados" role="tabpanel">
+     <div class="tab-pane fade" id="traslados" role="tabpanel">
         <?php if (!empty($datos['difuntos_trasladados'])): ?>
             <table class="table table-bordered table-striped">
                 <thead class="th a">
                     <tr>
-                    <th><?= generarOrdenLink('Nombre', 'Nombre', $datos) ?></th>
-                    <th><?= generarOrdenLink('Apellido', 'Apellido', $datos) ?></th>
-                    <th><?= generarOrdenLink('DNI', 'DNI', $datos) ?></th>
-                    <th><?= generarOrdenLink('Fecha defunción', 'Fecha de defunción', $datos) ?></th>
-                    <th><?= generarOrdenLink('Fecha traslado', 'Fecha de traslado', $datos) ?></th>
+                    <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
+                    <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
+                    <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>
+                    <th><?= generarOrdenLink('fecha_fallecimiento', 'Fecha de defunción', $datos) ?></th>
+                    <th><?= generarOrdenLink('fecha_retiro', 'Fecha de traslado', $datos) ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -199,7 +199,12 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
 
     $link = '?' . http_build_query($query_params);
 
-    return "<a href=\"$link\" style=\"color: white; text-decoration: none;\">$etiqueta</a>";
+    $flecha = '';
+    if ($columna_actual === $columna) {
+        $flecha = strtoupper($direccion_actual) === 'ASC' ? ' ▲' : ' ▼';
+    }
+
+    return "<a href=\"$link\" style=\"color: white; text-decoration: none;\">$etiqueta$flecha</a>";
 }
 ?>
 
