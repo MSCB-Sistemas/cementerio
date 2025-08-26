@@ -140,6 +140,7 @@ CREATE TABLE `pago` (
   `id_deudo` int NOT NULL,
   `id_parcela` int NOT NULL,
   `fecha_pago` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fecha_vencimiento` datetime NOT NULL,
   `importe` int DEFAULT NULL,
   `recargo` int DEFAULT NULL,
   `total` int DEFAULT NULL,
