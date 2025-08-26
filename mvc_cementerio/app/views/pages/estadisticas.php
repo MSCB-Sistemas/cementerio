@@ -18,6 +18,9 @@ $filtrar = isset($_GET['filtrar']);
             </button>
         </li>
         <li class="nav-item">
+            <button class="nav-link" id="traslados-tab" data-bs-toggle="tab" data-bs-target="#traslados" type="button" role="tab">Traslados de difuntos</button>
+        </li>
+        <li class="nav-item">
             <button class="nav-link" id="resumen-tab" data-bs-toggle="tab" data-bs-target="#resumen" type="button" role="tab">Resumen</button>
         </li>
     </ul>
@@ -130,7 +133,39 @@ $filtrar = isset($_GET['filtrar']);
             </div>
         <?php endif; ?>
     </div>
-
+     
+    <!-- Pestania de traslados -->
+     <div class="tab-pane fade show active" id="traslados" role="tabpanel">
+        <?php if (!empty($datos['difuntos_trasladados'])): ?>
+            <table class="table table-bordered table-striped">
+                <thead class="th a">
+                    <tr>
+                    <th><?= generarOrdenLink('Nombre', 'Nombre', $datos) ?></th>
+                    <th><?= generarOrdenLink('Apellido', 'Apellido', $datos) ?></th>
+                    <th><?= generarOrdenLink('DNI', 'DNI', $datos) ?></th>
+                    <th><?= generarOrdenLink('Fecha defunción', 'Fecha de defunción', $datos) ?></th>
+                    <th><?= generarOrdenLink('Fecha traslado', 'Fecha de traslado', $datos) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($datos['difuntos_trasladados'] as $difunto_trasladado): ?>
+                        <tr>
+                        <td><?= htmlspecialchars($difunto_trasladado['nombre']) ?></td>
+                            <td><?= htmlspecialchars($difunto_trasladado['apellido']) ?></td>
+                            <td><?= htmlspecialchars($difunto_trasladado['dni']) ?></td>
+                            <td><?= htmlspecialchars($difunto_trasladado['fecha_fallecimiento']) ?></td>
+                            <td><?= htmlspecialchars($difunto_trasladado['fecha_retiro']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <div class="text-center py-4">
+                <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                <p class="text-muted">No hay difuntos trasladados</p>
+            </div>
+        <?php endif; ?>
+    </div>
     <!-- Pestania de resumen -->
     <div class="tab-pane fade" id="resumen" role="tabpanel">
         <div class="alert alert-info">

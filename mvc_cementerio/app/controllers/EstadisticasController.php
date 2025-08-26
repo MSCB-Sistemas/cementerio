@@ -1,10 +1,11 @@
 <?php
 class EstadisticasController extends Control {
-    private $model;
+    
+    private EstadisticasModel $model;
 
     public function __construct() {
         $this->requireLogin();
-        $this->model = $this->loadModel("EstadisticasModel");
+        $this-> model = $this->loadModel("EstadisticasModel");
     }
 
     public function index() {
@@ -24,6 +25,9 @@ class EstadisticasController extends Control {
 
         $deudores_morosos = $this->model->getDeudosMorosos();
 
+        $difuntos_trasladados = $this->model->getDifuntosTrasladados($sort_col, $sort_dir, $limite, $offset);
+
+
         $total_defunciones = $this->model->getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin);
         $total_paginas = max(1, ceil($total_defunciones / $limite));
 
@@ -31,6 +35,7 @@ class EstadisticasController extends Control {
             'title' => 'Estadisticas',
             'movimientos' => $defunciones,
             'deudores_morosos' => $deudores_morosos,
+            'difuntos_trasladados' => $difuntos_trasladados,
             'fecha_inicio' => $fecha_inicio,
             'fecha_fin' => $fecha_fin,
             'sort_col' => $sort_col,
