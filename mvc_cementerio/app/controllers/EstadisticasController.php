@@ -8,7 +8,7 @@ class EstadisticasController extends Control {
     }
 
     public function index() {
-        $fecha_inicio = !empty($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : '2000-01-01';
+        $fecha_inicio = !empty($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : date('Y-m-01');
         $fecha_fin = !empty($_GET['fecha_fin']) ? $_GET['fecha_fin'] : date('Y-m-d');
 
         $sort_col = !empty($_GET['sort_col']) ? $_GET['sort_col'] : 'fecha';
