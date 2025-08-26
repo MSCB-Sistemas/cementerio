@@ -33,6 +33,7 @@ class EstadisticasController extends Control {
             'tipo_parcela' => $_GET['tipo_parcela'] ?? '',
             'seccion' => $_GET['seccion'] ?? '',
             'fraccion' => $_GET['fraccion'] ?? '',
+            'nivel' => $_GET['nivel'] ?? '',
             'orientacion' => $_GET['orientacion'] ?? '',
             'hilera' => $_GET['hilera'] ?? '',
             'ubicacion' => $_GET['ubicacion'] ?? ''

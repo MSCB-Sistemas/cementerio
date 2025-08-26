@@ -142,6 +142,11 @@ class EstadisticasModel extends Control {
             $params[':fraccion'] = $filtros['fraccion'];
         }
 
+        if (!empty($filtros['nivel'])) {
+            $sql .= " AND p.nivel = :nivel";
+            $params[':nivel'] = $filtros['nivel'];
+        }
+
         if (!empty($filtros['orientacion'])) {
             $sql .= " AND p.orientacion = :orientacion";
             $params[':orientacion'] = $filtros['orientacion'];

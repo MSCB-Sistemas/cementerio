@@ -93,7 +93,7 @@ $buscar = isset($_GET['buscar']);
     </div>
 
     <!-- Pestaña para deudores morosos-->
-    <div class="tab-pane fade show active" id="morosos" role="tabpanel">
+    <div class="tab-pane fade" id="morosos" role="tabpanel">
         <?php if (!empty($datos['deudores_morosos'])): ?>
             <table class="table table-bordered table-striped">
                 <thead class="th a">
@@ -169,6 +169,10 @@ $buscar = isset($_GET['buscar']);
         <div id="filtro_parcela" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-2">
+                    <label for="ubicacion" class="form-label">Nº de Ubicación</label>
+                    <input type="text" class="form-control" name="ubicacion">
+                </div>
+                <div class="col-md-2">
                     <label for="tipo_parcela" class="form-label">Tipo</label>
                     <select name="tipo_parcela" class="form-select">
                         <option value="">Seleccionar...</option>
@@ -188,6 +192,10 @@ $buscar = isset($_GET['buscar']);
                     <input type="text" class="form-control" name="fraccion">
                 </div>
                 <div class="col-md-2">
+                    <label for="nivel" class="form-label">Nivel</label>
+                    <input type="text" class="form-control" name="nivel">
+                </div>
+                <div class="col-md-2">
                     <label for="orientacion" class="form-label">Orientación</label>
                     <select name="orientacion" class="form-select">
                         <option value="">Seleccionar...</option>
@@ -201,10 +209,7 @@ $buscar = isset($_GET['buscar']);
                     <label for="hilera" class="form-label">Hilera</label>
                     <input type="text" class="form-control" name="hilera">
                 </div>
-                <div class="col-md-2">
-                    <label for="ubicacion" class="form-label">Nº de Ubicación</label>
-                    <input type="text" class="form-control" name="ubicacion">
-                </div>
+                
                 <div class="col-md-2 align-self-end">
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
                 </div>
