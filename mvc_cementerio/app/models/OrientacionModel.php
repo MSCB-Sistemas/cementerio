@@ -1,6 +1,7 @@
 <?php
 // Carga la configuración del sistema y la clase para conectar a la base de datos
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /**
@@ -56,6 +57,14 @@ class OrientacionModel {
     {
         $stmt = $this->db->prepare("INSERT INTO orientacion (descripcion) VALUES (:descripcion)");
         $stmt->execute(['descripcion' => $descripcion]);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "ParcelaModel",             // Modelo
+            "Insert"                    // Accion
+        );
         return $this->db->lastInsertId();
     }
 

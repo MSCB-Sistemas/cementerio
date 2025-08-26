@@ -92,7 +92,7 @@ class ParcelaModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "ParcelaModel",             // Modelo
+            "Parcela Model",             // Modelo
             "Insert"                    // Accion
         );
         return (int) $this->db->lastInsertId();
@@ -137,7 +137,7 @@ class ParcelaModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "ParcelaModel",             // Modelo
+            "Parcela Model",             // Modelo
             "Update"                    // Accion
         );
         return $stmt->rowCount() > 0;
@@ -161,7 +161,7 @@ class ParcelaModel {
             $_SESSION['usuario_id'],    // usuario actual
             $sql,                       // Query SQL ejecutada
             $parametros,                // Parámetros
-            "ParcelaModel",             // Modelo
+            "Parcela Model",             // Modelo
             "Delete"                    // Accion
         );
         return $stmt->rowCount() > 0;
