@@ -95,10 +95,10 @@ $filtrar = isset($_GET['filtrar']);
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-outline-primary active" id="ver-activos">
-                    <i class="fas fa-toggle-on me-1"></i> Ver activos
+                    <i class="fas fa-toggle-on me-1"></i> Pagos vencidos
                 </button>
-                <button type="button" class="btn btn-outline-secondary" id="ver_inactivos">
-                    <i class="fas fa-toggle-off me-1"></i> Ver inactivos
+                <button type="button" class="btn btn-outline-secondary" id="ver-inactivos">
+                    <i class="fas fa-toggle-off me-1"></i> Pagos saldados
                 </button>
             </div>
         </div>
@@ -107,7 +107,6 @@ $filtrar = isset($_GET['filtrar']);
             <table class="table table-bordered table-striped" id="tabla-morosos">
                 <thead class="th a">
                     <tr>
-                        <th><?= generarOrdenLink('Estado', 'Estado', $datos)?></th>
                         <th><?= generarOrdenLink('Parcela', 'Parcela', $datos) ?></th>
                         <th><?= generarOrdenLink('DNI', 'DNI', $datos) ?></th>
                         <th><?= generarOrdenLink('Nombre', 'Nombre', $datos) ?></th>
@@ -123,9 +122,6 @@ $filtrar = isset($_GET['filtrar']);
                         $estado = 'activo'; 
                     ?>
                         <tr class="fila-moroso" data-estado="<?= $estado ?>">
-                            <td class="text-center">
-                                <span class="badge estado-badge bg-success">Activo</span>
-                            </td>
                             <td><?= htmlspecialchars($moroso['id_parcela']) ?></td>
                             <td><?= htmlspecialchars($moroso['dni']) ?></td>
                             <td><?= htmlspecialchars($moroso['nombre']) ?></td>
