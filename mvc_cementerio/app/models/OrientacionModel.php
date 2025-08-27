@@ -1,6 +1,7 @@
 <?php
 // Carga la configuración del sistema y la clase para conectar a la base de datos
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /**
@@ -54,8 +55,18 @@ class OrientacionModel {
      */
     public function insertOrientacion($descripcion): int
     {
-        $stmt = $this->db->prepare("INSERT INTO orientacion (descripcion) VALUES (:descripcion)");
-        $stmt->execute(['descripcion' => $descripcion]);
+        $sql = "INSERT INTO orientacion (descripcion) VALUES (:descripcion)";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['descripcion' => $descripcion];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Orientacion Model",             // Modelo
+            "Insert"                    // Accion
+        );
         return $this->db->lastInsertId();
     }
 
@@ -68,12 +79,24 @@ class OrientacionModel {
      */
     public function updateOrientacion($id_orientacion, $descripcion): bool
     {
-        $stmt = $this->db->prepare("UPDATE orientacion SET descripcion = :descripcion 
-                                    WHERE id_orientacion = :id_orientacion");
-        $stmt->execute([
+        $sql = "UPDATE orientacion 
+                SET descripcion = :descripcion 
+                WHERE id_orientacion = :id_orientacion
+                ";
+        $stmt = $this->db->prepare($sql);
+        $parametros = [
             'id_orientacion' => $id_orientacion,
             'descripcion' => $descripcion
-        ]);
+        ];
+        $stmt->execute($parametros);
+
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Orientacion Model",             // Modelo
+            "Update"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
@@ -85,8 +108,18 @@ class OrientacionModel {
      */
     public function deleteOrientacion($id_orientacion): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM orientacion WHERE id_orientacion = :id_orientacion");
-        $stmt->execute(['id_orientacion' => $id_orientacion]);
+        $sql = "DELETE FROM orientacion WHERE id_orientacion = :id_orientacion";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['id_orientacion' => $id_orientacion];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Orientacion Model",             // Modelo
+            "Delete"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 }

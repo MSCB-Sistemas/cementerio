@@ -174,7 +174,8 @@ class ParcelaController extends Control {
                 return;
             }
 
-            if ($this->model->updateParcela($id, $tipo_parcela, $deudo, $nro_ubicacion, $hilera, $seccion, $fraccion, $nivel, $orientacion)) {
+            if ($this->model->updateParcela($id, $tipo_parcela, $deudo, $nro_ubicacion, $hilera, $seccion, $fraccion, $nivel, $orientacion)) 
+            {
                 header("Location: " . URL . "parcela");
                 exit;
             } else {
