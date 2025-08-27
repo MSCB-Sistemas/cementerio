@@ -65,7 +65,7 @@ class PagoModel {
      * @param int $id_usuario ID del usuario que realiza el pago.
      * @return int ID del nuevo pago insertado.
      */
-    public function insertPago($id_deudo, $id_parcela, $fecha_pago, $importe, $recargo, $total, $id_usuario): int
+    public function insertPago($id_deudo, $id_parcela, $fecha_pago, $fecha_vencimiento, $importe, $recargo, $total, $id_usuario): int
     {
         $sql = "INSERT INTO pago (id_deudo, id_parcela, fecha_pago, importe, recargo, total, id_usuario) 
                 VALUES (:id_deudo, :id_parcela, :fecha_pago, :importe, :recargo, :total, :id_usuario)";
@@ -75,6 +75,7 @@ class PagoModel {
             "id_deudo" => $id_deudo,
             "id_parcela" => $id_parcela,
             "fecha_pago" => $fecha_pago,
+            "fecha_vencimiento" => $fecha_vencimiento,
             "importe" => $importe,
             "recargo" => $recargo,
             "total" => $total,
@@ -105,7 +106,7 @@ class PagoModel {
      * @param int $id_usuario ID del usuario que realiza el pago.
      * @return bool True si se actualizó correctamente, false en caso contrario.
      */
-    public function updatePago($id_pago, $id_deudo, $id_parcela, $fecha_pago, $importe, $recargo, $total, $id_usuario): bool
+    public function updatePago($id_pago, $id_deudo, $id_parcela, $fecha_pago, $fecha_vencimiento, $importe, $recargo, $total, $id_usuario): bool
     {
         $sql = "UPDATE pago SET id_deudo = :id_deudo, id_parcela = :id_parcela, fecha_pago = :fecha_pago, importe = :importe, recargo = :recargo, total = :total, id_usuario = :id_usuario
                 WHERE id_pago = :id_pago";
@@ -116,6 +117,7 @@ class PagoModel {
             "id_deudo" => $id_deudo,
             "id_parcela" => $id_parcela,
             "fecha_pago" => $fecha_pago,
+            "fecha_vencimiento" => $fecha_vencimiento,
             "importe" => $importe,
             "recargo" => $recargo,
             "total" => $total,

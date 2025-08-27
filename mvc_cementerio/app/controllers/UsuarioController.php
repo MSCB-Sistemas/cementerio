@@ -17,8 +17,8 @@ class UsuarioController extends Control{
         $datos = [
             'title' => 'Lista de Usuarios',
             'urlCrear' => URL . 'usuario/create',
-            'columnas' => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Rol', 'Activo'],
-            'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'descripcion', 'activo'],
+            'columnas' => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Telefono', 'Email', 'Rol', 'Activo'],
+            'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'telefono', 'email', 'descripcion', 'activo'],
             'data' => $usuarios,
             'acciones' => function ($fila) {
                 $id = $fila['id_usuario'];
@@ -59,6 +59,8 @@ class UsuarioController extends Control{
             $apellido = trim($_POST["apellido"] ?? '');
             $cargo = trim($_POST["cargo"] ?? '');
             $sector = trim($_POST["sector"] ?? '');
+            $telefono = trim($_POST["telefono"] ?? '');
+            $email = trim($_POST["email"] ?? '');
             $contrasenia = trim($_POST["password"] ?? '');
             $tipoUsuario = $_POST["tipo_usuario"] ?? '';
             $errores = [];
@@ -88,7 +90,7 @@ class UsuarioController extends Control{
             }
             $contrasenia = password_hash($contrasenia, PASSWORD_DEFAULT);
 
-            if ($this->model->insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $contrasenia, $tipoUsuario)) {
+            if ($this->model->insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email,  $contrasenia, $tipoUsuario)) {
                 header("Location: " . URL . "usuario");
                 exit;
             } else {
@@ -115,6 +117,8 @@ class UsuarioController extends Control{
                 'apellido' => $usuario['apellido'],
                 'cargo' => $usuario['cargo'],
                 'sector' => $usuario['sector'],
+                'telefono' => $usuario['telefono'],
+                'email' => $usuario['email'],
                 'id_tipo_usuario' => $usuario['id_tipo_usuario'],
             ],
             'errores' => [],
@@ -130,6 +134,8 @@ class UsuarioController extends Control{
             $nombre = trim($_POST["nombre"] ?? '');
             $apellido = trim($_POST["apellido"] ?? '');
             $cargo = trim($_POST["cargo"] ?? '');
+            $telefono = trim($_POST["telefono"] ?? '');
+            $email = trim($_POST["email"] ?? '');
             $sector = trim($_POST["sector"] ?? '');
             $tipoUsuario = $_POST["tipo_usuario"] ?? '';
 
@@ -150,6 +156,8 @@ class UsuarioController extends Control{
                     'nombre' => $nombre,
                     'apellido' => $apellido,
                     'cargo' => $cargo,
+                    'telefono'=> $telefono,
+                    'email'=> $email,                    
                     'sector' => $sector,
                     'id_tipo_usuario' => $tipoUsuario
                 ];
@@ -165,7 +173,7 @@ class UsuarioController extends Control{
                 return;
             }
 
-            if ($this->model->updateUsuario($id, $usuario, $nombre, $apellido, $cargo, $sector, $tipoUsuario)) {
+            if ($this->model->updateUsuario($id, $usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $tipoUsuario)) {
                 header("Location: " . URL . "usuario");
                 exit;
             } else {
