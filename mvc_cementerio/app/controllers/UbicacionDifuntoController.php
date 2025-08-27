@@ -6,6 +6,7 @@ class UbicacionDifuntoController extends Control{
     private ParcelaModel $parcelaModel;
 
     public function __construct(){
+        $this->requireLogin();
        $this->model = $this->loadModel("UbicacionDifuntoModel"); 
        $this->difuntoModel = $this->loadModel("DifuntoModel");
        $this->parcelaModel = $this->loadModel("ParcelaModel");
@@ -37,7 +38,7 @@ class UbicacionDifuntoController extends Control{
     public function create(){
 
         $difuntos = $this->difuntoModel->getAllDifuntos();
-        /* $parcelas = $this->parcelaModel->getAllParcelas(); */
+        $parcelas = $this->parcelaModel->getAllParcelas();
         
         $datos = [
             'title' => 'Crear Ubicación',
@@ -45,7 +46,7 @@ class UbicacionDifuntoController extends Control{
             'values' => [],
             'errores' => [],
             'difuntos' => $difuntos,
-            /* 'parcelas' => $parcelas, */
+            'parcelas' => $parcelas,
         ];
         $this->loadView('ubicaciones/UbicacionDifuntoForm', $datos);
     }

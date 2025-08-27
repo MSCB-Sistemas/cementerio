@@ -1,176 +1,72 @@
-<!doctype html>
-<html lang="es" data-bs-theme="auto">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sidebar · Bootstrap 5</title>
-
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Bootstrap Icons (opcional, para los íconos del menú) -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
-  <style>
-    /* Estilos suaves para el sidebar */
-    .sidebar {
-      width: 280px;
-      min-height: 100vh;
-    }
-    .btn-toggle {
-      padding: .25rem .5rem;
-      font-weight: 600;
-      background-color: transparent;
-    }
-    .btn-toggle::after {
-      content: "";
-      width: .9em;
-      height: .9em;
-      margin-left: .25rem;
-      display: inline-block;
-      vertical-align: .255em;
-      border-right: .12em solid currentColor;
-      border-bottom: .12em solid currentColor;
-      transform: rotate(-45deg);
-      transition: transform .2s;
-    }
-    .btn-toggle[aria-expanded="true"]::after {
-      transform: rotate(45deg);
-    }
-    .btn-toggle-nav a {
-      padding: .25rem .5rem;
-      margin: .2rem 0 .2rem 1.25rem;
-      display: inline-flex;
-      border-radius: .25rem;
-    }
-    .btn-toggle-nav a:hover,
-    .btn-toggle-nav a.active {
-      background-color: rgba(0,0,0,.05);
-      text-decoration: none;
-    }
-  </style>
-</head>
-<body>
-
-<main class="d-flex">
-  <!-- SIDEBAR -->
-  <aside class="sidebar d-flex flex-column flex-shrink-0 bg-light border-end p-3">
-    <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-      <i class="bi bi-bootstrap-fill me-2 fs-4"></i>
-      <span class="fs-5 fw-semibold">Sistema Cementerio Municipal</span>
+<h1 class="visually-hidden">Barra inicio</h1>
+<div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark " style="width: 289px; background-color: #fd7e14 !important;">
+    <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none" href="https://www.bariloche.gov.ar/" target="_blank">
+        <img src="<?= URL . '/img/logo_claro.png' ?>" alt="Logo" width="240" height="80" class="pe-none me-2">
     </a>
     <hr>
-
-    <ul class="list-unstyled ps-0 nav flex-column">
-
-      <!-- Difunto-->
-      <li class="mb-1">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0"
-                data-bs-toggle="collapse" data-bs-target="#difunto-collapse" aria-expanded="false">
-          <i class="bi bi-house-door me-2"></i> ABM Difuntos
-        </button>
-        <div class="collapse" id="difunto-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Registrar Difunto</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Modificar Difunto</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Eliminar Difunto</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Padrón General</a></li>
-          </ul>
-        </div>
-      </li>
-
-      <!-- Deudo -->
-      <li class="mb-1">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                data-bs-toggle="collapse" data-bs-target="#deudo-collapse" aria-expanded="false">
-          <i class="bi bi-speedometer2 me-2"></i> ABM Deudo
-        </button>
-        <div class="collapse" id="deudo-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Registrar Deudo</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Modificar Deudo</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Eliminar Deudo</a></li>
-          </ul>
-        </div>
-      </li>
-
-      <!-- Ubicaciones -->
-      <li class="mb-1">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                data-bs-toggle="collapse" data-bs-target="#ubicacion-collapse" aria-expanded="false">
-          <i class="bi bi-bag-check me-2"></i> Ubicaciones
-        </button>
-        <div class="collapse" id="ubicacion-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Registrar Ubicación</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Modificar Ubicación</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Eliminar Ubicación</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Listado de Ubicaciones</a></li>
-          </ul>
-        </div>
-      </li>
-
-      <li class="border-top my-3"></li>
-
-      <!-- Pagos -->
-      <li class="mb-1">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                data-bs-toggle="collapse" data-bs-target="#pago-collapse" aria-expanded="false">
-          <i class="bi bi-person-circle me-2"></i> Pagos
-        </button>
-        <div class="collapse" id="pago-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Registrar Pago</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Eliminar Pago</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Historial de Pagos</a></li>
-          </ul>
-        </div>
-      </li>
-
-      
-      <!-- Parcelas -->
-      <li class="mb-1">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                data-bs-toggle="collapse" data-bs-target="#parcela-collapse" aria-expanded="false">
-          <i class="bi bi-bag-check me-2"></i> Parcelas
-        </button>
-        <div class="collapse" id="parcela-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Agregar Parcela</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Modificar Parcela</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Eliminar Parcela</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Historial de Parcelas Vendidas</a></li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-  </aside>
-
-  <!-- CONTENIDO -->
-  <section class="flex-grow-1 p-4">
-    <h1 class="h3">Contenido principal</h1>
-    <p>Acá va tu app. El contenido se adapta al lado del sidebar.</p>
-  </section>
-</main>
-
-<!-- Bootstrap JS (necesario para collapse) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-
-            <!-- Registro usuario -->
-                <li class="nav-item">
-            <a class="nav-link" href="#" id="nuevoUsuario" role="button"  >
-            Registrar Usuario
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item ">
+            <a class="nav-link text-white" href="home" aria-current="page">
+                <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true">
+                    <use xlink:href="#home">
+                        <symbol id="home" viewBox="0 0 16 16">
+                            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z"></path>
+                        </symbol>
+                    </use>
+                </svg>
+                Inicio
             </a>
-        
-        </ul>
-        <button class="btn btn-checkin">Cerrar sesión</button>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link text-white" href="<?= URL ?>estadisticas">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-line me-2" viewBox="0 0 16 16">
+                    <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1zm1 12h2V2h-2zm-3 0V7H7v7zm-5 0v-3H2v3z"/>
+                </svg>
+                Listas
+            </a>
+        </li>
+        <li>
+            <a class="nav-link text-white position-relative" 
+            data-bs-toggle="collapse" 
+            data-bs-target="#submenuABM"
+            href="#submenuABM" 
+            role="button" 
+            aria-expanded="false" 
+            aria-controls="submenuABM">
+            <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true">
+                <use xlink:href="#table">
+                    <symbol id="table" viewBox="0 0 16 16">
+                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"></path>
+                    </symbol>
+                </use>
+            </svg>
+                Alta, Baja y Modificacion
+                <span class="position-absolute end-0 me-3" id="abm-arrow">&#x25BC;</span> <!-- flecha hacia abajo -->
+            </a>
+
+            <div class="collapse ps-3" id="submenuABM">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <? if ($_SESSION['usuario_tipo'] == '1') : ?>
+                        <li><a href="<?= URL ?>usuario" class="nav-link text-white">Usuarios</a></li>
+                    <? endif; ?>
+                    <li><a href="<?= URL ?>deudo" class="nav-link text-white">Deudos</a></li>
+                    <li><a href="<?= URL ?>difunto" class="nav-link text-white">Difuntos</a></li>
+                    <li><a href="<?= URL ?>estadoCivil" class="nav-link text-white">Estados Civiles</a></li>
+                    <li><a href="<?= URL ?>parcela" class="nav-link text-white">Parcelas</a></li>
+                    <li><a href="<?= URL ?>ubicacion" class="nav-link text-white">Ubicaciones</a></li>
+                    <li><a href="<?= URL ?>orientaciones" class="nav-link text-white">Orientaciones</a></li>
+                    <li><a href="<?= URL ?>sexo" class="nav-link text-white">Sexos</a></li>
+                    <li><a href="<?= URL ?>nacionalidades" class="nav-link text-white">Nacionalidades</a></li>
+                    <li><a href="<?= URL ?>tipoParcela" class="nav-link text-white">Tipos de parcela</a></li>
+                    <li><a href="<?= URL ?>tipoUsuario" class="nav-link text-white">Tipos de usuario</a></li>
+                    <li><a href="<?= URL ?>pago" class="nav-link text-white">Pagos</a></li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+    <hr>
+    <div class="d-flex justify-content-center align-items-center">
+        <?php echo ucfirst($_SESSION['usuario_nombre'])." ".ucfirst($_SESSION['usuario_apellido']);?> </strong>
+        </a>
     </div>
-    <nav>
-        <a href="<?= APP ?>usuario/logout"></a>
-    </nav>
-</html>
-
-
-        
+</div>

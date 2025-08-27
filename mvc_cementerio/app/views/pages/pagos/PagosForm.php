@@ -18,24 +18,9 @@
             
             <form action="<?= $datos['action'] ?>" method="POST" class="needs-validation" novalidate>
                 <div class="row g-3">
+                    
                     <!-- Primera columna -->
                     <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="tipo_parcela" class="form-label fw-bold">Tipo de parcela</label>
-                            <select class="form-select" id="tipo_parcela" name="tipo_parcela" required>
-                                <option value="">Seleccione...</option>
-                                <?php foreach ($datos['tipos_parcelas'] as $n): ?>
-                                    <option value="<?= $n['id_tipo_parcela'] ?>"
-                                        <?= ($datos['values']['id_tipo_parcela'] ?? '') == $n['id_tipo_parcela'] ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($n['nombre_parcela']) ?>
-                                    </option>
-                                <?php endforeach ?>
-                            </select>
-                            <div class="invalid-feedback">
-                                Por favor seleccione un tipo de parcela
-                            </div>
-                        </div>
-                        
                         <div class="mb-3">
                             <label for="deudo" class="form-label fw-bold">Deudo</label>
                             <select class="form-select" id="deudo" name="deudo" required>
@@ -51,22 +36,47 @@
                                 Por favor seleccione un deudo
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
-                            <label for="numero_ubicacion" class="form-label fw-bold">Número ubicación</label>
-                            <input type="text" class="form-control" id="numero_ubicacion" name="numero_ubicacion" 
-                                   value="<?= htmlspecialchars($datos['values']['numero_ubicacion'] ?? '') ?>" required>
+                            <label for="parcela" class="form-label fw-bold">Parcela</label>
+                            <select class="form-select" id="parcela" name="parcela" required>
+                                <option value="">Seleccione...</option>
+                                <?php foreach ($datos['parcelas'] as $n): ?>
+                                    <option value="<?= $n['id_parcela'] ?>"
+                                        <?= ($datos['values']['id_parcela'] ?? '') == $n['id_parcela'] ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($n['id_parcela']) ?>
+                                    </option>
+                                <?php endforeach ?>
+                            </select>
                             <div class="invalid-feedback">
-                                Por favor ingrese el número de ubicación
+                                Por favor seleccione una parcela
                             </div>
                         </div>
                         
                         <div class="mb-3">
-                            <label for="hilera" class="form-label fw-bold">Hilera</label>
-                            <input type="text" class="form-control" id="hilera" name="hilera" 
-                                   value="<?= htmlspecialchars($datos['values']['hilera'] ?? '') ?>" required>
+                            <label for="fecha_pago" class="form-label fw-bold">Fecha de pago</label>
+                            <input type="date" class="form-control" id="fecha_pago" name="fecha_pago" 
+                                   value="<?= htmlspecialchars($datos['values']['fecha_pago'] ?? '') ?>" required>
                             <div class="invalid-feedback">
-                                Por favor ingrese la hilera
+                                Por favor ingrese la fecha de pago
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fecha_vencimiento" class="form-label fw-bold">Fecha de vencimiento</label>
+                            <input type="date" class="form-control" id="fecha_pago" name="fecha_vencimiento" 
+                                   value="<?= htmlspecialchars($datos['values']['fecha_vencimiento'] ?? '') ?>" required>
+                            <div class="invalid-feedback">
+                                Por favor ingrese la fecha de vencimiento
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="importe" class="form-label fw-bold">Importe</label>
+                            <input type="number" class="form-control" id="hilera" name="importe" 
+                                   value="<?= htmlspecialchars($datos['values']['importe'] ?? '') ?>" required>
+                            <div class="invalid-feedback">
+                                Por favor ingrese el importe
                             </div>
                         </div>
                     </div>
@@ -74,49 +84,27 @@
                     <!-- Segunda columna -->
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="seccion" class="form-label fw-bold">Sección</label>
-                            <input type="text" class="form-control" id="seccion" name="seccion" 
-                                   value="<?= htmlspecialchars($datos['values']['seccion'] ?? '') ?>" required>
+                            <label for="recargo" class="form-label fw-bold">Recargo</label>
+                            <input type="number" class="form-control" id="recargo" name="recargo" 
+                                   value="<?= htmlspecialchars($datos['values']['recargo'] ?? '') ?>" required>
                             <div class="invalid-feedback">
-                                Por favor ingrese la sección
+                                Por favor ingrese el recargo
                             </div>
                         </div>
                         
                         <div class="mb-3">
-                            <label for="fraccion" class="form-label fw-bold">Fracción</label>
-                            <input type="text" class="form-control" id="fraccion" name="fraccion" 
-                                   value="<?= htmlspecialchars($datos['values']['fraccion'] ?? '') ?>" required>
+                            <label for="total" class="form-label fw-bold">Total</label>
+                            <input type="number" class="form-control" id="total" name="total" 
+                                   value="<?= htmlspecialchars($datos['values']['total'] ?? '') ?>" required>
                             <div class="invalid-feedback">
                                 Por favor ingrese la fracción
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="nivel" class="form-label fw-bold">Nivel</label>
-                            <input type="text" class="form-control" id="nivel" name="nivel" 
-                                   value="<?= htmlspecialchars($datos['values']['nivel'] ?? '') ?>">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="orientacion" class="form-label fw-bold">Orientación</label>
-                            <select class="form-select" id="orientacion" name="orientacion" required>
-                                <option value="">Seleccione...</option>
-                                <?php foreach ($datos['orientaciones'] as $n): ?>
-                                    <option value="<?= $n['id_orientacion'] ?>"
-                                        <?= ($datos['values']['id_orientacion'] ?? '') == $n['id_orientacion'] ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($n['descripcion']) ?>
-                                    </option>
-                                <?php endforeach ?>
-                            </select>
-                            <div class="invalid-feedback">
-                                Por favor seleccione una orientación
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                    <a href="<?= URL ?>parcela" class="btn btn-outline-secondary me-md-2">
+                    <a href="<?= URL ?>pago" class="btn btn-outline-secondary me-md-2">
                         <i class="bi bi-x-circle"></i> Cancelar
                     </a>
                     <button type="submit" class="btn btn-primary">

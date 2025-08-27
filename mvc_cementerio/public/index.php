@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../app/config/config.php';
 require_once __DIR__ . '/../app/config/errores.php';
 require_once __DIR__ . '/../app/lib/Control.php';
 
@@ -6,9 +7,6 @@ $base = '/cementerio/mvc_cementerio';
 
 // 📋​ Rutas disponibles: ruta => [Controlador, metodo]
 $routes = [
-
-    '' => ['UsuarioController', 'login'],  // ruta raíz
-    'login' => ['UsuarioController', 'login'],
 
     // URL's usuario.
     'usuario' => ['UsuarioController', 'index'],
@@ -20,8 +18,13 @@ $routes = [
     'usuario/activate' => ['UsuarioController', 'activate'],
     'usuario/changePass' => ['UsuarioController', 'changePass'],
     'usuario/savePass' => ['UsuarioController', 'savePass'],
-
+    
+    // URL's login
+    '' => ['AuthController', 'login'],
+    'login' => ['AuthController', 'login'],
+    'logout' => ['AuthController', 'logout'],
     'home' => ['homeController', 'index'],
+    'estadisticas' => ['EstadisticasController', 'index'],
 
     // URL's difunto.
     'difunto' => ['DifuntoController', 'index'],
@@ -55,6 +58,14 @@ $routes = [
     'sexo/update' => ['SexoController', 'update'],
     'sexo/delete' => ['SexoController', 'delete'],
 
+    // URL's pagos
+    'pago' => ['PagoController', 'index'],
+    'pago/create' => ['PagoController', 'create'],
+    'pago/save' => ['PagoController', 'save'],
+    'pago/edit' => ['PagoController', 'edit'],
+    'pago/update' => ['PagoController', 'update'],
+    'pago/delete' => ['PagoController', 'delete'],
+
     // URL's tipos de parcela.
     'tipoParcela'=> ['TipoParcelaController', 'index'],
     'tipoParcela/create'=> ['TipoParcelaController', 'create'],
@@ -78,6 +89,7 @@ $routes = [
     'deudo/edit' => ['DeudoController', 'edit'],
     'deudo/update' => ['DeudoController', 'update'],
     'deudo/delete' => ['DeudoController', 'delete'],
+
 
     //URL's nacionalidades
     'nacionalidades' => ['NacionalidadesController','index'],
@@ -106,15 +118,18 @@ $routes = [
 
 // Obtener ruta y metodo actual
 $uri = $_SERVER['REQUEST_URI'];
+// var_dump($uri);
 $uri = str_replace($base, '', $uri);
-$path = parse_url($uri, PHP_URL_PATH);
-$uri = trim($path ?? '', '/');
+$uri = trim(parse_url($uri, PHP_URL_PATH), '/');
 $method = $_SERVER['REQUEST_METHOD'];
+//var_dump($_SERVER['REQUEST_URI']);
 
+// var_dump($method);
 
 // Separar en partes la ruta para manejar mejor los parametros
 $partes = explode('/', $uri);
 
+// var_dump($partes);
 
 // Inicializa vairables
 $ruta = '';
@@ -123,6 +138,7 @@ $parametro = null;
 // Logica para GET con 1 variable (ejemplo: usuario/12)
 
 if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
+    // var_dump($method);
     $ruta = $partes[0] . '/' . $partes[1];
     $parametro = $partes[2];
 } else {
@@ -130,6 +146,7 @@ if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
     $ruta = implode('/', $partes);
 }
 
+// var_dump($ruta);
 
 // 1️⃣​. Si la ruta esta definida en el arreglo de rutas
 if (isset($routes[$ruta])) {
