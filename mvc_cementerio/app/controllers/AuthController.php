@@ -1,5 +1,7 @@
 <?php
 class AuthController extends Control {
+    $permisoModel = new PermisoModel();
+
     public function login() {
         $datos = ['title' => 'Login'];
 
