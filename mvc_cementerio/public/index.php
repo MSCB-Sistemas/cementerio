@@ -1,7 +1,8 @@
 <?php
-require_once __DIR__ . '/../app/config/config.php';
-require_once __DIR__ . '/../app/config/errores.php';
-require_once __DIR__ . '/../app/lib/Control.php';
+require_once __DIR__ . '/../app/init.php';
+#require_once __DIR__ . '/../app/config/config.php';
+#require_once __DIR__ . '/../app/config/errores.php';
+#require_once __DIR__ . '/../app/lib/Control.php';
 
 $base = '/cementerio/mvc_cementerio';
 
