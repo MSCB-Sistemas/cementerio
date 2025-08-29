@@ -168,7 +168,8 @@ if (isset($routes[$ruta])) {
 
             // 6️⃣. Verifica si el metodo existe
             if (method_exists($obj, $metodo)) {
-
+                
+                //--->> Verificar Permiso
                 // 7️⃣. Si hay parametro se pasa
                 if ($parametro !== null) {
                     $obj->$metodo($parametro);

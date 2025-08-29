@@ -26,6 +26,7 @@ class AuthController extends Control {
                 $_SESSION['usuario_nombre'] = $usuario['nombre'];
                 $_SESSION['usuario_apellido'] = $usuario['apellido'];
                 $_SESSION['usuario_tipo'] = $usuario['id_tipo_usuario'];
+                $_SESSION['usuario_permisos'] = $permisoModel->getPermisosPorRol($usuario['id_tipo_usuario']);
 
                 if ($remember) {
                     $this->createRememberMeToken($usuario['id_usuario']);
