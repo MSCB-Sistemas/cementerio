@@ -6,6 +6,8 @@ CREATE TABLE `sexo` (
   PRIMARY KEY (`id_sexo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
+INSERT INTO `sexo` VALUES (1,'Masculino'),(2,'Femenino');
+
 -- sgcm.estado_civil definition
 
 CREATE TABLE `estado_civil` (
@@ -13,6 +15,8 @@ CREATE TABLE `estado_civil` (
   `descripcion` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NOT NULL,
   PRIMARY KEY (`id_estado_civil`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+
+INSERT INTO `estado_civil` VALUES (1,'Casado'),(2,'Soltero'), (3,'Viudo');
 
 -- sgcm.nacionalidades definition
 

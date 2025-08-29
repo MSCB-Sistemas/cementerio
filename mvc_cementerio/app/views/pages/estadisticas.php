@@ -25,72 +25,100 @@ $buscar = isset($_GET['buscar']);
     </ul>
 
 <div class="tab-content mt-4">
-    <!-- Pestaña Padron difuntos -->
+    <!-- Pestaña para Padron de Difuntos -->
     <div class="tab-pane fade show active" id="tablas" role="tabpanel">
-        <form method="GET" class="row g-3 mb-4">
-            <div class="col-auto">
-                <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
-                <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" value="<?php echo !empty($datos['fecha_inicio']) ? htmlspecialchars($datos['fecha_inicio']) : '' ?>">
-            </div>
+         <!-- Seleccionar tipo de filtro de búsqueda -->
+        <div class="mb-4">
+            <label for="tipo_filtro" class="form-label">Seleccionar filtro de búsqueda:</label>
+            <select id="tipo_filtro" class="form-select w-auto" onchange="mostrarFiltro()">
+                <option value="">Seleccionar...</option>
+                <option value="lista_completa">Padrón general de Difuntos</option>
+                <option value="filtro_titular">Por Orden Alfabético</option>
+                <option value="filtro_fecha">Por Fecha de Defunción</option>
+            </select>
+    </div>
 
-            <div class="col-auto">
-                <label for="fecha_fin" class="form-label">Fecha Fin</label>
-                <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" value="<?php echo !empty($datos['fecha_fin']) ? htmlspecialchars($datos['fecha_fin']) : '' ?>">
-            </div>
+        <!-- Filtro por Fecha -->
+        <div id="filtro_fecha" class="filtro-box mb-4">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <label for="fecha_inicio" class="form-label">Desde</label>
+                    <input type="date" class="form-control" name="fecha_inicio" value="<?= htmlspecialchars($_GET['fecha_inicio'] ?? '') ?>">
+                </div>
+                <div class="col-md-3">
+                    <label for="fecha_fin" class="form-label">Hasta</label>
+                    <input type="date" class="form-control" name="fecha_fin" value="<?= htmlspecialchars($_GET['fecha_fin'] ?? '') ?>">
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </div>
 
-            <div class="col-auto align-self-end">
-                <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
-            </div>
-        </form>
+        <!-- Filtro por Apellido de Difunto -->
+        <div id="filtro_titular" class="filtro-box mb-4" style="display: none;">
+            <form method="GET" class="row g-3">
+                <div class="col-md-2">
+                    <label for="letra_apellido" class="form-label">Apellido(A-Z)</label>
+                    <select name="letra_apellido" class="form-select">
+                        <option value="">Seleccionar...</option>
+                        <?php foreach (range('A', 'Z') as $letra): ?>
+                            <option value="<?= $letra ?>" <?= (isset($datos['letra_apellido']) && $datos['letra_apellido'] === $letra) ? 'selected' : '' ?>><?= $letra ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </div>
 
-        <!-- Mostrar error solo si hay -->
-        <?php if ($error): ?>
-            <div class="alert alert-warning text-center"><?= htmlspecialchars($error) ?></div>
-        <?php endif; ?>
-
-        <table class="table table-bordered table-striped">
-            <thead class="th a">
-                <tr>
-                    <th><?= generarOrdenLink('fecha_fallecimiento', 'Fecha Fallecimiento', $datos) ?></th>
-                    <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
-                    <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
-                    <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>
-                    <th><?= generarOrdenLink('descripcion', 'Sexo', $datos) ?></th>
-                    <th><?= generarOrdenLink('domicilio', 'Domicilio', $datos) ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($datos['movimientos'])): ?>
-                    <?php foreach ($datos['movimientos'] as $m): ?>
+        <!-- Mostrar datos -->
+        <?php if (!empty($datos['datos_difuntos'])): ?>
+            <table class="table table-bordered table-striped">
+                <thead class="th a">
+                    <tr>
+                        <th><?= generarOrdenLink('fecha_defuncion', 'Fecha de Defunción', $datos) ?></th>
+                        <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
+                        <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
+                        <th><?= generarOrdenLink('edad', 'Edad', $datos) ?></th>
+                        <th><?= generarOrdenLink('dni', 'Dni', $datos) ?></th>
+                        <th><?= generarOrdenLink('deudo', 'Deudo', $datos) ?></th> 
+                        <th><?= generarOrdenLink('estado_civil', 'Estado Civil', $datos) ?></th>
+                        <th><?= generarOrdenLink('nacionalidad', 'Nacionalidad', $datos) ?></th>  
+                        <th><?= generarOrdenLink('sexo', 'Sexo', $datos) ?></th>
+                        <th><?= generarOrdenLink('domicilio', 'Domicilio', $datos) ?></th>
+                        <th><?= generarOrdenLink('localidad', 'Localidad', $datos) ?></th>
+                        <th><?= generarOrdenLink('codigo_postal', 'Código Postal', $datos) ?></th>              
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($datos['datos_difuntos'] as $dif): ?>
                         <tr>
-                            <td><?= htmlspecialchars($m['fecha_fallecimiento']) ?></td>
-                            <td><?= htmlspecialchars($m['nombre']) ?></td>
-                            <td><?= htmlspecialchars($m['apellido']) ?></td>
-                            <td><?= htmlspecialchars($m['dni']) ?></td>
-                            <td><?= htmlspecialchars($m['descripcion']) ?></td>
-                            <td><?= htmlspecialchars($m['domicilio']) ?></td>
+                            <td><?= htmlspecialchars($dif['fecha_defuncion']) ?></td>
+                            <td><?= htmlspecialchars($dif['nombre']) ?></td>
+                            <td><?= htmlspecialchars($dif['apellido']) ?></td>
+                            <td><?= htmlspecialchars($dif['edad']) ?></td>
+                            <td><?= htmlspecialchars($dif['dni']) ?></td>
+                            <td><?= htmlspecialchars($dif['deudo']) ?></td>
+                            <td><?= htmlspecialchars($dif['estado_civil']) ?></td>
+                            <td><?= htmlspecialchars($dif['nacionalidad'] ?? '') ?></td>
+                            <td><?= htmlspecialchars($dif['sexo'] ?? '') ?></td>
+                            <td><?= htmlspecialchars($dif['domicilio']) ?></td>
+                            <td><?= htmlspecialchars($dif['localidad']) ?></td>
+                            <td><?= htmlspecialchars($dif['codigo_postal']) ?></td>            
                         </tr>
                     <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5" class="text-center text-muted">No se encontraron resultados.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-
-        <?php if (!empty($datos['total_paginas']) && ($datos['total_paginas']) > 1): ?>
-            <ul class="pagination">
-                <?php for ($i = 1; $i <= $datos['total_paginas']; $i++): ?>
-                    <li class="page-item <?= ($i == $datos['pagina_actual']) ? 'active' : '' ?>">
-                        <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $i])) ?>">
-                            <?= $i ?>
-                        </a>
-                    </li>
-                <?php endfor; ?>
-            </ul>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <div class="text-center py-4">
+                <i class="fas fa-info-circle text-info fa-3x mb-3"></i>
+                <p class="text-muted">No hay datos registrados</p>
+            </div>
         <?php endif; ?>
     </div>
+
 
     <!-- Pestaña para deudores morosos-->
     <div class="tab-pane fade" id="morosos" role="tabpanel">
