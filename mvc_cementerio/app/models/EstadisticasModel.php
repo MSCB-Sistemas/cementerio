@@ -102,6 +102,25 @@ class EstadisticasModel extends Control {
         }   
     }
 
+    public function getDifuntosTrasladados($sort_col, $sort_dir, $limite, $offset){
+        $columnas_permitidas = ['nombre', 'apellido', 'fecha_fallecimiento', 'fecha_retiro'];
+        $sort_col = in_array($sort_col, $columnas_permitidas) ? $sort_col :'fecha_retiro';
+        $sort_dir = strtoupper($sort_dir) === 'DESC' ? 'DESC' : 'ASC';
+        $stmt = $this->db->prepare("SELECT d.*, d.dni, d.nombre, d.apellido, d.fecha_fallecimiento, u.fecha_retiro
+                                     FROM difunto d 
+                                     INNER JOIN ubicacion_difunto u
+                                     ON  d.id_difunto = u.id_difunto
+                                     WHERE u.fecha_retiro != '0000-00-00'
+                                     ORDER BY $sort_col $sort_dir
+                                     LIMIT :limite OFFSET :offset
+                                     ");
+        $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();     
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);                                     
+    }
+
 
     public function getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido = '') {
         $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
