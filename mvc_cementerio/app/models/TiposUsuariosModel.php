@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /**
@@ -54,18 +53,8 @@ class TiposUsuariosModel {
      */
     public function insertTipoUsuario($descripcion): bool|string
     {
-        $sql = "INSERT INTO tipos_usuarios (descripcion) VALUES (:descripcion)";
-        $stmt = $this->db->prepare($sql);
-        $parametros = ['descripcion' => $descripcion];
-        $stmt->execute($parametros);
-        
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Tipo Usuarios Model",      // Modelo
-            "Insert"                    // Accion
-        );
+        $stmt = $this->db->prepare("INSERT INTO tipos_usuarios (descripcion) VALUES (:descripcion)");
+        $stmt->execute(['descripcion' => $descripcion]);
         return $this->db->lastInsertId();
     }
 
@@ -78,22 +67,12 @@ class TiposUsuariosModel {
      */
     public function updateTipoUsuario($id_tipo_usuario, $descripcion): bool
     {
-        $sql = "UPDATE tipos_usuarios SET descripcion = :descripcion 
-                WHERE id_tipo_usuario = :id_tipo_usuario";
-        $stmt = $this->db->prepare($sql);
-        $parametros = [
+        $stmt = $this->db->prepare("UPDATE tipos_usuarios SET descripcion = :descripcion 
+                                    WHERE id_tipo_usuario = :id_tipo_usuario");
+        $stmt->execute([
             'id_tipo_usuario' => $id_tipo_usuario,
             'descripcion' => $descripcion
-        ];
-        $stmt->execute($parametros);
-
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Tipo Usuarios Model",      // Modelo
-            "Update"                    // Accion
-        );
+        ]);
         return $stmt->rowCount() > 0;
     }
 
@@ -105,18 +84,8 @@ class TiposUsuariosModel {
      */
     public function deleteTipoUsuario(int $id_tipo_usuario): bool
     {
-        $sql = "DELETE FROM tipos_usuarios WHERE id_tipo_usuario = :id_tipo_usuario";
-        $stmt = $this->db->prepare($sql);
-        $parametros = ['id_tipo_usuario' => $id_tipo_usuario];
-        $stmt->execute($parametros);
-        
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Tipo Usuarios Model",      // Modelo
-            "Delete"                    // Accion
-        );
+        $stmt = $this->db->prepare("DELETE FROM tipos_usuarios WHERE id_tipo_usuario = :id_tipo_usuario");
+        $stmt->execute(['id_tipo_usuario' => $id_tipo_usuario]);
         return $stmt->rowCount() > 0;
     }
 }

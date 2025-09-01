@@ -1,4 +1,3 @@
-
 <body class="bg-light text-dark min-vh-100 d-flex justify-content-center align-items-center">
     <main class="container-fluid d-flex justify-content-center align-items-center px-3">
         <div class="card shadow-lg border-0" style="width: 100%; max-width: 500px;">

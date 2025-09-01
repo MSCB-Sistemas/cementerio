@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /*
@@ -54,18 +53,10 @@ class EstadoCivilModel {
     */
     public function insertEstadoCivil($descripcion)
     {
-        $sql = "INSERT INTO estado_civil (descripcion) VALUES (:descripcion)";
-        $stmt = $this->db->prepare($sql);
-        $parametros = ['descripcion' => $descripcion];
-        $stmt->execute($parametros);
-
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Estado Civil Model",         // Modelo
-            "Insert"                    // Accion
-        );
+        $stmt = $this->db->prepare("INSERT INTO estado_civil (descripcion) VALUES (:descripcion)");
+        $stmt->execute([
+            'descripcion' => $descripcion,
+        ]);
         return $this->db->lastInsertId();
     }
 
@@ -77,24 +68,11 @@ class EstadoCivilModel {
      */
     public function updateEstadoCivil($id_estado_civil, $descripcion): bool
     {
-        $sql = "UPDATE estado_civil 
-                SET id_estado_civil = :id_estado_civil, descripcion = :descripcion 
-                WHERE id_estado_civil = :id_estado_civil";
-        $stmt = $this->db->prepare($sql);
-        
-        $parametros = [
+        $stmt = $this->db->prepare("UPDATE estado_civil SET id_estado_civil = :id_estado_civil, descripcion = :descripcion WHERE id_estado_civil = :id_estado_civil");
+        $stmt->execute([
             'id_estado_civil' => $id_estado_civil,
             'descripcion' => $descripcion
-        ];
-        $stmt->execute($parametros);
-
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Estado Civil Model",         // Modelo
-            "Update"                    // Accion
-        );
+        ]);
         return $stmt->rowCount() > 0;
     }
 
@@ -105,18 +83,8 @@ class EstadoCivilModel {
      */
     public function deleteEstadoCivil($id_estado_civil): bool
     {
-        $sql = "DELETE FROM estado_civil WHERE id_estado_civil = :id_estado_civil";
-        $stmt = $this->db->prepare($sql);
-        $parametros = ['id_estado_civil' => $id_estado_civil];
-        $stmt->execute($parametros);
-        
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Estado Civil Model",         // Modelo
-            "Delete"                    // Accion
-        );
+        $stmt = $this->db->prepare("DELETE FROM estado_civil WHERE id_estado_civil = :id_estado_civil");
+        $stmt->execute(['id_estado_civil' => $id_estado_civil]);
         return $stmt->rowCount() > 0;
     }
 }

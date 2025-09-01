@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /**
@@ -27,18 +26,16 @@ class ParcelaModel {
      */
     public function getAllParcelas(): array
     {
-        $sql = "SELECT p.*,
-                        tp.nombre_parcela AS tipo_parcela,
-                        de.nombre AS nombre_deudo,
-                        o.descripcion AS orientacion
-                FROM parcela p
-                LEFT JOIN tipo_parcela tp ON p.id_tipo_parcela = tp.id_tipo_parcela
-                LEFT JOIN deudo de ON p.id_deudo = de.id_deudo
-                LEFT JOIN orientacion o ON p.id_orientacion = o.id_orientacion
-                ";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare("SELECT p.*,
+                                                tp.nombre_parcela AS tipo_parcela,
+                                                de.nombre AS nombre_deudo,
+                                                o.descripcion AS orientacion
+                                        FROM parcela p
+                                        LEFT JOIN tipo_parcela tp ON p.id_tipo_parcela = tp.id_tipo_parcela
+                                        LEFT JOIN deudo de ON p.id_deudo = de.id_deudo
+                                        LEFT JOIN orientacion o ON p.id_orientacion = o.id_orientacion
+                                        ");
         $stmt->execute();
-
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -68,11 +65,9 @@ class ParcelaModel {
     */
     public function insertParcela($id_tipo_parcela, $id_deudo, $numero_ubicacion, $hilera, $seccion, $fraccion, $nivel, $id_orientacion): int
     {
-        $sql = "INSERT INTO parcela (id_tipo_parcela, id_deudo, numero_ubicacion, hilera, seccion, fraccion, nivel, id_orientacion) 
-                VALUES (:id_tipo_parcela, :id_deudo, :numero_ubicacion, :hilera, :seccion, :fraccion, :nivel, :id_orientacion)";
-        $stmt = $this->db->prepare($sql);
-
-        $parametros = [
+        $stmt = $this->db->prepare("INSERT INTO parcela (id_tipo_parcela, id_deudo, numero_ubicacion, hilera, seccion, fraccion, nivel, id_orientacion) 
+                                    VALUES (:id_tipo_parcela, :id_deudo, :numero_ubicacion, :hilera, :seccion, :fraccion, :nivel, :id_orientacion)");
+        $stmt->execute([
             'id_tipo_parcela' => $id_tipo_parcela,
             'id_deudo' => $id_deudo,
             'numero_ubicacion' => $numero_ubicacion,
@@ -81,23 +76,10 @@ class ParcelaModel {
             'fraccion' => $fraccion,
             'nivel' => $nivel,
             'id_orientacion' => $id_orientacion
-        ];
-
-        $stmt->execute($parametros);
-
-        // aquí registramos la auditoría
-        //var_dump( "Entró a AuditoriaHelper::log");
-        //var_dump($_SESSION);
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Parcela Model",             // Modelo
-            "Insert"                    // Accion
-        );
-        return (int) $this->db->lastInsertId();
-       
+        ]);
+        return $this->db->lastInsertId();
     }
+
 
     /** 
      * Actualiza una parcela existente
@@ -114,12 +96,10 @@ class ParcelaModel {
      */
     public function updateParcela($id_parcela, $id_tipo_parcela, $id_deudo, $numero_ubicacion, $hilera, $seccion, $fraccion, $nivel, $id_orientacion): bool
     {
-        $sql = "UPDATE parcela 
-                SET id_tipo_parcela = :id_tipo_parcela, id_deudo = :id_deudo, numero_ubicacion = :numero_ubicacion, hilera = :hilera, seccion = :seccion, fraccion = :fraccion, nivel = :nivel, id_orientacion = :id_orientacion 
-                WHERE id_parcela = :id_parcela";
-        $stmt = $this->db->prepare($sql);
-        
-        $parametros = [
+        $stmt = $this->db->prepare("UPDATE parcela 
+                                    SET id_tipo_parcela = :id_tipo_parcela, id_deudo = :id_deudo, numero_ubicacion = :numero_ubicacion, hilera = :hilera, seccion = :seccion, fraccion = :fraccion, nivel = :nivel, id_orientacion = :id_orientacion 
+                                    WHERE id_parcela = :id_parcela");
+        $stmt->execute([
             'id_parcela' => $id_parcela,
             'id_tipo_parcela' => $id_tipo_parcela,
             'id_deudo' => $id_deudo,
@@ -129,17 +109,7 @@ class ParcelaModel {
             'fraccion' => $fraccion,
             'nivel' => $nivel,
             'id_orientacion' => $id_orientacion
-        ];        
-        $stmt->execute($parametros);
-
-        // aquí registramos la auditoría
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Parcela Model",             // Modelo
-            "Update"                    // Accion
-        );
+        ]);
         return $stmt->rowCount() > 0;
     }
 
@@ -150,20 +120,8 @@ class ParcelaModel {
      */
     public function deleteParcela($id_parcela): bool
     {
-        $sql = "DELETE FROM parcela WHERE id_parcela = :id_parcela";
-        $stmt = $this->db->prepare($sql);
-        $parametros = ['id_parcela' => $id_parcela];
-
-        $stmt->execute($parametros);
-
-        // aquí registramos la auditoría
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Parcela Model",             // Modelo
-            "Delete"                    // Accion
-        );
+        $stmt = $this->db->prepare("DELETE FROM parcela WHERE id_parcela = :id_parcela");
+        $stmt->execute(['id_parcela' => $id_parcela]);
         return $stmt->rowCount() > 0;
     }
 }
