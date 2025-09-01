@@ -10,7 +10,9 @@ class EstadisticasController extends Control {
     public function index() {
         $fecha_inicio = !empty($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : '2000-01-01';
         $fecha_fin = !empty($_GET['fecha_fin']) ? $_GET['fecha_fin'] : date('Y-m-d');
-        $letra_apellido = !empty($_GET['letra_apellido']) ? $_GET['letra_apellido'] : '';
+        $letra_apellido_difunto = $_GET['letra_apellido_difunto'] ?? '';
+        $letra_apellido_deudo = $_GET['letra_apellido_deudo'] ?? '';
+
 
         $sort_col = $_GET['sort_col'] ?? 'fecha_defuncion';
         $sort_dir = (isset($_GET['sort_dir']) && strtoupper($_GET['sort_dir']) === 'DESC') ? 'DESC' : 'ASC';
@@ -21,12 +23,11 @@ class EstadisticasController extends Control {
         $offset = ($pagina - 1) * $limite;
 
         $defunciones = $this->model->getDefuncionesEntreFechas(
-            $fecha_inicio, $fecha_fin, $letra_apellido, $sort_col, $sort_dir, $limite, $offset
+            $fecha_inicio, $fecha_fin, $letra_apellido_difunto, $sort_col, $sort_dir, $limite, $offset
         );
 
-
         $total_defunciones = $this->model->getTotalDefuncionesEntreFechas(
-            $fecha_inicio, $fecha_fin, $letra_apellido
+            $fecha_inicio, $fecha_fin, $letra_apellido_difunto
         );
 
         $deudores_morosos = $this->model->getDeudosMorosos();
@@ -54,7 +55,7 @@ class EstadisticasController extends Control {
             $total_parcelas_vendidas = $parcelas_vendidas; // No es paginado
         } else {
             // Si no, usar búsqueda por fecha o apellido
-            $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido);
+            $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido_deudo);
             $total_parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin);
         }
 
@@ -72,7 +73,8 @@ class EstadisticasController extends Control {
             'total_morosos' => count($deudores_morosos),
             'parcelas_vendidas' => $parcelas_vendidas,
             'total_parcelas_vendidas' => $total_parcelas_vendidas,
-            'letra_apellido' => $letra_apellido
+            'letra_apellido_difunto' => $letra_apellido_difunto,
+            'letra_apellido_deudo' => $letra_apellido_deudo,
         ];
 
         $this->loadView("estadisticas", $datos);

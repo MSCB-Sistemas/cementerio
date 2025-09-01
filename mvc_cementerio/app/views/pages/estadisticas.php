@@ -30,16 +30,16 @@ $buscar = isset($_GET['buscar']);
          <!-- Seleccionar tipo de filtro de búsqueda -->
         <div class="mb-4">
             <label for="tipo_filtro" class="form-label">Seleccionar filtro de búsqueda:</label>
-            <select id="tipo_filtro" class="form-select w-auto" onchange="mostrarFiltro()">
+            <select id="tipo_filtro" class="form-select w-auto" onchange="mostrarFiltroDifuntos()">
                 <option value="">Seleccionar...</option>
                 <option value="lista_completa">Padrón general de Difuntos</option>
-                <option value="filtro_titular">Por Orden Alfabético</option>
-                <option value="filtro_fecha">Por Fecha de Defunción</option>
+                <option value="filtro_titular_difuntos">Por Orden Alfabético</option>
+                <option value="filtro_fecha_difuntos">Por Fecha de Defunción</option>
             </select>
     </div>
 
         <!-- Filtro por Fecha -->
-        <div id="filtro_fecha" class="filtro-box mb-4">
+        <div id="filtro_fecha_difuntos" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-3">
                     <label for="fecha_inicio" class="form-label">Desde</label>
@@ -56,14 +56,14 @@ $buscar = isset($_GET['buscar']);
         </div>
 
         <!-- Filtro por Apellido de Difunto -->
-        <div id="filtro_titular" class="filtro-box mb-4" style="display: none;">
+        <div id="filtro_titular_difuntos" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-2">
-                    <label for="letra_apellido" class="form-label">Apellido(A-Z)</label>
-                    <select name="letra_apellido" class="form-select">
+                    <label for="letra_apellido_difunto" class="form-label">Apellido(A-Z)</label>
+                    <select name="letra_apellido_difunto" class="form-select">
                         <option value="">Seleccionar...</option>
                         <?php foreach (range('A', 'Z') as $letra): ?>
-                            <option value="<?= $letra ?>" <?= (isset($datos['letra_apellido']) && $datos['letra_apellido'] === $letra) ? 'selected' : '' ?>><?= $letra ?></option>
+                            <option value="<?= $letra ?>" <?= (isset($datos['letra_apellido_difunto']) && $datos['letra_apellido_difunto'] === $letra) ? 'selected' : '' ?>><?= $letra ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -167,17 +167,17 @@ $buscar = isset($_GET['buscar']);
         <!-- Seleccionar tipo de filtro de búsqueda -->
         <div class="mb-4">
             <label for="tipo_filtro" class="form-label">Seleccionar filtro de búsqueda:</label>
-            <select id="tipo_filtro" class="form-select w-auto" onchange="mostrarFiltro()">
+            <select id="tipo_filtro_parcelas" class="form-select w-auto" onchange="mostrarFiltroParcelas()">
                 <option value="">Seleccionar...</option>
-                <option value="lista_completa">Listado de Parcelas</option>
-                <option value="filtro_fecha">Por Fecha de Venta</option>
-                <option value="filtro_parcela">Por Datos de Parcela</option>
-                <option value="filtro_titular">Por Titular</option>
+                <option value="lista_completa_parcelas">Listado de Parcelas</option>
+                <option value="filtro_fecha_parcelas">Por Fecha de Venta</option>
+                <option value="filtro_parcela_parcelas">Por Datos de Parcela</option>
+                <option value="filtro_titular_parcelas">Por Titular</option>
             </select>
     </div>
 
         <!-- Filtro por Fecha -->
-        <div id="filtro_fecha" class="filtro-box mb-4">
+        <div id="filtro_fecha_parcelas" class="filtro-box mb-4">
             <form method="GET" class="row g-3">
                 <div class="col-md-3">
                     <label for="fecha_inicio" class="form-label">Desde</label>
@@ -194,7 +194,7 @@ $buscar = isset($_GET['buscar']);
         </div>
 
         <!-- Filtro por Datos de Parcela -->
-        <div id="filtro_parcela" class="filtro-box mb-4" style="display: none;">
+        <div id="filtro_parcela_parcelas" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-2">
                     <label for="ubicacion" class="form-label">Nº de Ubicación</label>
@@ -245,14 +245,14 @@ $buscar = isset($_GET['buscar']);
         </div>
 
         <!-- Filtro por Titular -->
-        <div id="filtro_titular" class="filtro-box mb-4" style="display: none;">
+        <div id="filtro_titular_parcelas" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-2">
-                    <label for="letra_apellido" class="form-label">Apellido Titular (A-Z)</label>
-                    <select name="letra_apellido" class="form-select">
+                    <label for="letra_apellido_deudo" class="form-label">Apellido Titular (A-Z)</label>
+                    <select name="letra_apellido_deudo" class="form-select">
                         <option value="">Seleccionar...</option>
                         <?php foreach (range('A', 'Z') as $letra): ?>
-                            <option value="<?= $letra ?>" <?= (isset($datos['letra_apellido']) && $datos['letra_apellido'] === $letra) ? 'selected' : '' ?>><?= $letra ?></option>
+                            <option value="<?= $letra ?>" <?= (isset($datos['letra_apellido_deudo']) && $datos['letra_apellido_deudo'] === $letra) ? 'selected' : '' ?>><?= $letra ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -358,7 +358,7 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
     });
 
     // Función para mostrar el filtro seleccionado
-    function mostrarFiltro() {
+    function mostrarFiltroDifuntos() {
         const seleccion = document.getElementById('tipo_filtro').value;
         const filtros = document.querySelectorAll('.filtro-box');
 
@@ -366,9 +366,10 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
 
         // Si se elige "lista_completa", recarga sin parámetros
     if (seleccion === 'lista_completa') {
-        window.location.href = window.location.pathname + '?tab=vendidas';
+        window.location.href = window.location.pathname + '?tab=tablas';
         return;
     }
+
 
         if (!seleccion) return; // No mostrar nada si no hay selección
 
@@ -378,8 +379,28 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
         }
     }
 
+    function mostrarFiltroParcelas() {
+    const seleccion = document.getElementById('tipo_filtro_parcelas').value;
+    const filtros = document.querySelectorAll('#vendidas .filtro-box');
+
+    filtros.forEach(f => f.style.display = 'none');
+
+    if (seleccion === 'lista_completa_parcelas') {
+        window.location.href = window.location.pathname + '?tipo_filtro_parcelas=lista_completa_parcelas&tab=vendidas';
+        return;
+    }
+
+    if (!seleccion) return;
+
+    const filtroSeleccionado = document.getElementById(seleccion);
+    if (filtroSeleccionado) {
+        filtroSeleccionado.style.display = 'block';
+    }
+}
+
     document.addEventListener('DOMContentLoaded', function () {
-        mostrarFiltro();
-    });
+    mostrarFiltroDifuntos(); 
+    mostrarFiltroParcelas(); 
+});
 
 </script>
