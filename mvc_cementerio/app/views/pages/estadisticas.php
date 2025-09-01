@@ -385,7 +385,7 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
 
         filtros.forEach(f => f.style.display = 'none');
 
-        if (seleccion === 'lista_completa_parcelas')  {
+        if (seleccion === 'lista_completa_parcelas') {
             window.location.href = window.location.pathname + '?tipo_filtro_parcelas=lista_completa_parcelas&tab=vendidas';
             return;
         }
