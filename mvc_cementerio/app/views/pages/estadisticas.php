@@ -379,7 +379,7 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
         }
     }
 
-    function mostrarFiltroParcelas() {
+    function mostrarFiltroParcelas()  {
     const seleccion = document.getElementById('tipo_filtro_parcelas').value;
     const filtros = document.querySelectorAll('#vendidas .filtro-box');
 
