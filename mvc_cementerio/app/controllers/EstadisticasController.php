@@ -12,6 +12,10 @@ class EstadisticasController extends Control {
         $fecha_inicio = !empty($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : date('Y-m-01');
         $fecha_fin = !empty($_GET['fecha_fin']) ? $_GET['fecha_fin'] : date('Y-m-d');
 
+        $letra_apellido_difunto = $_GET['letra_apellido_difunto'] ?? '';
+        $letra_apellido_deudo = $_GET['letra_apellido_deudo'] ?? '';
+
+
         $sort_col = !empty($_GET['sort_col']) ? $_GET['sort_col'] : 'fecha';
         $sort_dir = !empty($_GET['sort_dir']) && in_array($_GET['sort_dir'], ['ASC', 'DESC']);
 
@@ -33,6 +37,30 @@ class EstadisticasController extends Control {
         $total_defunciones = $this->model->getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin);
         $total_paginas = max(1, ceil($total_defunciones / $limite));
 
+        // Capturar posibles filtros de parcela
+        $filtros_parcela = [
+            'tipo_parcela' => $_GET['tipo_parcela'] ?? '',
+            'seccion' => $_GET['seccion'] ?? '',
+            'fraccion' => $_GET['fraccion'] ?? '',
+            'nivel' => $_GET['nivel'] ?? '',
+            'orientacion' => $_GET['orientacion'] ?? '',
+            'hilera' => $_GET['hilera'] ?? '',
+            'ubicacion' => $_GET['ubicacion'] ?? ''
+        ];
+
+        // Ver si se usó al menos un filtro de parcela
+        $uso_filtro_parcela = array_filter($filtros_parcela);
+
+        if ($uso_filtro_parcela) {
+            // Si se usó el filtro por datos de parcela
+            $parcelas_vendidas = $this->model->getParcelasVendidasPorDatosParcela($filtros_parcela);
+            $total_parcelas_vendidas = $parcelas_vendidas; // No es paginado
+        } else {
+            // Si no, usar búsqueda por fecha o apellido
+            $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido_deudo);
+            $total_parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin);
+        }
+      
         $datos = [
             'title' => 'Estadisticas',
             'movimientos' => $defunciones,
@@ -45,7 +73,11 @@ class EstadisticasController extends Control {
             'pagina_actual' => $pagina,
             'total_paginas' => $total_paginas,
             'total_resultados' => $total_defunciones,
-            'total_morosos' => count($deudores_morosos)
+            'total_morosos' => count($deudores_morosos),
+            'parcelas_vendidas' => $parcelas_vendidas,
+            'total_parcelas_vendidas' => $total_parcelas_vendidas,
+            'letra_apellido_difunto' => $letra_apellido_difunto,
+            'letra_apellido_deudo' => $letra_apellido_deudo,
         ];
 
         $this->loadView("estadisticas", $datos);
