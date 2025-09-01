@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 class DifuntoModel {
@@ -62,19 +61,17 @@ class DifuntoModel {
      * @param mixed $codigo_postal
      * @return bool|string
      */
-    public function insertDifunto($id_deudo, $nombre, $apellido, $dni, $edad, $fecha_fallecimiento, $id_sexo, $id_nacionalidad, $id_estado_civil, $domicilio, $localidad, $codigo_postal): int 
-    {
-        $sql = "INSERT INTO difunto (
+    public function insertDifunto($id_deudo, $nombre, $apellido, $dni, $edad, $fecha_fallecimiento, $id_sexo, $id_nacionalidad, $id_estado_civil, $domicilio, $localidad, $codigo_postal): int {
+        $stmt = $this->db->prepare("
+            INSERT INTO difunto (
                 id_deudo, nombre, apellido, dni, edad, fecha_fallecimiento,
                 id_sexo, id_nacionalidad, id_estado_civil, domicilio, localidad, codigo_postal
-            ) 
-            VALUES (
+            ) VALUES (
                 :id_deudo, :nombre, :apellido, :dni, :edad, :fecha_fallecimiento,
                 :id_sexo, :id_nacionalidad, :id_estado_civil, :domicilio, :localidad, :codigo_postal
-            )";
-        $stmt = $this->db->prepare($sql);
-        
-        $parametros = [
+            )
+        ");
+        $stmt->execute([
             'id_deudo' => $id_deudo,
             'nombre'=> $nombre,
             'apellido' => $apellido,
@@ -87,16 +84,8 @@ class DifuntoModel {
             'domicilio'=> $domicilio,
             'localidad'=> $localidad,
             'codigo_postal'=> $codigo_postal
-        ];
-        $stmt->execute($parametros); 
+        ]); 
         
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Difunto Model",             // Modelo
-            "Insert"                    // Accion
-        );
         return $this->db->lastInsertId();
     }
 
@@ -106,9 +95,9 @@ class DifuntoModel {
          * @param array $data Datos nuevos para el difunto.
          * @return bool True si se actualizó al menos un campo, False si no hubo cambios.
      */
-    public function updateDifunto(int $id_difunto, $id_deudo, $nombre, $apellido, $dni, $edad, $fecha_fallecimiento, $id_sexo, $id_nacionalidad, $id_estado_civil, $domicilio, $localidad, $codigo_postal): bool 
-    {
-        $sql = "UPDATE difunto SET 
+    public function updateDifunto(int $id_difunto, $id_deudo, $nombre, $apellido, $dni, $edad, $fecha_fallecimiento, $id_sexo, $id_nacionalidad, $id_estado_civil, $domicilio, $localidad, $codigo_postal): bool {
+        $stmt = $this->db->prepare("
+            UPDATE difunto SET 
                 id_deudo = :id_deudo,
                 nombre = :nombre,
                 apellido = :apellido,
@@ -121,11 +110,9 @@ class DifuntoModel {
                 domicilio = :domicilio,
                 localidad = :localidad,
                 codigo_postal = :codigo_postal
-                WHERE id_difunto = :id_difunto
-                ";
-        $stmt = $this->db->prepare($sql);
-        
-        $parametros = [
+            WHERE id_difunto = :id_difunto
+        ");
+        $stmt->execute([
             "id_difunto"=> $id_difunto,
             "id_deudo" => $id_deudo,
             "nombre"=> $nombre,
@@ -139,16 +126,7 @@ class DifuntoModel {
             "domicilio"=> $domicilio,
             "localidad"=> $localidad,
             "codigo_postal"=> $codigo_postal
-        ];
-        $stmt->execute($parametros);
-
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Difunto Model",             // Modelo
-            "Update"                    // Accion
-        );
+        ]);
         return $stmt->rowCount() > 0;
     }
 
@@ -157,20 +135,9 @@ class DifuntoModel {
          * @param int $id_difunto ID del difunto a eliminar.
          * @return bool True si se eliminó, False si no se encontró o no se eliminó.
      */
-    public function deleteDifunto(int $id_difunto): bool 
-    {
-        $sql = "DELETE FROM difunto WHERE id_difunto = :id_difunto";
-        $stmt = $this->db->prepare($sql);
-        $parametros = ['id_difunto' => $id_difunto];
-        $stmt->execute($parametros);
-        
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Difunto Model",             // Modelo
-            "Update"                    // Accion
-        );
+    public function deleteDifunto(int $id_difunto): bool {
+        $stmt = $this->db->prepare("DELETE FROM difunto WHERE id_difunto = :id_difunto");
+        $stmt->execute(['id_difunto' => $id_difunto]);
         return $stmt->rowCount() > 0;
     }
 }

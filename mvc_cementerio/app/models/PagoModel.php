@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /**
@@ -67,11 +66,9 @@ class PagoModel {
      */
     public function insertPago($id_deudo, $id_parcela, $fecha_pago, $fecha_vencimiento, $importe, $recargo, $total, $id_usuario): int
     {
-        $sql = "INSERT INTO pago (id_deudo, id_parcela, fecha_pago, importe, recargo, total, id_usuario) 
-                VALUES (:id_deudo, :id_parcela, :fecha_pago, :importe, :recargo, :total, :id_usuario)";
-        $stmt = $this->db->prepare($sql);
-        
-        $parametros = [
+        $stmt = $this->db->prepare("INSERT INTO pago (id_deudo, id_parcela, fecha_pago, fecha_vencimiento, importe, recargo, total, id_usuario) 
+                                    VALUES (:id_deudo, :id_parcela, :fecha_pago, :fecha_vencimiento, :importe, :recargo, :total, :id_usuario)");
+        $stmt->execute([
             "id_deudo" => $id_deudo,
             "id_parcela" => $id_parcela,
             "fecha_pago" => $fecha_pago,
@@ -80,16 +77,7 @@ class PagoModel {
             "recargo" => $recargo,
             "total" => $total,
             "id_usuario" => $id_usuario
-        ];
-        $stmt->execute($parametros);
-
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Pago Model",             // Modelo
-            "Insert"                    // Accion
-        );
+        ]);
         return $this->db->lastInsertId();
     }
 
@@ -108,11 +96,9 @@ class PagoModel {
      */
     public function updatePago($id_pago, $id_deudo, $id_parcela, $fecha_pago, $fecha_vencimiento, $importe, $recargo, $total, $id_usuario): bool
     {
-        $sql = "UPDATE pago SET id_deudo = :id_deudo, id_parcela = :id_parcela, fecha_pago = :fecha_pago, importe = :importe, recargo = :recargo, total = :total, id_usuario = :id_usuario
-                WHERE id_pago = :id_pago";
-        $stmt = $this->db->prepare($sql);
-        
-        $parametros = [
+        $stmt = $this->db->prepare("UPDATE pago SET id_deudo = :id_deudo, id_parcela = :id_parcela, fecha_pago = :fecha_pago, fecha_vencimiento = :fecha_vencimiento, importe = :importe, recargo = :recargo, total = :total, id_usuario = :id_usuario
+                                    WHERE id_pago = :id_pago");
+        $stmt->execute([
             "id_pago" => $id_pago,
             "id_deudo" => $id_deudo,
             "id_parcela" => $id_parcela,
@@ -122,16 +108,7 @@ class PagoModel {
             "recargo" => $recargo,
             "total" => $total,
             "id_usuario" => $id_usuario
-        ];
-        $stmt->execute($parametros);
-
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Pago Model",             // Modelo
-            "Update"                    // Accion
-        );
+        ]);
         return $stmt->rowCount() > 0;
     }
 
@@ -143,18 +120,8 @@ class PagoModel {
      */
     public function deletePago($id_pago): bool
     {
-        $sql = "DELETE FROM pago WHERE id_pago = :id_pago";
-        $stmt = $this->db->prepare($sql);
-        $parametros = ['id_pago' => $id_pago];
-        $stmt->execute($parametros);
-        
-        AuditoriaHelper::log(
-            $_SESSION['usuario_id'],    // usuario actual
-            $sql,                       // Query SQL ejecutada
-            $parametros,                // Parámetros
-            "Pago Model",             // Modelo
-            "Delete"                    // Accion
-        );
+        $stmt = $this->db->prepare("DELETE FROM pago WHERE id_pago = :id_pago");
+        $stmt->execute(['id_pago' => $id_pago]);
         return $stmt->rowCount() > 0;
     }
 }

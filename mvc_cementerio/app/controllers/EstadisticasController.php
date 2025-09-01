@@ -1,23 +1,20 @@
 <?php
 class EstadisticasController extends Control {
-    
-    private EstadisticasModel $model;
+    private $model;
 
     public function __construct() {
         $this->requireLogin();
-        $this-> model = $this->loadModel("EstadisticasModel");
+        $this->model = $this->loadModel("EstadisticasModel");
     }
 
     public function index() {
-        $fecha_inicio = !empty($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : date('Y-m-01');
+        $fecha_inicio = !empty($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : '2000-01-01';
         $fecha_fin = !empty($_GET['fecha_fin']) ? $_GET['fecha_fin'] : date('Y-m-d');
         $letra_apellido = !empty($_GET['letra_apellido']) ? $_GET['letra_apellido'] : '';
 
         $sort_col = $_GET['sort_col'] ?? 'fecha_defuncion';
         $sort_dir = (isset($_GET['sort_dir']) && strtoupper($_GET['sort_dir']) === 'DESC') ? 'DESC' : 'ASC';
 
-
-        $sort_dir = strtoupper($_GET['sort_dir'] ?? 'ASC');
 
         $pagina = !empty($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
         $limite = 14;
@@ -33,9 +30,6 @@ class EstadisticasController extends Control {
         );
 
         $deudores_morosos = $this->model->getDeudosMorosos();
-
-        $difuntos_trasladados = $this->model->getDifuntosTrasladados($sort_col, $sort_dir, $limite, $offset);
-
 
         $total_defunciones = $this->model->getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin);
         $total_paginas = max(1, ceil($total_defunciones / $limite));
@@ -68,7 +62,6 @@ class EstadisticasController extends Control {
             'title' => 'Estadisticas',
             'datos_difuntos' => $defunciones,
             'deudores_morosos' => $deudores_morosos,
-            'difuntos_trasladados' => $difuntos_trasladados,
             'fecha_inicio' => $fecha_inicio,
             'fecha_fin' => $fecha_fin,
             'sort_col' => $sort_col,
