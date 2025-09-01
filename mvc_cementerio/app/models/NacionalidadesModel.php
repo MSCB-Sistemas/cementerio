@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /**
@@ -53,9 +54,19 @@ class NacionalidadesModel {
      */
     public function insertNacionalidad($nacionalidad): int
     {
-        $stmt = $this->db->prepare("INSERT INTO nacionalidades (nacionalidad) VALUES (:nacionalidad)");
-        $stmt->execute(['nacionalidad' => $nacionalidad]);
-        return $this->db->lastInsertId();
+        $sql = "INSERT INTO nacionalidades (nacionalidad) VALUES (:nacionalidad)";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['nacionalidad' => $nacionalidad];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Nacionalidades Model",             // Modelo
+            "Insert"                    // Accion
+        );
+        return (int) $this->db->lastInsertId();
     }
 
     /**
@@ -67,11 +78,22 @@ class NacionalidadesModel {
      */
     public function updateNacionalidad($id_nacionalidad, $nacionalidad): bool
     {
-        $stmt = $this->db->prepare("UPDATE nacionalidades SET nacionalidad = :nacionalidad WHERE id_nacionalidad = :id_nacionalidad");
-        $stmt->execute([
+        $sql = "UPDATE nacionalidades SET nacionalidad = :nacionalidad WHERE id_nacionalidad = :id_nacionalidad";
+        $stmt = $this->db->prepare($sql);
+        
+        $parametros = [
             'id_nacionalidad' => $id_nacionalidad,
             'nacionalidad' => $nacionalidad
-        ]);
+        ];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Nacionalidades Model",             // Modelo
+            "Update"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
@@ -83,8 +105,18 @@ class NacionalidadesModel {
      */
     public function deleteNacionalidad($id_nacionalidad): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM nacionalidades WHERE id_nacionalidad = :id_nacionalidad");
-        $stmt->execute(['id_nacionalidad' => $id_nacionalidad]);
+        $sql = "DELETE FROM nacionalidades WHERE id_nacionalidad = :id_nacionalidad";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['id_nacionalidad' => $id_nacionalidad];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Nacionalidades Model",             // Modelo
+            "Delete"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 }

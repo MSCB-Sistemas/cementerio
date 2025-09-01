@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /*
@@ -53,10 +54,18 @@ class SexoModel {
      */
     public function insertSexo($descripcion)
     {
-        $stmt = $this->db->prepare("INSERT INTO sexo (descripcion) VALUES (:descripcion)");
-        $stmt->execute([
-            'descripcion' => $descripcion,
-        ]);
+        $sql = "INSERT INTO sexo (descripcion) VALUES (:descripcion)";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['descripcion' => $descripcion];
+        $stmt->execute($parametros);
+
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Genero/Sexo Model",             // Modelo
+            "Insert"                    // Accion
+        );
         return $this->db->lastInsertId();
     }
 
@@ -68,11 +77,22 @@ class SexoModel {
      */
     public function updateSexo($id_sexo, $descripcion): bool
     {
-        $stmt = $this->db->prepare("UPDATE sexo SET id_sexo = :id_sexo, descripcion = :descripcion WHERE id_sexo = :id_sexo");
-        $stmt->execute([
+        $sql = "UPDATE sexo SET id_sexo = :id_sexo, descripcion = :descripcion WHERE id_sexo = :id_sexo";
+        $stmt = $this->db->prepare($sql);
+        
+        $parametros = [
             'id_sexo' => $id_sexo,
             'descripcion' => $descripcion
-        ]);
+        ];
+        $stmt->execute($parametros);
+
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Genero/Sexo Model",        // Modelo
+            "Update"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
@@ -83,8 +103,18 @@ class SexoModel {
      */
     public function deleteSexo($id_sexo): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM sexo WHERE id_sexo = :id_sexo");
-        $stmt->execute(['id_sexo' => $id_sexo]);
+        $sql = "DELETE FROM sexo WHERE id_sexo = :id_sexo";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['id_sexo' => $id_sexo];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Genero/Sexo Model",        // Modelo
+            "Delete"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 }
