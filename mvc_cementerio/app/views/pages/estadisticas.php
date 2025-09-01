@@ -379,24 +379,24 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
         }
     }
 
-    function mostrarFiltroParcelas()  {
-    const seleccion = document.getElementById('tipo_filtro_parcelas').value;
-    const filtros = document.querySelectorAll('#vendidas .filtro-box');
+    function mostrarFiltroParcelas() {
+        const seleccion = document.getElementById('tipo_filtro_parcelas').value;
+        const filtros = document.querySelectorAll('#vendidas .filtro-box');
 
-    filtros.forEach(f => f.style.display = 'none');
+        filtros.forEach(f => f.style.display = 'none');
 
-    if (seleccion === 'lista_completa_parcelas')  {
-        window.location.href = window.location.pathname + '?tipo_filtro_parcelas=lista_completa_parcelas&tab=vendidas';
-        return;
+        if (seleccion === 'lista_completa_parcelas')  {
+            window.location.href = window.location.pathname + '?tipo_filtro_parcelas=lista_completa_parcelas&tab=vendidas';
+            return;
+        }
+
+        if (!seleccion) return;
+
+        const filtroSeleccionado = document.getElementById(seleccion);
+        if (filtroSeleccionado) {
+            filtroSeleccionado.style.display = 'block';
+        }
     }
-
-    if (!seleccion) return;
-
-    const filtroSeleccionado = document.getElementById(seleccion);
-    if (filtroSeleccionado) {
-        filtroSeleccionado.style.display = 'block';
-    }
-}
 
     document.addEventListener('DOMContentLoaded', function () {
     mostrarFiltroDifuntos(); 
