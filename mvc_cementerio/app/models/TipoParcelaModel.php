@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /**
@@ -52,8 +53,18 @@ class TipoParcelaModel {
      */
     public function insertTipoParcela($nombre_parcela)
     {
-        $stmt = $this->db->prepare("INSERT INTO tipo_parcela (nombre_parcela) VALUES (:nombre_parcela)");
-        $stmt->execute(['nombre_parcela' => $nombre_parcela]);
+        $sql = "INSERT INTO tipo_parcela (nombre_parcela) VALUES (:nombre_parcela)";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['nombre_parcela' => $nombre_parcela];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Tipo Parcela Model",             // Modelo
+            "Insert"                    // Accion
+        );
         return $this->db->lastInsertId();
     }
 
@@ -65,11 +76,22 @@ class TipoParcelaModel {
      */
     public function updateTipoParcela($id_tipo_parcela, $nombre_parcela): bool
     {
-        $stmt = $this->db->prepare("UPDATE tipo_parcela SET nombre_parcela = :nombre_parcela WHERE id_tipo_parcela = :id_tipo_parcela");
-        $stmt->execute([
+        $sql = "UPDATE tipo_parcela SET nombre_parcela = :nombre_parcela WHERE id_tipo_parcela = :id_tipo_parcela";
+        $stmt = $this->db->prepare($sql);
+        
+        $parametros = [
             'id_tipo_parcela' => $id_tipo_parcela,
             'nombre_parcela' => $nombre_parcela
-        ]);
+        ];
+        $stmt->execute($parametros);
+
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Tipo Parcela Model",       // Modelo
+            "Update"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
@@ -80,8 +102,18 @@ class TipoParcelaModel {
      */
     public function deleteTipoParcela($id_tipo_parcela): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM tipo_parcela WHERE id_tipo_parcela = :id_tipo_parcela");
-        $stmt->execute(['id_tipo_parcela' => $id_tipo_parcela]);
+        $sql = "DELETE FROM tipo_parcela WHERE id_tipo_parcela = :id_tipo_parcela";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['id_tipo_parcela' => $id_tipo_parcela];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Tipo Parcela Model",       // Modelo
+            "Delete"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 }

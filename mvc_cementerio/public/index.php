@@ -19,6 +19,7 @@ $routes = [
     'usuario/changePass' => ['UsuarioController', 'changePass'],
     'usuario/savePass' => ['UsuarioController', 'savePass'],
     
+    // URL's login
     '' => ['AuthController', 'login'],
     'login' => ['AuthController', 'login'],
     'logout' => ['AuthController', 'logout'],

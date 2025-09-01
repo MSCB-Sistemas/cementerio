@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /**
@@ -56,14 +57,26 @@ class UbicacionDifuntoModel {
      */
     public function insertUbicacion($id_parcela, $id_difunto, $fecha_ingreso, $fecha_retiro): int
     {
-        $stmt = $this->db->prepare("INSERT INTO ubicacion_difunto (id_parcela, id_difunto, fecha_ingreso, fecha_retiro)
-                                    VALUES (:id_parcela, :id_difunto, :fecha_ingreso, :fecha_retiro)");
-        $stmt->execute([
+        $sql = "INSERT INTO ubicacion_difunto (id_parcela, id_difunto, fecha_ingreso, fecha_retiro)
+                VALUES (:id_parcela, :id_difunto, :fecha_ingreso, :fecha_retiro)
+                ";
+        $stmt = $this->db->prepare($sql);
+        
+        $parametros = [
             'id_parcela' => $id_parcela,
             'id_difunto' => $id_difunto,
             'fecha_ingreso' => $fecha_ingreso,
             'fecha_retiro' => $fecha_retiro
-        ]);
+        ];
+        $stmt->execute($parametros);
+
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Ubicacion Difunto Model",    // Modelo
+            "Insert"                    // Accion
+        );
         return $this->db->lastInsertId();
     }
 
@@ -79,15 +92,27 @@ class UbicacionDifuntoModel {
      */
     public function updateUbicacion($id_ubicacion_difunto, $id_parcela, $id_difunto, $fecha_ingreso, $fecha_retiro): bool
     {
-        $stmt = $this->db->prepare("UPDATE ubicacion_difunto SET id_parcela = :id_parcela, id_difunto = :id_difunto, fecha_ingreso = :fecha_ingreso, fecha_retiro = :fecha_retiro
-                                    WHERE id_ubicacion_difunto = :id_ubicacion_difunto");
-        $stmt->execute([
+        $sql = "UPDATE ubicacion_difunto SET id_parcela = :id_parcela, id_difunto = :id_difunto, fecha_ingreso = :fecha_ingreso, fecha_retiro = :fecha_retiro
+                WHERE id_ubicacion_difunto = :id_ubicacion_difunto
+                ";
+        $stmt = $this->db->prepare($sql);
+        
+        $parametros = [
             'id_ubicacion_difunto' => $id_ubicacion_difunto,
             'id_parcela' => $id_parcela,
             'id_difunto' => $id_difunto,
             'fecha_ingreso' => $fecha_ingreso,
             'fecha_retiro' => $fecha_retiro
-        ]);
+        ];
+        $stmt->execute($parametros);
+
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Ubicacion Difunto Model",    // Modelo
+            "Update"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
@@ -99,8 +124,18 @@ class UbicacionDifuntoModel {
      */
     public function deleteUbicacion($id_ubicacion_difunto): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM ubicacion_difunto WHERE id_ubicacion_difunto = :id_ubicacion_difunto");
-        $stmt->execute(['id_ubicacion_difunto' => $id_ubicacion_difunto]);
+        $sql = "DELETE FROM ubicacion_difunto WHERE id_ubicacion_difunto = :id_ubicacion_difunto";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['id_ubicacion_difunto' => $id_ubicacion_difunto];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Ubicacion Difunto Model",    // Modelo
+            "Delete"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 }
