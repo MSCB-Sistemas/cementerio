@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 /**
@@ -7,7 +8,6 @@ require_once 'Database.php';
  * Maneja las operaciones CRUD para la tabla 'deudo'
  */
 class DeudoModel {
-
     /**
      * @var PDO $db
      * Conexión a la base de datos
@@ -58,9 +58,11 @@ class DeudoModel {
      * @return int ID del nuevo deudo insertado o false si falla
      */
     public function insertDeudo($dni, $nombre, $apellido, $telefono, $email, $domicilio, $localidad, $codigo_postal){
-        $stmt = $this->db->prepare("INSERT INTO deudo (dni, nombre, apellido, telefono, email, domicilio, localidad, codigo_postal)
-                                           VALUES (:dni, :nombre, :apellido, :telefono, :email, :domicilio, :localidad, :codigo_postal)");
-        $stmt->execute([
+        $sql = "INSERT INTO deudo (dni, nombre, apellido, telefono, email, domicilio, localidad, codigo_postal)
+                VALUES (:dni, :nombre, :apellido, :telefono, :email, :domicilio, :localidad, :codigo_postal)";
+        $stmt = $this->db->prepare($sql);
+
+        $parametros = [
             'dni' => $dni,
             'nombre' => $nombre,
             'apellido' => $apellido,
@@ -69,8 +71,18 @@ class DeudoModel {
             'domicilio' => $domicilio,
             'localidad' => $localidad,
             'codigo_postal' => $codigo_postal
-        ]);
-        return intval($this->db->lastInsertId());
+        ];
+        $stmt->execute($parametros);
+
+        // aquí registramos la auditoría
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Deudo Model",               // Modelo
+            "Insert"                    // Accion
+        );
+        return (int) $this->db->lastInsertId();
     }
 
     /**
@@ -89,9 +101,10 @@ class DeudoModel {
      */
     public function updateDeudo($id_deudo, $dni, $nombre, $apellido, $telefono, $email, $domicilio, $localidad, $codigo_postal): bool
     {
-        $stmt = $this->db->prepare("UPDATE deudo SET dni = :dni, nombre = :nombre, apellido = :apellido, telefono = :telefono, email = :email, domicilio = :domicilio, localidad = :localidad, codigo_postal = :codigo_postal
-                                           WHERE id_deudo = :id_deudo");
-        $stmt->execute([
+        $sql = "UPDATE deudo SET dni = :dni, nombre = :nombre, apellido = :apellido, telefono = :telefono, email = :email, domicilio = :domicilio, localidad = :localidad, codigo_postal = :codigo_postal
+                WHERE id_deudo = :id_deudo";
+        $stmt = $this->db->prepare($sql);
+        $parametros = [
             'id_deudo' => $id_deudo,
             'dni' => $dni,
             'nombre' => $nombre,
@@ -101,7 +114,17 @@ class DeudoModel {
             'domicilio' => $domicilio,
             'localidad' => $localidad,
             'codigo_postal' => $codigo_postal
-        ]);
+        ];
+        $stmt->execute($parametros);
+
+        // aquí registramos la auditoría
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Deudo Model",               // Modelo
+            "Update"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
@@ -112,8 +135,19 @@ class DeudoModel {
      */
     public function deleteDeudo(int $id_deudo): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM deudo WHERE id_deudo = :id_deudo");
-        $stmt->execute(['id_deudo' => $id_deudo]);
+        $sql = "DELETE FROM deudo WHERE id_deudo = :id_deudo";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['id_deudo' => $id_deudo];
+        $stmt->execute($parametros);
+
+        // aquí registramos la auditoría
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Deudo Model",             // Modelo
+            "Delete"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 }
