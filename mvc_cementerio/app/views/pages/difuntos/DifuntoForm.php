@@ -70,9 +70,9 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="fecha_fallecimiento" class="form-label fw-bold">Fecha fallecimiento</label>
-                            <input type="date" class="form-control" id="fecha_fallecimiento" name="fecha_fallecimiento" 
-                                   value="<?= htmlspecialchars($datos['values']['fecha_fallecimiento'] ?? '') ?>">
+                            <label for="fecha_defuncion" class="form-label fw-bold">Fecha de defunción</label>
+                            <input type="date" class="form-control" id="fecha_defuncion" name="fecha_defuncion" 
+                                   value="<?= htmlspecialchars($datos['values']['fecha_defuncion'] ?? '') ?>">
                         </div>
                     </div>
                     

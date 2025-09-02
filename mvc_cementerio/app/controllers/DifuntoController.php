@@ -24,8 +24,8 @@ class DifuntoController extends Control
         $datos = [
             'title' => 'Lista de difuntos',
             'urlCrear' => URL . 'difunto/create',
-            'columnas' => ['ID', 'Deudo', 'Nombre', 'Apellido', 'DNI', 'Edad', 'Fecha fallecimiento', 'Genero', 'Nacionalidad', 'Estado civil', 'Domicilio', 'Localidad', 'Codigo postal'],
-            'columnas_claves' => ['id_difunto', 'nombre_deudo', 'nombre', 'apellido', 'dni', 'edad', 'fecha_fallecimiento', 'sexo', 'nacionalidad', 'estado_civil', 'domicilio', 'localidad', 'codigo_postal'],
+            'columnas' => ['ID', 'Deudo', 'Nombre', 'Apellido', 'DNI', 'Edad', 'Fecha de defuncion', 'Genero', 'Nacionalidad', 'Estado civil', 'Domicilio', 'Localidad', 'Codigo postal'],
+            'columnas_claves' => ['id_difunto', 'nombre_deudo', 'nombre', 'apellido', 'dni', 'edad', 'fecha_defuncion', 'sexo', 'nacionalidad', 'estado_civil', 'domicilio', 'localidad', 'codigo_postal'],
             'data' => $difuntos,
             'acciones' => function ($fila) {
                 $id = $fila['id_difunto'];
@@ -70,7 +70,7 @@ class DifuntoController extends Control
             $apellido = trim($_POST["apellido"] ?? '');
             $dni = trim($_POST["dni"] ?? '');
             $edad = trim($_POST["edad"] ?? '');
-            $fechaFallecimiento = trim($_POST["fecha_fallecimiento"] ?? '');
+            $fechaDefuncion = trim($_POST["fecha_defuncion"] ?? '');
             $sexo = $_POST["sexo"] ?? '';
             $nacionalidad = $_POST["nacionalidad"] ?? '';
             $estadoCivil = $_POST["estado_civil"] ?? '';
@@ -83,8 +83,8 @@ class DifuntoController extends Control
                 $errores[] = "El deudo es obligatorio";
             if (empty($dni))
                 $errores[] = "El dni es obligatorio";
-            if (empty($fechaFallecimiento))
-                $errores[] = "La fecha de fallecimiento es obligatoria";
+            if (empty($fechaDefuncion))
+                $errores[] = "La fecha de defunción es obligatoria";
             if (empty($domicilio))
                 $errores[] = "El domicilio es obligatorio";
             if (empty($localidad))
@@ -109,7 +109,7 @@ class DifuntoController extends Control
                 return;
             }
 
-            if ($this->model->insertDifunto($deudo, $nombre, $apellido, $dni, $edad, $fechaFallecimiento, $sexo, $nacionalidad, $estadoCivil, $domicilio, $localidad, $codigoPostal)) {
+            if ($this->model->insertDifunto($deudo, $nombre, $apellido, $dni, $edad, $fechaDefuncion, $sexo, $nacionalidad, $estadoCivil, $domicilio, $localidad, $codigoPostal)) {
                 header("Location: " . URL . "difunto");
                 exit;
             } else {
@@ -139,7 +139,7 @@ class DifuntoController extends Control
                 'apellido' => $difunto['apellido'],
                 'dni' => $difunto['dni'],
                 'edad' => $difunto['edad'],
-                'fecha_fallecimiento' => $difunto['fecha_fallecimiento'],
+                'fecha_defuncion' => $difunto['fecha_defuncion'],
                 'sexo' => $difunto['id_sexo'],
                 'nacionalidad' => $difunto['id_nacionalidad'],
                 'estado_civil' => $difunto['id_estado_civil'],
@@ -163,7 +163,7 @@ class DifuntoController extends Control
             $apellido = trim($_POST["apellido"] ?? '');
             $dni = trim($_POST["dni"] ?? '');
             $edad = trim($_POST["edad"] ?? '');
-            $fechaFallecimiento = trim($_POST["fecha_fallecimiento"] ?? '');
+            $fechaDefuncion = trim($_POST["fecha_defuncion"] ?? '');
             $sexo = $_POST["sexo"] ?? '';
             $nacionalidad = $_POST["nacionalidad"] ?? '';
             $estadoCivil = $_POST["estado_civil"] ?? '';
@@ -175,8 +175,8 @@ class DifuntoController extends Control
                 $errores[] = "El deudo es obligatorio";
             if (empty($dni))
                 $errores[] = "El dni es obligatorio";
-            if (empty($fechaFallecimiento))
-                $errores[] = "La fecha de fallecimiento es obligatoria";
+            if (empty($fechaDefuncion))
+                $errores[] = "La fecha de defunción es obligatoria";
             if (empty($domicilio))
                 $errores[] = "El domicilio es obligatorio";
             if (empty($localidad))
@@ -190,7 +190,7 @@ class DifuntoController extends Control
                     'apellido' => $apellido,
                     'dni' => $dni,
                     'edad' => $edad,
-                    'fecha_fallecimiento' => $fechaFallecimiento,
+                    'fecha_defuncion' => $fechaDefuncion,
                     'id_sexo' => $sexo,
                     'id_nacionalidad' => $nacionalidad,
                     'id_estado_civil' => $estadoCivil,
@@ -217,7 +217,7 @@ class DifuntoController extends Control
                 return;
             }
 
-            if ($this->model->updateDifunto($id, $deudo, $nombre, $apellido, $dni, $edad, $fechaFallecimiento, $sexo, $nacionalidad, $estadoCivil, $domicilio, $localidad, $codigoPostal)) {
+            if ($this->model->updateDifunto($id, $deudo, $nombre, $apellido, $dni, $edad, $fechaDefuncion, $sexo, $nacionalidad, $estadoCivil, $domicilio, $localidad, $codigoPostal)) {
                 header("Location: " . URL . "difunto");
                 exit;
             } else {

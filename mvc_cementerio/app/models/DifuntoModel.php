@@ -52,7 +52,7 @@ class DifuntoModel {
      * @param mixed $apellido
      * @param mixed $dni
      * @param mixed $edad
-     * @param mixed $fecha_fallecimiento
+     * @param mixed $fecha_defuncion
      * @param mixed $id_sexo
      * @param mixed $id_nacionalidad
      * @param mixed $id_estado_civil
@@ -61,13 +61,13 @@ class DifuntoModel {
      * @param mixed $codigo_postal
      * @return bool|string
      */
-    public function insertDifunto($id_deudo, $nombre, $apellido, $dni, $edad, $fecha_fallecimiento, $id_sexo, $id_nacionalidad, $id_estado_civil, $domicilio, $localidad, $codigo_postal): int {
+    public function insertDifunto($id_deudo, $nombre, $apellido, $dni, $edad, $fecha_defuncion, $id_sexo, $id_nacionalidad, $id_estado_civil, $domicilio, $localidad, $codigo_postal): int {
         $stmt = $this->db->prepare("
             INSERT INTO difunto (
-                id_deudo, nombre, apellido, dni, edad, fecha_fallecimiento,
+                id_deudo, nombre, apellido, dni, edad, fecha_defuncion,
                 id_sexo, id_nacionalidad, id_estado_civil, domicilio, localidad, codigo_postal
             ) VALUES (
-                :id_deudo, :nombre, :apellido, :dni, :edad, :fecha_fallecimiento,
+                :id_deudo, :nombre, :apellido, :dni, :edad, :fecha_defuncion,
                 :id_sexo, :id_nacionalidad, :id_estado_civil, :domicilio, :localidad, :codigo_postal
             )
         ");
@@ -77,7 +77,7 @@ class DifuntoModel {
             'apellido' => $apellido,
             'dni' => $dni,
             'edad' => $edad,
-            'fecha_fallecimiento'=> $fecha_fallecimiento,
+            'fecha_defuncion'=> $fecha_defuncion,
             'id_sexo'=> $id_sexo,
             'id_nacionalidad'=> $id_nacionalidad,
             'id_estado_civil'=> $id_estado_civil,
@@ -95,7 +95,7 @@ class DifuntoModel {
          * @param array $data Datos nuevos para el difunto.
          * @return bool True si se actualizó al menos un campo, False si no hubo cambios.
      */
-    public function updateDifunto(int $id_difunto, $id_deudo, $nombre, $apellido, $dni, $edad, $fecha_fallecimiento, $id_sexo, $id_nacionalidad, $id_estado_civil, $domicilio, $localidad, $codigo_postal): bool {
+    public function updateDifunto(int $id_difunto, $id_deudo, $nombre, $apellido, $dni, $edad, $fecha_defuncion, $id_sexo, $id_nacionalidad, $id_estado_civil, $domicilio, $localidad, $codigo_postal): bool {
         $stmt = $this->db->prepare("
             UPDATE difunto SET 
                 id_deudo = :id_deudo,
@@ -103,7 +103,7 @@ class DifuntoModel {
                 apellido = :apellido,
                 dni = :dni,
                 edad = :edad,
-                fecha_fallecimiento = :fecha_fallecimiento,
+                fecha_defuncion = :fecha_defuncion,
                 id_sexo = :id_sexo,
                 id_nacionalidad = :id_nacionalidad,
                 id_estado_civil = :id_estado_civil,
@@ -119,7 +119,7 @@ class DifuntoModel {
             "apellido"=> $apellido,
             "dni"=> $dni,
             "edad"=> $edad,
-            "fecha_fallecimiento"=> $fecha_fallecimiento,
+            "fecha_defuncion"=> $fecha_defuncion,
             "id_sexo"=> $id_sexo,
             "id_nacionalidad"=> $id_nacionalidad,
             "id_estado_civil"=> $id_estado_civil,
