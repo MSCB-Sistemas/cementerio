@@ -6,32 +6,31 @@ class Control
         $this->checkRememberMeToken();
     }
 
-    public function loadModel($model)
+    protected function loadModel($model)
     {
-        require_once '../app/models/' . $model . '.php';
-
+        require_once APP .'/models/' . $model . '.php';
         return new $model;
     }
 
-    public function loadView($view, $datos = [], $layout = 'main')
+    protected function loadView($view, $datos = [], $layout = 'main')
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
         $viewFile = APP . '/views/pages/' . $view . '.php';
 
-        if (file_exists($viewFile)) {
-            if ($layout) {
-                $viewPath = $viewFile;
-                require_once APP . "/views/layout/{$layout}.php";
-            } else {
-                require_once $viewFile;
-            }
+        if (!file_exists($viewFile)) { die($viewFile); }
+
+        if ($layout) {
+            $viewPath = $viewFile;  // queda disponible para el layout
+            require_once APP . "/views/layout/{$layout}.php";
         } else {
-            die($viewFile);
+            require_once $viewFile;
         }
     }
+    
+    /** RBAC (permisos): Getters rápidos sobre la sesion */
+    protected function user()     { return $_SESSION['usuario_id'] ?? null; }
+    protected function isLogin()  { return !empty($_SESSION['usuario_id']); }
+    protected function roleId()   { return $_SESSION['usuario_id']['id_tipo_usuario'] ?? null; }
+    protected function permisos() { return $_SESSION['usuario_id']['permisos'] ?? []; }
 
     protected function checkRememberMeToken()
     {
@@ -75,12 +74,13 @@ class Control
         setcookie("id_usuario", $id_usuario, $expiry,'/', '', $secure, true);
     }
 
-    protected function requireLogin() {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
+    protected function requireLogin(string $fallback = URL . 'login'): void
+    {
+        // NO session_start() acá: la sesión ya se abrió en init.php
+        $loggedIn = isset($_SESSION['usuario_id']);
 
-        if (!isset($_SESSION['usuario_id'])) {
+        if (!$loggedIn) {
+            $_SESSION['flash_error'] = 'Debés iniciar sesión.';
             header("Location: " . URL . 'login');
             exit;
         }
