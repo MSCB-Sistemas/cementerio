@@ -97,7 +97,7 @@ CREATE TABLE `difunto` (
   `apellido` varchar(100) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
   `dni` int DEFAULT NULL,
   `edad` int DEFAULT NULL,
-  `fecha_fallecimiento` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `fecha_defuncion` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `id_sexo` int DEFAULT NULL,
   `id_nacionalidad` int DEFAULT NULL,
   `id_estado_civil` int DEFAULT NULL,
