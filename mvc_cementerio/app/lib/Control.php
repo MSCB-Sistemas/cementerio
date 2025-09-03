@@ -100,26 +100,44 @@ class Control
         $this->createRememberMeToken($_SESSION['usuario_id']);
     }
 
-    protected function createRememberMeToken($id_usuario) {
+    protected function createRememberMeToken($id_usuario): void 
+    {
         $token = bin2hex(random_bytes(32));
-        $expiry = time() + 60 * 60 * 24 * 30;
+        $expiry = time() + 60 * 60 * 24 * 30;   //30 días
 
         $tokenModel = $this->loadModel("RememberTokensModel");
         $tokenModel->insertRememberMeToken($id_usuario, $token, $expiry);
 
         $secure = isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] === "on";
-        setcookie("remember_token", $token, $expiry,'/', '', $secure, true);
-        setcookie("id_usuario", $id_usuario, $expiry,'/', '', $secure, true);
+        //setcookie("remember_token", $token, $expiry,'/', '', $secure, true);
+        //setcookie("id_usuario", (string)$id_usuario, $expiry,'/', '', $secure, true);
+
+        // Cookies modernas (sin redireccionar)
+        setcookie('remember_token', $rawToken, [
+            'expires'  => $expiry,
+            'path'     => '/',
+            'domain'   => '',
+            'secure'   => $secure,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
+
+        setcookie('id_usuario', (string)$id_usuario, [
+            'expires'  => $expiry,
+            'path'     => '/',
+            'domain'   => '',
+            'secure'   => $secure,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
     }
 
     protected function requireLogin(string $fallback = URL . 'login'): void
     {
         // NO session_start() acá: la sesión ya se abrió en init.php
-        $loggedIn = isset($_SESSION['usuario_id']);
-
-        if (!$loggedIn) {
+        if (!($this->isLogin())) {
             $_SESSION['flash_error'] = 'Debés iniciar sesión.';
-            header("Location: " . URL . 'login');
+            header('Location: ' . rtrim($fallback, '/'));
             exit;
         }
     }
