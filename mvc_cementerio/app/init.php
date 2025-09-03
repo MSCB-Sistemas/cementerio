@@ -5,16 +5,18 @@
     session_start();
   }
 
-  require_once 'config/config.php';
-  require_once __DIR__ . '/../app/config/errores.php';
+  // Carga de config y helpers (rutas relativas a /app)
+  require_once __DIR__ . '/config/config.php';
+  require_once __DIR__ . '/config/errores.php';
   require_once __DIR__ . '/helpers/authHelper.php';
-  require_once __DIR__ . '/../app/lib/Control.php';
+
+  require_once __DIR__ . '/lib/Control.php';
 
   // Autoload multipath/
   spl_autoload_register(function ($class) {
     $paths = [
-      __DIR__ . '/lib/' . $class . '.php',
-      __DIR__ . '/models/' . $class . '.php',
+      __DIR__ . '/lib/'         . $class . '.php',
+      __DIR__ . '/models/'      . $class . '.php',
       __DIR__ . '/controllers/' . $class . '.php',
     ];
     foreach ($paths as $file) {
