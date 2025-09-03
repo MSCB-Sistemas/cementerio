@@ -5,11 +5,13 @@ require_once 'Database.php';
 class EstadisticasModel extends Control {
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = Database::connect();
     }
 
-    private function establecerFechasPorDefecto(&$fecha_inicio, &$fecha_fin) {
+    private function establecerFechasPorDefecto(&$fecha_inicio, &$fecha_fin)
+    {
         if (!$fecha_fin) {
             $fecha_fin = date('Y-m-d');
         }
@@ -19,9 +21,10 @@ class EstadisticasModel extends Control {
         }
     }
 
-    public function getDeudosMorosos() {
+    public function getDeudosMorosos()
+    {
         $fecha_actual = date('Y-m-d');
-        
+
         $stmt = $this->db->prepare("SELECT p.*, d.dni, d.nombre, d.apellido FROM pago p
                                         INNER JOIN deudo d ON p.id_deudo = d.id_deudo
                                         WHERE p.fecha_vencimiento < :fecha_actual
@@ -32,11 +35,12 @@ class EstadisticasModel extends Control {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getDefuncionesEntreFechas($fecha_inicio, $fecha_fin, $sort_col, $sort_dir, $limite, $offset) {
+    public function getDefuncionesEntreFechas($fecha_inicio, $fecha_fin, $sort_col, $sort_dir, $limite, $offset)
+    {
         $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
 
         $columnas_permitidas = ['fecha_fallecimiento', 'nombre', 'apellido'];
-        $sort_col = in_array($sort_col, $columnas_permitidas) ? $sort_col :'fecha_fallecimiento';
+        $sort_col = in_array($sort_col, $columnas_permitidas) ? $sort_col : 'fecha_fallecimiento';
         $sort_dir = strtoupper($sort_dir) === 'DESC' ? 'DESC' : 'ASC';
 
         $stmt = $this->db->prepare("SELECT d.*, s.descripcion FROM difunto d
@@ -56,7 +60,8 @@ class EstadisticasModel extends Control {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin) {
+    public function getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin)
+    {
         try {
             $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
 
@@ -71,7 +76,6 @@ class EstadisticasModel extends Control {
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
             return isset($resultado['total']) ? (int)$resultado['total'] : 0;
-
         } catch (PDOException $e) {
             error_log("Error en getTotalDefuncionesEntreFechas: " . $e->getMessage());
             return 0;

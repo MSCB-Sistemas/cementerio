@@ -28,52 +28,6 @@ $filtrar = isset($_GET['filtrar']);
 <div class="tab-content mt-4">
     <!-- Pestania Padron difuntos -->
     <div class="tab-pane fade show active" id="tablas" role="tabpanel">
-
-         <!-- Seleccionar tipo de filtro de búsqueda -->
-        <div class="mb-4">
-            <label for="tipo_filtro" class="form-label">Seleccionar filtro de búsqueda:</label>
-            <select id="tipo_filtro" class="form-select w-auto" onchange="mostrarFiltroDifuntos()">
-                <option value="">Seleccionar...</option>
-                <option value="lista_completa">Padrón general de Difuntos</option>
-                <option value="filtro_titular_difuntos">Por Orden Alfabético</option>
-                <option value="filtro_fecha_difuntos">Por Fecha de Defunción</option>
-            </select>
-        </div>
-
-        <!-- Filtro por Fecha -->
-        <div id="filtro_fecha_difuntos" class="filtro-box mb-4" style="display: none;">
-            <form method="GET" class="row g-3">
-                <div class="col-md-3">
-                    <label for="fecha_inicio" class="form-label">Desde</label>
-                    <input type="date" class="form-control" name="fecha_inicio" value="<?= htmlspecialchars($_GET['fecha_inicio'] ?? '') ?>">
-                </div>
-                <div class="col-md-3">
-                    <label for="fecha_fin" class="form-label">Hasta</label>
-                    <input type="date" class="form-control" name="fecha_fin" value="<?= htmlspecialchars($_GET['fecha_fin'] ?? '') ?>">
-                </div>
-                <div class="col-md-2 align-self-end">
-                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Filtro por Apellido de Difunto -->
-        <div id="filtro_titular_difuntos" class="filtro-box mb-4" style="display: none;">
-            <form method="GET" class="row g-3">
-                <div class="col-md-2">
-                    <label for="letra_apellido_difunto" class="form-label">Apellido(A-Z)</label>
-                    <select name="letra_apellido_difunto" class="form-select">
-                        <option value="">Seleccionar...</option>
-                        <?php foreach (range('A', 'Z') as $letra): ?>
-                            <option value="<?= $letra ?>" <?= (isset($datos['letra_apellido_difunto']) && $datos['letra_apellido_difunto'] === $letra) ? 'selected' : '' ?>><?= $letra ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-2 align-self-end">
-                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
-                </div>
-            </form>
-        </div>
         <form method="GET" class="row g-3 mb-4">
             <div class="col-auto">
                 <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
