@@ -3,7 +3,9 @@ class Control
 {
     public function __construct()
     {
-        $this->checkRememberMeToken();
+        // Se deja el “auto refresh” de remember-me acá,
+        // El inicio de sesión se hace en init.php
+        $this->refreshRememberMeIfNeeded();
     }
 
     protected function loadModel($model)
@@ -12,11 +14,14 @@ class Control
         return new $model;
     }
 
-    protected function loadView($view, $datos = [], $layout = 'main')
+    protected function loadView(string $view, array $datos = [], string $layout = 'main')
     {
         $viewFile = APP . '/views/pages/' . $view . '.php';
 
         if (!file_exists($viewFile)) { die($viewFile); }
+
+        // Variables disponibles en la vista
+        extract($datos, EXTR_SKIP);
 
         if ($layout) {
             $viewPath = $viewFile;  // queda disponible para el layout
@@ -27,12 +32,38 @@ class Control
     }
     
     /** RBAC (permisos): Getters rápidos sobre la sesion */
-    protected function user()     { return $_SESSION['usuario_id'] ?? null; }
-    protected function isLogin()  { return !empty($_SESSION['usuario_id']); }
-    protected function roleId()   { return $_SESSION['usuario_id']['id_tipo_usuario'] ?? null; }
-    protected function permisos() { return $_SESSION['usuario_id']['permisos'] ?? []; }
+    protected function isLogin(): bool  { return !empty($_SESSION['usuario_id']); }
+    protected function userId(): ?int   
+    { 
+        if (isset($_SESSION['usuario_id'])) {
+            return (int)$_SESSION['usuario_id'];
+        } else {
+            return null;
+        }
+    }
 
-    protected function checkRememberMeToken()
+    protected function roleId(): ?int   
+    { 
+        if (isset($_SESSION['usuario_tipo'])) {
+            return (int)$_SESSION['usuario_tipo'];
+        } else {
+            return null;
+        }
+    }
+
+    protected function permisos(): array 
+    {   
+        if (isset($_SESSION['usuario_permisos'])) {
+            $permisos = $_SESSION['usuario_permisos'];
+        } else {
+            $permisos = [];
+        }
+        return $permisos;
+    }
+
+    /** REMEMBER-ME **************************************************/
+    // No abre sesión (ya está abierta en init.php). No redirige.
+    protected function checkRememberMeToken(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();

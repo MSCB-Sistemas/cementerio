@@ -82,4 +82,18 @@ class RememberTokensModel {
         $stmt->execute(['id_usuario' => $id_usuario, 'token' => $token]);
         return $stmt->rowCount() > 0;
     }
-}
+
+    /** (Opcional) limpia tokens vencidos */
+    public function purgeExpired(): int {
+        $stmt = $this->db->prepare("DELETE FROM remember_tokens WHERE fecha_expiracion <= NOW()");
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
+    /** (Opcional) borra todos los tokens de un usuario (logout global) */
+    public function deleteAllForUser(int $id_usuario): int {
+        $stmt = $this->db->prepare("DELETE FROM remember_tokens WHERE id_usuario = :id_usuario");
+        $stmt->execute(['id_usuario' => $id_usuario]);
+        return $stmt->rowCount();
+    }
+}   
