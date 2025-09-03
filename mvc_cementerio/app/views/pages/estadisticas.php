@@ -14,7 +14,7 @@ $filtrar = isset($_GET['filtrar']);
             <button class="nav-link" id="morosos-tab" data-bs-toggle="tab" data-bs-target="#morosos" type="button" role="tab">Deudores Morosos
                 <?php if (!empty($datos['total_morosos']) && $datos['total_morosos'] > 0): ?>
                     <span class="badge bg-danger ms-1"><?= $datos['total_morosos'] ?></span>
-                <?php endif?>
+                <?php endif; ?>
             </button>
         </li>
         <li class="nav-item">
@@ -38,7 +38,7 @@ $filtrar = isset($_GET['filtrar']);
                 <option value="filtro_titular_difuntos">Por Orden Alfabético</option>
                 <option value="filtro_fecha_difuntos">Por Fecha de Defunción</option>
             </select>
-    </div>
+        </div>
 
         <!-- Filtro por Fecha -->
         <div id="filtro_fecha_difuntos" class="filtro-box mb-4" style="display: none;">
@@ -120,7 +120,7 @@ $filtrar = isset($_GET['filtrar']);
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="5" class="text-center text-muted">No se encontraron resultados.</td>
+                        <td colspan="6" class="text-center text-muted">No se encontraron resultados.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -213,10 +213,10 @@ $filtrar = isset($_GET['filtrar']);
                 <option value="filtro_parcela_parcelas">Por Datos de Parcela</option>
                 <option value="filtro_titular_parcelas">Por Titular</option>
             </select>
-    </div>
+        </div>
 
         <!-- Filtro por Fecha -->
-        <div id="filtro_fecha_parcelas" class="filtro-box mb-4">
+        <div id="filtro_fecha_parcelas" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-3">
                     <label for="fecha_inicio" class="form-label">Desde</label>
@@ -303,9 +303,12 @@ $filtrar = isset($_GET['filtrar']);
 
         <!-- Mostrar datos -->
         <?php if (!empty($datos['parcelas_vendidas'])): ?>
+            <!-- Aquí iría el contenido de parcelas vendidas -->
+        <?php endif; ?>
+    </div>
      
     <!-- Pestania de traslados -->
-     <div class="tab-pane fade" id="traslados" role="tabpanel">
+    <div class="tab-pane fade" id="traslados" role="tabpanel">
         <?php if (!empty($datos['difuntos_trasladados'])): ?>
             <table class="table table-bordered table-striped">
                 <thead class="th a">
@@ -336,6 +339,7 @@ $filtrar = isset($_GET['filtrar']);
             </div>
         <?php endif; ?>
     </div>
+    
     <!-- Pestania de resumen -->
     <div class="tab-pane fade" id="resumen" role="tabpanel">
         <div class="alert alert-info">
@@ -399,10 +403,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Función para mostrar el filtro seleccionado
-function mostrarFiltroDifuntos() {
-    const seleccion = document.getElementById('tipo_filtro').value;
-    const filtros = document.querySelectorAll('.filtro-box');
 const botonesEstado = document.querySelectorAll('.btn-toggle-estado');
 botonesEstado.forEach(boton => {
     boton.addEventListener('click', function() {
@@ -411,20 +411,20 @@ botonesEstado.forEach(boton => {
         const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
 
         // Aca va un ajax.
-        console.log('Cambiando estado de deuda ${idDeuda} de ${estadoActual} a ${nuevoEstado}');
+        console.log('Cambiando estado de deuda ' + idDeuda + ' de ' + estadoActual + ' a ' + nuevoEstado);
 
         // Si se elige "lista_completa", recarga sin parámetros
-    if (seleccion === 'lista_completa') {
-        window.location.href = window.location.pathname + '?tab=tablas';
-        return;
-    }
+        if (seleccion === 'lista_completa') {
+            window.location.href = window.location.pathname + '?tab=tablas';
+            return;
+        }
 
         if (!seleccion) return; // No mostrar nada si no hay selección
+        
         setTimeout(() => {
             this.setAttribute('data-estado-actual', nuevoEstado);
 
             const fila = this.closest('.fila-moroso');
-
 
             if (nuevoEstado === 'activo') {
                 this.classList.remove('btn-success');
@@ -432,9 +432,11 @@ botonesEstado.forEach(boton => {
                 this.innerHTML = '<i class="fas fa-toggle-off"></i> Desactivar';
 
                 const badge = fila.querySelector('.estado-badge');
-                badge.classList.remove('bg-secondary');
-                badge.classList.add('bg-success');
-                badge.textContent = 'Activo';
+                if (badge) {
+                    badge.classList.remove('bg-secondary');
+                    badge.classList.add('bg-success');
+                    badge.textContent = 'Activo';
+                }
 
                 fila.setAttribute('data-estado', 'activo');
 
@@ -448,9 +450,11 @@ botonesEstado.forEach(boton => {
                 this.innerHTML = '<i class="fas fa-toggle-off"></i> Activar';
 
                 const badge = fila.querySelector('.estado-badge');
-                badge.classList.remove('bg-success');
-                badge.classList.add('bg-secondary');
-                badge.textContent = 'Inactivo';
+                if (badge) {
+                    badge.classList.remove('bg-success');
+                    badge.classList.add('bg-secondary');
+                    badge.textContent = 'Inactivo';
+                }
 
                 fila.setAttribute('data-estado', 'inactivo');
 
@@ -459,7 +463,7 @@ botonesEstado.forEach(boton => {
                 }
             }
 
-            alert("Deuda ${nuevoEstado === 'activo' ? 'activada' : 'desactivada'} correctamente");
+            alert("Deuda " + (nuevoEstado === 'activo' ? 'activada' : 'desactivada') + " correctamente");
         }, 300);
     });
 });
@@ -468,29 +472,6 @@ document.getElementById('ver-activos').addEventListener('click', function() {
     this.classList.add('active');
     document.getElementById('ver-inactivos').classList.remove('active');
 
-    function mostrarFiltroParcelas() {
-        const seleccion = document.getElementById('tipo_filtro_parcelas').value;
-        const filtros = document.querySelectorAll('#vendidas .filtro-box');
-
-        filtros.forEach(f => f.style.display = 'none');
-
-        if (seleccion === 'lista_completa_parcelas') {
-            window.location.href = window.location.pathname + '?tipo_filtro_parcelas=lista_completa_parcelas&tab=vendidas';
-            return;
-        }
-
-        if (!seleccion) return;
-
-        const filtroSeleccionado = document.getElementById(seleccion);
-        if (filtroSeleccionado) {
-            filtroSeleccionado.style.display = 'block';
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-    mostrarFiltroDifuntos(); 
-    mostrarFiltroParcelas(); 
-});
     document.querySelectorAll('.fila-moroso').forEach(fila => {
         if (fila.getAttribute('data-estado') === 'activo') {
             fila.style.display = '';
@@ -511,5 +492,48 @@ document.getElementById('ver-inactivos').addEventListener('click', function() {
             fila.style.display = 'none';
         }
     });
+});
+
+function mostrarFiltroParcelas() {
+    const seleccion = document.getElementById('tipo_filtro_parcelas').value;
+    const filtros = document.querySelectorAll('#vendidas .filtro-box');
+
+    filtros.forEach(f => f.style.display = 'none');
+
+    if (seleccion === 'lista_completa_parcelas') {
+        window.location.href = window.location.pathname + '?tipo_filtro_parcelas=lista_completa_parcelas&tab=vendidas';
+        return;
+    }
+
+    if (!seleccion) return;
+
+    const filtroSeleccionado = document.getElementById(seleccion);
+    if (filtroSeleccionado) {
+        filtroSeleccionado.style.display = 'block';
+    }
+}
+
+function mostrarFiltroDifuntos() {
+    const seleccion = document.getElementById('tipo_filtro').value;
+    const filtros = document.querySelectorAll('#tablas .filtro-box');
+
+    filtros.forEach(f => f.style.display = 'none');
+
+    if (seleccion === 'lista_completa') {
+        window.location.href = window.location.pathname + '?tab=tablas';
+        return;
+    }
+
+    if (!seleccion) return;
+
+    const filtroSeleccionado = document.getElementById(seleccion);
+    if (filtroSeleccionado) {
+        filtroSeleccionado.style.display = 'block';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    mostrarFiltroDifuntos(); 
+    mostrarFiltroParcelas();
 });
 </script>
