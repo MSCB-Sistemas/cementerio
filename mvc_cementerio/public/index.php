@@ -1,120 +1,122 @@
 <?php
+// Abre sesión y carga helpers
 require_once __DIR__ . '/../app/init.php';
-#require_once __DIR__ . '/../app/config/config.php';
-#require_once __DIR__ . '/../app/config/errores.php';
-#require_once __DIR__ . '/../app/lib/Control.php';
 
 $base = '/cementerio/mvc_cementerio';
 
-// 📋​ Rutas disponibles: ruta => [Controlador, metodo]
+// ====== Definición de rutas: 'ruta' => [Controller, method, guard] ======
+// guard:
+//   - '__public__'  => accesible sin login
+//   - '__login__'   => requiere estar logueado
+//   - 'permiso_x'   => requiere ese permiso RBAC (OR si pasas array de permisos)
 $routes = [
 
-    // URL's usuario.
-    'usuario' => ['UsuarioController', 'index'],
-    'usuario/create' => ['UsuarioController', 'create'],
-    'usuario/save' => ['UsuarioController', 'save'],
-    'usuario/edit' => ['UsuarioController', 'edit'],
-    'usuario/update' => ['UsuarioController', 'update'],
-    'usuario/delete' => ['UsuarioController', 'delete'],
-    'usuario/activate' => ['UsuarioController', 'activate'],
-    'usuario/changePass' => ['UsuarioController', 'changePass'],
-    'usuario/savePass' => ['UsuarioController', 'savePass'],
-    
-    // URL's login
-    '' => ['AuthController', 'login'],
-    'login' => ['AuthController', 'login'],
-    'logout' => ['AuthController', 'logout'],
-    'home' => ['homeController', 'index'],
-    'estadisticas' => ['EstadisticasController', 'index'],
+    // Login / Home / Estadísticas
+    ''                => ['AuthController',       'login',        '__public__'],
+    'login'           => ['AuthController',       'login',        '__public__'],
+    'logout'          => ['AuthController',       'logout',       '__login__'],
+    'home'            => ['HomeController',       'index',        '__login__'],
+    'estadisticas'    => ['EstadisticasController','index',       'ver_estadisticas'],
 
-    // URL's difunto.
-    'difunto' => ['DifuntoController', 'index'],
-    'difunto/create' => ['DifuntoController', 'create'],
-    'difunto/save' => ['DifuntoController', 'save'],
-    'difunto/edit' => ['DifuntoController', 'edit'],
-    'difunto/update' => ['DifuntoController', 'update'],
-    'difunto/delete' => ['DifuntoController', 'delete'],
+    // Usuario (ejemplos de permisos)
+    'usuario'         => ['UsuarioController',    'index',        'ver_usuario'],
+    'usuario/create'  => ['UsuarioController',    'create',       'crear_usuario'],
+    'usuario/save'    => ['UsuarioController',    'save',         'crear_usuario'],
+    'usuario/edit'    => ['UsuarioController',    'edit',         'editar_usuario'],
+    'usuario/update'  => ['UsuarioController',    'update',       'editar_usuario'],
+    'usuario/delete'  => ['UsuarioController',    'delete',       'eliminar_usuario'],
+    'usuario/activate'=> ['UsuarioController',    'activate',     'editar_usuario'],
+    'usuario/changePass'=>['UsuarioController',   'changePass',   '__login__'],
+    'usuario/savePass'=> ['UsuarioController',    'savePass',     '__login__'],
 
-    // URL's estado civil.
-    'estadoCivil' => ['EstadoCivilController', 'index'],
-    'estadoCivil/create' => ['EstadoCivilController', 'create'],
-    'estadoCivil/save' => ['EstadoCivilController', 'save'],
-    'estadoCivil/edit' => ['EstadoCivilController', 'edit'],
-    'estadoCivil/update' => ['EstadoCivilController', 'update'],
-    'estadoCivil/delete' => ['EstadoCivilController', 'delete'],
+    // Difunto
+    'difunto'         => ['DifuntoController',    'index',        'ver_difunto'],
+    'difunto/create'  => ['DifuntoController',    'create',       'crear_difunto'],
+    'difunto/save'    => ['DifuntoController',    'save',         'crear_difunto'],
+    'difunto/edit'    => ['DifuntoController',    'edit',         'editar_difunto'],
+    'difunto/update'  => ['DifuntoController',    'update',       'editar_difunto'],
+    'difunto/delete'  => ['DifuntoController',    'delete',       'eliminar_difunto'],
 
-    // URL's parcela.
-    'parcela' => ['ParcelaController','index'],
-    'parcela/save'=> ['ParcelaController', 'save'],
-    'parcela/create'=> ['ParcelaController', 'create'],
-    'parcela/edit'=> ['ParcelaController', 'edit'],
-    'parcela/update'=> ['ParcelaController', 'update'],
-    'parcela/delete'=> ['ParcelaController', 'delete'],
+    // Estado civil
+    'estadoCivil'         => ['EstadoCivilController', 'index',   '__login__'],
+    'estadoCivil/create'  => ['EstadoCivilController', 'create',  'crear_estado_civil'],
+    'estadoCivil/save'    => ['EstadoCivilController', 'save',    'crear_estado_civil'],
+    'estadoCivil/edit'    => ['EstadoCivilController', 'edit',    'editar_estado_civil'],
+    'estadoCivil/update'  => ['EstadoCivilController', 'update',  'editar_estado_civil'],
+    'estadoCivil/delete'  => ['EstadoCivilController', 'delete',  'eliminar_estado_civil'],
 
-    // URL's sexo.
-    'sexo' => ['SexoController', 'index'],
-    'sexo/create' => ['SexoController', 'create'],
-    'sexo/save' => ['SexoController', 'save'],
-    'sexo/edit' => ['SexoController', 'edit'],
-    'sexo/update' => ['SexoController', 'update'],
-    'sexo/delete' => ['SexoController', 'delete'],
+    // Parcela
+    'parcela'         => ['ParcelaController','index',            '__login__'],
+    'parcela/create'  => ['ParcelaController','create',           'crear_parcela'],
+    'parcela/save'    => ['ParcelaController','save',             'crear_parcela'],
+    'parcela/edit'    => ['ParcelaController','edit',             'editar_parcela'],
+    'parcela/update'  => ['ParcelaController','update',           'editar_parcela'],
+    'parcela/delete'  => ['ParcelaController','delete',           'eliminar_parcela'],
 
-    // URL's pagos
-    'pago' => ['PagoController', 'index'],
-    'pago/create' => ['PagoController', 'create'],
-    'pago/save' => ['PagoController', 'save'],
-    'pago/edit' => ['PagoController', 'edit'],
-    'pago/update' => ['PagoController', 'update'],
-    'pago/delete' => ['PagoController', 'delete'],
+    // Sexo
+    'sexo'            => ['SexoController', 'index',              '__login__'],
+    'sexo/create'     => ['SexoController', 'create',             'crear_sexo'],
+    'sexo/save'       => ['SexoController', 'save',               'crear_sexo'],
+    'sexo/edit'       => ['SexoController', 'edit',               'editar_sexo'],
+    'sexo/update'     => ['SexoController', 'update',             'editar_sexo'],
+    'sexo/delete'     => ['SexoController', 'delete',             'eliminar_sexo'],
 
-    // URL's tipos de parcela.
-    'tipoParcela'=> ['TipoParcelaController', 'index'],
-    'tipoParcela/create'=> ['TipoParcelaController', 'create'],
-    'tipoParcela/save'=> ['TipoParcelaController', 'save'],
-    'tipoParcela/edit'=> ['TipoParcelaController', 'edit'],
-    'tipoParcela/update'=> ['TipoParcelaController', 'update'],
-    'tipoParcela/delete'=> ['TipoParcelaController', 'delete'],
+    // Pago
+    'pago'            => ['PagoController', 'index',              '__login__'],
+    'pago/create'     => ['PagoController', 'create',             'crear_pago'],
+    'pago/save'       => ['PagoController', 'save',               'crear_pago'],
+    'pago/edit'       => ['PagoController', 'edit',               'editar_pago'],
+    'pago/update'     => ['PagoController', 'update',             'editar_pago'],
+    'pago/delete'     => ['PagoController', 'delete',             'eliminar_pago'],
 
-    // URL's tipos de usuario.
-    'tipoUsuario'=> ['TipoUsuariosController', 'index'],
-    'tipoUsuario/create'=> ['TipoUsuariosController', 'create'],
-    'tipoUsuario/save'=> ['TipoUsuariosController', 'save'],
-    'tipoUsuario/edit'=> ['TipoUsuariosController', 'edit'],
-    'tipoUsuario/update'=> ['TipoUsuariosController', 'update'],
-    'tipoUsuario/delete'=> ['TipoUsuariosController', 'delete'],
+    // TipoParcela
+    'tipoParcela'         => ['TipoParcelaController', 'index',   '__login__'],
+    'tipoParcela/create'  => ['TipoParcelaController', 'create',  'crear_tipo_parcela'],
+    'tipoParcela/save'    => ['TipoParcelaController', 'save',    'crear_tipo_parcela'],
+    'tipoParcela/edit'    => ['TipoParcelaController', 'edit',    'editar_tipo_parcela'],
+    'tipoParcela/update'  => ['TipoParcelaController', 'update',  'editar_tipo_parcela'],
+    'tipoParcela/delete'  => ['TipoParcelaController', 'delete',  'eliminar_tipo_parcela'],
 
-    // URL's deudo.
-    'deudo' => ['DeudoController', 'index'],
-    'deudo/create' => ['DeudoController', 'create'],
-    'deudo/save' => ['DeudoController', 'save'],
-    'deudo/edit' => ['DeudoController', 'edit'],
-    'deudo/update' => ['DeudoController', 'update'],
-    'deudo/delete' => ['DeudoController', 'delete'],
+    // TipoUsuario
+    'tipoUsuario'         => ['TipoUsuariosController', 'index',  'ver_tipo_usuario'],
+    'tipoUsuario/create'  => ['TipoUsuariosController', 'create', 'crear_tipo_usuario'],
+    'tipoUsuario/save'    => ['TipoUsuariosController', 'save',   'crear_tipo_usuario'],
+    'tipoUsuario/edit'    => ['TipoUsuariosController', 'edit',   'editar_tipo_usuario'],
+    'tipoUsuario/update'  => ['TipoUsuariosController', 'update', 'editar_tipo_usuario'],
+    'tipoUsuario/delete'  => ['TipoUsuariosController', 'delete', 'eliminar_tipo_usuario'],
+
+    // Deudo
+    'deudo'           => ['DeudoController', 'index',             '__login__'],
+    'deudo/create'    => ['DeudoController', 'create',            'crear_deudo'],
+    'deudo/save'      => ['DeudoController', 'save',              'crear_deudo'],
+    'deudo/edit'      => ['DeudoController', 'edit',              'editar_deudo'],
+    'deudo/update'    => ['DeudoController', 'update',            'editar_deudo'],
+    'deudo/delete'    => ['DeudoController', 'delete',            'eliminar_deudo'],
 
 
-    //URL's nacionalidades
-    'nacionalidades' => ['NacionalidadesController','index'],
-    'nacionalidades/create' => ['NacionalidadesController', 'create'],
-    'nacionalidades/save' => ['NacionalidadesController', 'save'],
-    'nacionalidades/edit' => ['NacionalidadesController', 'edit'],
-    'nacionalidades/update' => ['NacionalidadesController', 'update'],
-    'nacionalidades/delete' => ['NacionalidadesController', 'delete'],
+    // Nacionalidades
+    'nacionalidades'         => ['NacionalidadesController','index', '__login__'],
+    'nacionalidades/create'  => ['NacionalidadesController','create','crear_nacionalidad'],
+    'nacionalidades/save'    => ['NacionalidadesController','save',  'crear_nacionalidad'],
+    'nacionalidades/edit'    => ['NacionalidadesController','edit',  'editar_nacionalidad'],
+    'nacionalidades/update'  => ['NacionalidadesController','update','editar_nacionalidad'],
+    'nacionalidades/delete'  => ['NacionalidadesController','delete','eliminar_nacionalidad'],
 
-    //URL's orientaciones
-    'orientaciones' => ['OrientacionController', 'index'],
-    'orientaciones/create' => ['OrientacionController', 'create'],
-    'orientaciones/save' => ['OrientacionController', 'save'],
-    'orientaciones/edit' => ['OrientacionController', 'edit'],
-    'orientaciones/update' => ['OrientacionController', 'update'],
-    'orientaciones/delete' => ['OrientacionController', 'delete'],
+    // Orientaciones
+    'orientaciones'         => ['OrientacionController','index',   '__login__'],
+    'orientaciones/create'  => ['OrientacionController','create',  'crear_orientacion'],
+    'orientaciones/save'    => ['OrientacionController','save',    'crear_orientacion'],
+    'orientaciones/edit'    => ['OrientacionController','edit',    'editar_orientacion'],
+    'orientaciones/update'  => ['OrientacionController','update',  'editar_orientacion'],
+    'orientaciones/delete'  => ['OrientacionController','delete',  'eliminar_orientacion'],
 
-    //URL's ubicaciones
-    'ubicacion' => ['UbicacionDifuntoController', 'index'],
-    'ubicacion/create' => ['UbicacionDifuntoController', 'create'],
-    'ubicacion/save' => ['UbicacionDifuntoController', 'save'],
-    'ubicacion/edit' => ['UbicacionDifuntoController', 'edit'],
-    'ubicacion/update' => ['UbicacionDifuntoController', 'update'],
-    'ubicacion/delete' => ['UbicacionDifuntoController', 'delete'],
+    // Ubicaciones
+    'ubicacion'         => ['UbicacionDifuntoController','index',  '__login__'],
+    'ubicacion/create'  => ['UbicacionDifuntoController','create', 'crear_ubicacion'],
+    'ubicacion/save'    => ['UbicacionDifuntoController','save',   'crear_ubicacion'],
+    'ubicacion/edit'    => ['UbicacionDifuntoController','edit',   'editar_ubicacion'],
+    'ubicacion/update'  => ['UbicacionDifuntoController','update', 'editar_ubicacion'],
+    'ubicacion/delete'  => ['UbicacionDifuntoController','delete', 'eliminar_ubicacion'],
 ];
 
 // Obtener ruta y metodo actual
