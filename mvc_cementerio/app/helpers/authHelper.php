@@ -4,7 +4,7 @@ function isLoggedIn(){
     return isset($_SESSION['usuario_id']);
 }
 
-function currentUser(): array 
+function currentUser(): ?array 
 {
     // Devuelve el array completo del usuario (id, nombre, rol, permisos)
     if (!isset($_SESSION['usuario_id'])) 
@@ -24,7 +24,7 @@ function userHasPermission(string $permiso): bool
     if (!isLoggedIn())
         return false;
 
-    if($_SESSION['usuario_permisos']){
+    if(isset($_SESSION['usuario_permisos'])){
         $permisos = $_SESSION['usuario_permisos'];
     }else{
         $permisos = [];
