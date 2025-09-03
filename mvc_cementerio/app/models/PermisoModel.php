@@ -6,7 +6,7 @@ class PermisoModel {
     private $db;
 
     public function __construct() {
-        $this->db = Database::conectar();
+        $this->db = Database::connect();    
     }
 
     // 🔑 Devuelve un array con los nombres de los permisos de un rol

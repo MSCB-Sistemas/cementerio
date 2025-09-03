@@ -61,36 +61,43 @@ class Control
         return $permisos;
     }
 
-    /** REMEMBER-ME **************************************************/
+    /** ===== Remember-me (token en claro) ===== */    
     // No abre sesión (ya está abierta en init.php). No redirige.
-    protected function checkRememberMeToken(): void
+    protected function refreshRememberMeIfNeeded(): void
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        if ($this->isLogin()) return;
 
-        if (
-            !isset($_SESSION["usuario_id"]) &&
-            isset($_COOKIE["remember_token"]) &&
-            isset($_COOKIE["id_usuario"])
-        ) {
+        if (isset($_COOKIE["remember_token"])){
             $token = $_COOKIE["remember_token"];
-            $usuarioId = $_COOKIE["id_usuario"];
-
-            $tokenModel = $this->loadModel("RememberTokensModel");
-            $usuarioData = $tokenModel->validateRememberMeToken($usuarioId, $token);
-
-            if ($usuarioData) {
-                $_SESSION["usuario_id"] = $usuarioData["id_usuario"];
-                $_SESSION["usuario_nombre"] = $usuarioData["nombre"];
-                $_SESSION["usuario_apellido"] = $usuarioData["apellido"];
-                $_SESSION["usuario_tipo"] = $usuarioData["id_tipo_usuario"];
-
-                $this->createRememberMeToken($usuarioData["id_usuario"]);
-                header("Location: " . URL . "home");
-                exit;
-            }
+        }else{
+            $token = null;
         }
+
+        if (isset($_COOKIE["id_usuario"])){
+            $usuarioId = (int)$_COOKIE["remember_token"];
+        }else{
+            $usuarioId = null;
+        }
+
+        if (!$token || !$usuarioId) return;
+
+        // Validar contra BD (token en claro)
+        $tokenModel = $this->loadModel("RememberTokensModel");
+        $usuarioData = $tokenModel->validateRememberMeToken((int)$usuarioId, $token);
+        if(!usuarioData) return;
+
+        // Rehidratar sesión (pone TODAS las claves que usa toda tu app)
+        $_SESSION["usuario_id"] = $usuarioData["id_usuario"];
+        $_SESSION["usuario_nombre"] = $usuarioData["nombre"];
+        $_SESSION["usuario_apellido"] = $usuarioData["apellido"];
+        $_SESSION["usuario_tipo"] = (int)$usuarioData["id_tipo_usuario"];
+
+        // Cargar permisos de rol
+        $permisoModel = $this->loadModel('PermisoModel');
+        $_SESSION['usuario_permisos'] = $permisoModel->getPermisosPorRol($_SESSION['usuario_tipo']);
+
+        // Rotar token (defensa contra replay)
+        $this->createRememberMeToken($_SESSION['usuario_id']);
     }
 
     protected function createRememberMeToken($id_usuario) {
