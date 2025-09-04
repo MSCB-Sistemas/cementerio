@@ -194,7 +194,7 @@ $filtrar = isset($_GET['filtrar']);
             <form method="GET" class="row g-3">
                 <div class="col-md-2">
                     <label for="ubicacion" class="form-label">Nº de Ubicación</label>
-                    <input type="text" class="form-control" name="ubicacion">
+                    <input type="text" class="form-control" name="ubicacion" value="<?= htmlspecialchars($_GET['ubicacion'] ?? '') ?>">
                 </div>
                 <div class="col-md-2">
                     <label for="tipo_parcela" class="form-label">Tipo</label>
@@ -282,12 +282,12 @@ $filtrar = isset($_GET['filtrar']);
                                 <td>
                                     <?php 
                                     $tipo = '';
-                                    switch ($parcela['id_tipo_parcela']) {
-                                        case 1: $tipo = 'Nicho'; break;
-                                        case 2: $tipo = 'Fosa'; break;
-                                        case 3: $tipo = 'Panteón'; break;
-                                        case 4: $tipo = 'Osario'; break;
-                                        case 5: $tipo = 'Especial'; break;
+                                    switch ($parcela['tipo'] ?? $parcela['id_tipo_parcela'] ?? '') {
+                                        case 'N': case 1: $tipo = 'Nicho'; break;
+                                        case 'F': case 2: $tipo = 'Fosa'; break;
+                                        case 'P': case 3: $tipo = 'Panteón'; break;
+                                        case 'O': case 4: $tipo = 'Osario'; break;
+                                        case 'E': case 5: $tipo = 'Especial'; break;
                                         default: $tipo = 'Desconocido';
                                     }
                                     echo $tipo;

@@ -138,11 +138,38 @@ class EstadisticasModel extends Control {
         }
     }
 
+    public function getTodasLasParcelasVendidas()
+    {
+        try {
+            $sql = "
+            SELECT p.id_parcela, p.ubicacion as numero_ubicacion, p.tipo as id_tipo_parcela, 
+                   p.seccion, p.hilera, p.nivel, p.fraccion, p.orientacion,
+                   d.nombre as nombre_deudo, d.apellido as apellido_deudo, d.dni as dni_deudo,
+                   pgo.total as monto, pgo.fecha_pago as fecha_compra, pgo.fecha_vencimiento
+            FROM pago pgo
+            INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
+            INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
+            ORDER BY pgo.fecha_pago DESC
+        ";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getTodasLasParcelasVendidas: " . $e->getMessage());
+            return [];
+        }
+    }
+
     public function getParcelasVendidasPorDatosParcela($filtros = [])
     {
         try {
             $sql = "
-            SELECT p.id_parcela, d.nombre, d.apellido, d.dni, pgo.total as monto, pgo.fecha_pago as fecha_venta, pgo.fecha_vencimiento
+            SELECT p.id_parcela, p.ubicacion as numero_ubicacion, p.tipo as id_tipo_parcela, 
+                   p.seccion, p.hilera, p.nivel, p.fraccion, p.orientacion,
+                   d.nombre as nombre_deudo, d.apellido as apellido_deudo, d.dni as dni_deudo,
+                   pgo.total as monto, pgo.fecha_pago as fecha_compra, pgo.fecha_vencimiento
             FROM pago pgo
             INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
             INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
@@ -196,7 +223,7 @@ class EstadisticasModel extends Control {
             error_log("Error en getParcelasVendidasPorDatosParcela: " . $e->getMessage());
             return [];
         }
-}
+    }
 }
 
 ?>
