@@ -52,16 +52,6 @@ class EstadisticasController extends Control {
         // Ver si se usó al menos un filtro de parcela
         $uso_filtro_parcela = array_filter($filtros_parcela);
 
-        // if ($uso_filtro_parcela) {
-        //     // Si se usó el filtro por datos de parcela
-        //     $parcelas_vendidas = $this->model->getParcelasVendidasPorDatosParcela($filtros_parcela);
-        //     $total_parcelas_vendidas = $parcelas_vendidas; // No es paginado
-        // } else {
-        //     // Si no, usar búsqueda por fecha o apellido
-        //     $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido_deudo);
-        //     $total_parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin);
-        // }
-
         $datos = [
             'title' => 'Estadisticas',
             'movimientos' => $defunciones,
