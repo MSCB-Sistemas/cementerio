@@ -260,7 +260,69 @@ $filtrar = isset($_GET['filtrar']);
 
         <!-- Mostrar datos -->
         <?php if (!empty($datos['parcelas_vendidas'])): ?>
-            <!-- Aquí iría el contenido de parcelas vendidas -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="th a">
+                        <tr>
+                            <th><?= generarOrdenLink('numero_ubicacion', 'N° Ubicación', $datos) ?></th>
+                            <th><?= generarOrdenLink('tipo_parcela', 'Tipo', $datos) ?></th>
+                            <th><?= generarOrdenLink('nombre', 'Titular', $datos) ?></th>
+                            <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
+                            <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>
+                            <th><?= generarOrdenLink('seccion', 'Sección', $datos) ?></th>
+                            <th><?= generarOrdenLink('hilera', 'Hilera', $datos) ?></th>
+                            <th><?= generarOrdenLink('nivel', 'Nivel', $datos) ?></th>
+                            <th><?= generarOrdenLink('fecha_compra', 'Fecha Venta', $datos) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($datos['parcelas_vendidas'] as $parcela): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($parcela['numero_ubicacion']) ?></td>
+                                <td>
+                                    <?php 
+                                    $tipo = '';
+                                    switch ($parcela['id_tipo_parcela']) {
+                                        case 1: $tipo = 'Nicho'; break;
+                                        case 2: $tipo = 'Fosa'; break;
+                                        case 3: $tipo = 'Panteón'; break;
+                                        case 4: $tipo = 'Osario'; break;
+                                        case 5: $tipo = 'Especial'; break;
+                                        default: $tipo = 'Desconocido';
+                                    }
+                                    echo $tipo;
+                                    ?>
+                                </td>
+                                <td><?= htmlspecialchars($parcela['nombre_deudo'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($parcela['apellido_deudo'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($parcela['dni_deudo'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($parcela['seccion']) ?></td>
+                                <td><?= htmlspecialchars($parcela['hilera']) ?></td>
+                                <td><?= htmlspecialchars($parcela['nivel'] ?? '-') ?></td>
+                                <td><?= !empty($parcela['fecha_compra']) ? date('d/m/Y', strtotime($parcela['fecha_compra'])) : 'Sin fecha' ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <?php if (!empty($datos['total_paginas_parcelas']) && $datos['total_paginas_parcelas'] > 1): ?>
+                <ul class="pagination">
+                    <?php for ($i = 1; $i <= $datos['total_paginas_parcelas']; $i++): ?>
+                        <li class="page-item <?= ($i == ($datos['pagina_actual_parcelas'] ?? 1)) ? 'active' : '' ?>">
+                            <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina_parcelas' => $i])) ?>">
+                                <?= $i ?>
+                            </a>
+                        </li>
+                    <?php endfor; ?>
+                </ul>
+            <?php endif; ?>
+
+        <?php else: ?>
+            <div class="text-center py-4">
+                <i class="fas fa-info-circle text-info fa-3x mb-3"></i>
+                <p class="text-muted">No se encontraron parcelas vendidas</p>
+            </div>
         <?php endif; ?>
     </div>
      
