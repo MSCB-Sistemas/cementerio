@@ -21,6 +21,9 @@ $filtrar = isset($_GET['filtrar']);
             <button class="nav-link" id="traslados-tab" data-bs-toggle="tab" data-bs-target="#traslados" type="button" role="tab">Traslados de difuntos</button>
         </li>
         <li class="nav-item">
+            <button class="nav-link" id="vendidas-tab" data-bs-toggle="tab" data-bs-target="#vendidas" type="button" role="tab">Parcelas Vendidas</button>
+        </li>
+        <li class="nav-item">
             <button class="nav-link" id="resumen-tab" data-bs-toggle="tab" data-bs-target="#resumen" type="button" role="tab">Resumen</button>
         </li>
     </ul>
