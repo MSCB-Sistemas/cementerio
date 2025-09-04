@@ -101,34 +101,23 @@ class EstadisticasModel extends Control {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);                                     
     }
 
-    public function getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido = '')
+    public function getParcelasVendidas($fecha_inicio, $fecha_fin)
     {
         $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
 
         try {
-            $sql = "
-                SELECT p.id_parcela, d.nombre, d.apellido, d.dni, pgo.total as monto, pgo.fecha_pago as fecha_venta, pgo.fecha_vencimiento
-                FROM pago pgo
-                INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
-                INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
-                WHERE DATE(pgo.fecha_pago) BETWEEN :inicio AND :fin
-            ";
-
-            if (!empty($letra_apellido)) {
-                $sql .= " AND d.apellido LIKE :letra_apellido";
-            }
-
-            $sql .= " ORDER BY pgo.fecha_pago DESC";
+            $sql = "SELECT p.id_parcela, d.nombre, d.apellido, d.dni, pgo.total as monto, pgo.fecha_pago as fecha_venta, pgo.fecha_vencimiento
+                    FROM pago pgo
+                    INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
+                    INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
+                    WHERE DATE(pgo.fecha_pago) BETWEEN :inicio AND :fin
+                    ORDER BY pgo.fecha_pago DESC
+                ";
 
             $stmt = $this->db->prepare($sql);
 
             $stmt->bindValue(':inicio', $fecha_inicio);
             $stmt->bindValue(':fin', $fecha_fin);
-
-            if (!empty($letra_apellido)) {
-                $stmt->bindValue(':letra_apellido', $letra_apellido . '%');
-            }
-
             $stmt->execute();
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -141,16 +130,15 @@ class EstadisticasModel extends Control {
     public function getTodasLasParcelasVendidas()
     {
         try {
-            $sql = "
-            SELECT p.id_parcela, p.ubicacion as numero_ubicacion, p.tipo as id_tipo_parcela, 
-                   p.seccion, p.hilera, p.nivel, p.fraccion, p.orientacion,
+            $sql = "SELECT p.id_parcela, p.numero_ubicacion, p.id_tipo_parcela, 
+                   p.seccion, p.hilera, p.nivel, p.fraccion, p.id_orientacion,
                    d.nombre as nombre_deudo, d.apellido as apellido_deudo, d.dni as dni_deudo,
                    pgo.total as monto, pgo.fecha_pago as fecha_compra, pgo.fecha_vencimiento
-            FROM pago pgo
-            INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
-            INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
-            ORDER BY pgo.fecha_pago DESC
-        ";
+                    FROM pago pgo
+                    INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
+                    INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
+                    ORDER BY pgo.fecha_pago DESC
+                ";
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute();
@@ -165,21 +153,20 @@ class EstadisticasModel extends Control {
     public function getParcelasVendidasPorDatosParcela($filtros = [])
     {
         try {
-            $sql = "
-            SELECT p.id_parcela, p.ubicacion as numero_ubicacion, p.tipo as id_tipo_parcela, 
-                   p.seccion, p.hilera, p.nivel, p.fraccion, p.orientacion,
-                   d.nombre as nombre_deudo, d.apellido as apellido_deudo, d.dni as dni_deudo,
-                   pgo.total as monto, pgo.fecha_pago as fecha_compra, pgo.fecha_vencimiento
-            FROM pago pgo
-            INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
-            INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
-            WHERE 1=1
-        ";
+            $sql = "SELECT p.id_parcela, p.numero_ubicacion, p.id_tipo_parcela, 
+                   p.seccion, p.hilera, p.nivel, p.fraccion, p.id_orientacion,
+                   d.nombre, d.apellido, d.dni,
+                   pgo.total, pgo.fecha_pago, pgo.fecha_vencimiento
+                    FROM pago pgo
+                    INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
+                    INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
+                    WHERE 1=1
+                ";
 
             $params = [];
 
             if (!empty($filtros['tipo_parcela'])) {
-                $sql .= " AND p.tipo = :tipo_parcela";
+                $sql .= " AND p.id_tipo_parcela = :tipo_parcela";
                 $params[':tipo_parcela'] = $filtros['tipo_parcela'];
             }
 
@@ -208,7 +195,7 @@ class EstadisticasModel extends Control {
                 $params[':hilera'] = $filtros['hilera'];
             }
 
-            if (!empty($filtros['ubicacion'])) {
+            if (!empty($filtros['numero_ubicacion'])) {
                 $sql .= " AND p.ubicacion = :ubicacion";
                 $params[':ubicacion'] = $filtros['ubicacion'];
             }

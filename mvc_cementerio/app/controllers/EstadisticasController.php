@@ -49,19 +49,22 @@ class EstadisticasController extends Control {
             'ubicacion' => $_GET['ubicacion'] ?? ''
         ];
 
-        $filtrarPorParcela = !empty(array_filter($filtros_parcela)); 
-        $filtrarPorFechaOLetra = !empty($fecha_inicio) || !empty($fecha_fin) || !empty($letra_apellido_deudo);
+        // $filtrarPorParcela = !empty(array_filter($filtros_parcela)); 
+        // $filtrarPorFechaOLetra = !empty($fecha_inicio) || !empty($fecha_fin) || !empty($letra_apellido_deudo);
 
-        if ($filtrarPorParcela) {
-            $parcelas_vendidas = $this->model->getParcelasVendidasPorDatosParcela($filtros_parcela);
-            $total_parcelas_vendidas = count($parcelas_vendidas);
-        } elseif ($filtrarPorFechaOLetra) {
-            $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido_deudo);
-            $total_parcelas_vendidas = count($parcelas_vendidas);
-        } else {
-            $parcelas_vendidas = $this->model->getTodasLasParcelasVendidas();
-            $total_parcelas_vendidas = count($parcelas_vendidas);
-        }
+        $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin);
+        $total_parcelas_vendidas = count($parcelas_vendidas);
+
+        // if ($filtrarPorParcela) {
+        //     $parcelas_vendidas = $this->model->getParcelasVendidasPorDatosParcela($filtros_parcela);
+        //     $total_parcelas_vendidas = count($parcelas_vendidas);
+        // } elseif ($filtrarPorFechaOLetra) {
+        //     $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido_deudo);
+        //     $total_parcelas_vendidas = count($parcelas_vendidas);
+        // } else {
+        //     $parcelas_vendidas = $this->model->getTodasLasParcelasVendidas();
+        //     $total_parcelas_vendidas = count($parcelas_vendidas);
+        // }
 
         $datos = [
             'title' => 'Estadisticas',

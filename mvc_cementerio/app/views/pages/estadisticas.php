@@ -163,17 +163,17 @@ $filtrar = isset($_GET['filtrar']);
         <!-- Seleccionar tipo de filtro de búsqueda -->
         <div class="mb-4">
             <label for="tipo_filtro" class="form-label">Seleccionar filtro de búsqueda:</label>
-            <select id="tipo_filtro_parcelas" class="form-select w-auto" onchange="mostrarFiltroParcelas()">
+            <!-- <select id="tipo_filtro_parcelas" class="form-select w-auto" onchange="mostrarFiltroParcelas()">
                 <option value="">Seleccionar...</option>
                 <option value="lista_completa_parcelas">Listado de Parcelas</option>
                 <option value="filtro_fecha_parcelas">Por Fecha de Venta</option>
                 <option value="filtro_parcela_parcelas">Por Datos de Parcela</option>
                 <option value="filtro_titular_parcelas">Por Titular</option>
-            </select>
+            </select> -->
         </div>
 
         <!-- Filtro por Fecha -->
-        <div id="filtro_fecha_parcelas" class="filtro-box mb-4" style="display: none;">
+        <!-- <div id="filtro_fecha_parcelas" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-3">
                     <label for="fecha_inicio" class="form-label">Desde</label>
@@ -187,10 +187,10 @@ $filtrar = isset($_GET['filtrar']);
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
                 </div>
             </form>
-        </div>
+        </div> -->
 
         <!-- Filtro por Datos de Parcela -->
-        <div id="filtro_parcela_parcelas" class="filtro-box mb-4" style="display: none;">
+        <!-- <div id="filtro_parcela_parcelas" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-2">
                     <label for="ubicacion" class="form-label">Nº de Ubicación</label>
@@ -238,10 +238,10 @@ $filtrar = isset($_GET['filtrar']);
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
                 </div>
             </form>
-        </div>
+        </div> -->
 
         <!-- Filtro por Titular -->
-        <div id="filtro_titular_parcelas" class="filtro-box mb-4" style="display: none;">
+        <!-- <div id="filtro_titular_parcelas" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-2">
                     <label for="letra_apellido_deudo" class="form-label">Apellido Titular (A-Z)</label>
@@ -256,7 +256,7 @@ $filtrar = isset($_GET['filtrar']);
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
                 </div>
             </form>
-        </div>
+        </div> -->
 
         <!-- Mostrar datos -->
         <?php if (!empty($datos['parcelas_vendidas'])): ?>
@@ -277,28 +277,29 @@ $filtrar = isset($_GET['filtrar']);
                     </thead>
                     <tbody>
                         <?php foreach ($datos['parcelas_vendidas'] as $parcela): ?>
+                            <?php echo var_dump($parcela); ?>
                             <tr>
-                                <td><?= htmlspecialchars($parcela['numero_ubicacion']) ?></td>
+                                <td><?= htmlspecialchars($parcela['id_ubicacion']) ?></td>
                                 <td>
                                     <?php 
                                     $tipo = '';
-                                    switch ($parcela['tipo'] ?? $parcela['id_tipo_parcela'] ?? '') {
-                                        case 'N': case 1: $tipo = 'Nicho'; break;
-                                        case 'F': case 2: $tipo = 'Fosa'; break;
-                                        case 'P': case 3: $tipo = 'Panteón'; break;
-                                        case 'O': case 4: $tipo = 'Osario'; break;
-                                        case 'E': case 5: $tipo = 'Especial'; break;
+                                    switch ($parcela['id_tipo_parcela']) {
+                                        case 1: $tipo = 'Nicho'; break;
+                                        case 2: $tipo = 'Fosa'; break;
+                                        case 3: $tipo = 'Panteón'; break;
+                                        case 4: $tipo = 'Osario'; break;
+                                        case 5: $tipo = 'Especial'; break;
                                         default: $tipo = 'Desconocido';
                                     }
                                     echo $tipo;
                                     ?>
                                 </td>
-                                <td><?= htmlspecialchars($parcela['nombre_deudo'] ?? '') ?></td>
-                                <td><?= htmlspecialchars($parcela['apellido_deudo'] ?? '') ?></td>
-                                <td><?= htmlspecialchars($parcela['dni_deudo'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($parcela['nombre']) ?></td>
+                                <td><?= htmlspecialchars($parcela['apellido']) ?></td>
+                                <td><?= htmlspecialchars($parcela['dni']) ?></td>
                                 <td><?= htmlspecialchars($parcela['seccion']) ?></td>
                                 <td><?= htmlspecialchars($parcela['hilera']) ?></td>
-                                <td><?= htmlspecialchars($parcela['nivel'] ?? '-') ?></td>
+                                <td><?= htmlspecialchars($parcela['nivel']) ?></td>
                                 <td><?= !empty($parcela['fecha_compra']) ? date('d/m/Y', strtotime($parcela['fecha_compra'])) : 'Sin fecha' ?></td>
                             </tr>
                         <?php endforeach; ?>
