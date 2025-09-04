@@ -68,6 +68,7 @@ class EstadisticasController extends Control {
             'datos_difuntos' => $defunciones,
             'deudores_morosos' => $deudores_morosos,
             'difuntos_trasladados' => $difuntos_trasladados,
+            'parcelas_vendidas' => $parcelas_vendidas,
             'fecha_inicio' => $fecha_inicio,
             'fecha_fin' => $fecha_fin,
             'sort_col' => $sort_col,
