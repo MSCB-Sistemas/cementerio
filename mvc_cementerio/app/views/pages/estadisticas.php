@@ -61,8 +61,8 @@ $filtrar = isset($_GET['filtrar']);
                 </tr>
             </thead>
             <tbody>
-                <?php if (!empty($datos['movimientos'])): ?>
-                    <?php foreach ($datos['movimientos'] as $m): ?>
+                <?php if (!empty($datos['datos_difuntos'])): ?>
+                    <?php foreach ($datos['datos_difuntos'] as $m): ?>
                         <tr>
                             <td><?= htmlspecialchars($m['fecha_fallecimiento']) ?></td>
                             <td><?= htmlspecialchars($m['nombre']) ?></td>
@@ -338,7 +338,6 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Restaurar el tab activo guardado
     const lastTab = localStorage.getItem('activeTab');
     if (lastTab) {
         const tabElement = document.querySelector(`[data-bs-target="${lastTab}"]`);
@@ -347,78 +346,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Escuchar cambio de pestaña y guardarlo
     const tabLinks = document.querySelectorAll('[data-bs-toggle="tab"]');
     tabLinks.forEach(tab => {
         tab.addEventListener('shown.bs.tab', function(e) {
             const activeTab = e.target.getAttribute('data-bs-target');
             localStorage.setItem('activeTab', activeTab);
         });
-    });
-});
-
-const botonesEstado = document.querySelectorAll('.btn-toggle-estado');
-botonesEstado.forEach(boton => {
-    boton.addEventListener('click', function() {
-        const idDeuda = this.getAttribute('data-id');
-        const estadoActual = this.getAttribute('data-estado-actual');
-        const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
-
-        // Aca va un ajax.
-        console.log('Cambiando estado de deuda ' + idDeuda + ' de ' + estadoActual + ' a ' + nuevoEstado);
-
-        // Si se elige "lista_completa", recarga sin parámetros
-        if (seleccion === 'lista_completa') {
-            window.location.href = window.location.pathname + '?tab=tablas';
-            return;
-        }
-
-        if (!seleccion) return; // No mostrar nada si no hay selección
-        
-        setTimeout(() => {
-            this.setAttribute('data-estado-actual', nuevoEstado);
-
-            const fila = this.closest('.fila-moroso');
-
-            if (nuevoEstado === 'activo') {
-                this.classList.remove('btn-success');
-                this.classList.add('btn-warning');
-                this.innerHTML = '<i class="fas fa-toggle-off"></i> Desactivar';
-
-                const badge = fila.querySelector('.estado-badge');
-                if (badge) {
-                    badge.classList.remove('bg-secondary');
-                    badge.classList.add('bg-success');
-                    badge.textContent = 'Activo';
-                }
-
-                fila.setAttribute('data-estado', 'activo');
-
-                if (document.getElementById('ver-activos').classList.contains('active')) {
-                    fila.style.display = '';
-                }
-
-            } else {
-                this.classList.remove('btn-warning');
-                this.classList.add('btn-success');
-                this.innerHTML = '<i class="fas fa-toggle-off"></i> Activar';
-
-                const badge = fila.querySelector('.estado-badge');
-                if (badge) {
-                    badge.classList.remove('bg-success');
-                    badge.classList.add('bg-secondary');
-                    badge.textContent = 'Inactivo';
-                }
-
-                fila.setAttribute('data-estado', 'inactivo');
-
-                if (document.getElementById('ver-activos').classList.contains('active')) {
-                    fila.style.display = 'none';
-                }
-            }
-
-            alert("Deuda " + (nuevoEstado === 'activo' ? 'activada' : 'desactivada') + " correctamente");
-        }, 300);
     });
 });
 
