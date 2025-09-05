@@ -185,7 +185,7 @@
     
     .table thead th {
         border-bottom: 2px solid var(--bs-border-color);
-        background-color: #f8f9fa;
+        background-color: #ffffffff;
     }
     
     .table-hover tbody tr:hover {

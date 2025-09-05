@@ -8,8 +8,7 @@ class UsuarioModel {
     /* Constructor
      * Inicializa la conexión a la base de datos
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->db = Database::connect();
     }
 
@@ -17,8 +16,7 @@ class UsuarioModel {
      * Obtener todos los usuarios
      * @return array Lista de usuarios
      */
-    public function getAllUsuarios(): array
-    {
+    public function getAllUsuarios(): array {
         $stmt = $this->db->prepare("SELECT 
             u.id_usuario,
             u.usuario,
@@ -26,16 +24,33 @@ class UsuarioModel {
             u.apellido,
             u.cargo,
             u.sector,
+            u.telefono,
+            u.email,
             tu.descripcion,
             u.activo
         FROM 
             usuarios u
         JOIN 
-            tipos_usuarios tu ON u.id_tipo_usuario = tu.id_tipo_usuario;
-        ");
+            tipos_usuarios tu ON u.id_tipo_usuario = tu.id_tipo_usuario;");
+        
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$usuarios) {
+            return [];
+        }
+
+        // Convertir activo: 1 → "Si", 0 → "No" usando if...else
+        foreach ($usuarios as &$usuario) {
+            if ($usuario['activo'] === 1) {
+                $usuario['activo'] = "Si";
+            } else {
+                $usuario['activo'] = "No";
+            }
+        }
+        return $usuarios;
     }
+
 
     /** 
      * Obtener un usuario por su ID
@@ -48,6 +63,8 @@ class UsuarioModel {
         $stmt->execute(['id_usuario' => $id_usuario]);
         return $stmt->fetch();
     }
+
+    
 
     /**
      * Summary of insertUsuario

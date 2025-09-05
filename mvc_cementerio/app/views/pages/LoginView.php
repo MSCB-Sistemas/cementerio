@@ -40,7 +40,7 @@
                     <div class="mb-4 form-check">
                         <input class="form-check-input" type="checkbox" name="remember" id="remember">
                         <label class="form-check-label" for="remember">
-                            Recuerdame
+                            Recordar datos
                         </label>
                     </div>
                     
