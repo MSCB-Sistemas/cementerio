@@ -12,6 +12,7 @@ class EstadisticasController extends Control {
     {
         $fecha_inicio = !empty($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : date('Y-m-01');
         $fecha_fin = !empty($_GET['fecha_fin']) ? $_GET['fecha_fin'] : date('Y-m-d');
+        $letra_apellido_deudo = $_GET['letra_apellido_deudo'] ?? '';
 
         $sort_col = !empty($_GET['sort_col']) ? $_GET['sort_col'] : 'fecha';
         $sort_dir = !empty($_GET['sort_dir']) && in_array($_GET['sort_dir'], ['ASC', 'DESC']);
@@ -35,10 +36,13 @@ class EstadisticasController extends Control {
 
         $difuntos_trasladados = $this->model->getDifuntosTrasladados($sort_col, $sort_dir, $limite, $offset);
 
+        $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin);
+
         $total_defunciones = $this->model->getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin);
+        $total_parcelas_vendidas = $this->model->getTotalParcelasVendidasEntreFechas($fecha_inicio, $fecha_fin);
+        
         $total_paginas = max(1, ceil($total_defunciones / $limite));
 
-        // Capturar posibles filtros de parcela
         $filtros_parcela = [
             'tipo_parcela' => $_GET['tipo_parcela'] ?? '',
             'seccion' => $_GET['seccion'] ?? '',
@@ -49,14 +53,26 @@ class EstadisticasController extends Control {
             'ubicacion' => $_GET['ubicacion'] ?? ''
         ];
 
-        // Ver si se usó al menos un filtro de parcela
-        $uso_filtro_parcela = array_filter($filtros_parcela);
+        // $filtrarPorParcela = !empty(array_filter($filtros_parcela)); 
+        // $filtrarPorFechaOLetra = !empty($fecha_inicio) || !empty($fecha_fin) || !empty($letra_apellido_deudo);
+
+        // if ($filtrarPorParcela) {
+        //     $parcelas_vendidas = $this->model->getParcelasVendidasPorDatosParcela($filtros_parcela);
+        //     $total_parcelas_vendidas = count($parcelas_vendidas);
+        // } elseif ($filtrarPorFechaOLetra) {
+        //     $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido_deudo);
+        //     $total_parcelas_vendidas = count($parcelas_vendidas);
+        // } else {
+        //     $parcelas_vendidas = $this->model->getTodasLasParcelasVendidas();
+        //     $total_parcelas_vendidas = count($parcelas_vendidas);
+        // }
 
         $datos = [
             'title' => 'Estadisticas',
-            'movimientos' => $defunciones,
+            'datos_difuntos' => $defunciones,
             'deudores_morosos' => $deudores_morosos,
             'difuntos_trasladados' => $difuntos_trasladados,
+            'parcelas_vendidas' => $parcelas_vendidas,
             'fecha_inicio' => $fecha_inicio,
             'fecha_fin' => $fecha_fin,
             'sort_col' => $sort_col,
@@ -65,6 +81,8 @@ class EstadisticasController extends Control {
             'total_paginas' => $total_paginas,
             'total_resultados' => $total_defunciones,
             'total_morosos' => count($deudores_morosos),
+            'total_parcelas_vendidas' => $total_parcelas_vendidas,
+            'letra_apellido_deudo' => $letra_apellido_deudo,
         ];
 
         $this->loadView("estadisticas", $datos);
