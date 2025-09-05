@@ -60,19 +60,34 @@ class UsuarioModel {
      * @param mixed $id_tipo_usuario
      * @return bool
      */
-    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $contrasenia, $id_tipo_usuario): bool
+    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $contrasenia, $id_tipo_usuario): bool
     {
-        $stmt = $this->db->prepare("INSERT INTO usuarios (usuario, nombre, apellido, cargo, sector, contrasenia, id_tipo_usuario) 
-                                    VALUES (:usuario, :nombre, :apellido, :cargo, :sector, :contrasenia, :id_tipo_usuario)");
-        return $stmt->execute([
+        $sql = "INSERT INTO usuarios (usuario, nombre, apellido, cargo, sector, telefono, email, contrasenia, id_tipo_usuario) 
+                VALUES (:usuario, :nombre, :apellido, :cargo, :sector, :telefono, :email, :contrasenia, :id_tipo_usuario)
+                ";
+        $stmt = $this->db->prepare($sql);
+        
+        $parametros = [
             "usuario" => $usuario,
             "nombre" => $nombre,
             "apellido" => $apellido,
             "cargo" => $cargo,
             "sector" => $sector,
+            'telefono' => $telefono,
+            'email' => $email,
             "contrasenia" => password_hash($contrasenia, PASSWORD_DEFAULT),
             "id_tipo_usuario" => $id_tipo_usuario
-        ]);
+        ];
+        return $stmt->execute($parametros);
+
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Usuario Model",             // Modelo
+            "Insert"                    // Accion
+        );
+        return $this->db->lastInsertId();
     }
 
     /** 
@@ -89,20 +104,34 @@ class UsuarioModel {
      * @param bool $activo Estado activo del usuario
      * @return bool Resultado de la actualización
      */
-    public function updateUsuario($id_usuario, $usuario, $nombre, $apellido, $cargo, $sector, $id_tipo_usuario): bool
+    public function updateUsuario($id_usuario, $usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $id_tipo_usuario): bool
     {
-        $stmt = $this->db->prepare("UPDATE usuarios 
-                                    SET usuario = :usuario, nombre = :nombre, apellido = :apellido, cargo = :cargo, sector = :sector, id_tipo_usuario = :id_tipo_usuario 
-                                    WHERE id_usuario = :id_usuario");
-        $stmt->execute([
+        $sql = "UPDATE usuarios 
+                SET usuario = :usuario, nombre = :nombre, apellido = :apellido, cargo = :cargo, sector = :sector, telefono = :telefono, email = :email, id_tipo_usuario = :id_tipo_usuario 
+                WHERE id_usuario = :id_usuario
+                ";
+        $stmt = $this->db->prepare($sql);
+        
+        $parametros = [
             "id_usuario" => $id_usuario,
             "usuario" => $usuario,
             "nombre" => $nombre,
             "apellido" => $apellido,
             "cargo" => $cargo,
             "sector" => $sector,
+            'telefono' => $telefono,
+            'email' => $email,
             "id_tipo_usuario" => $id_tipo_usuario,
-        ]);
+        ];
+        $stmt->execute($parametros);
+
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Usuario Model",             // Modelo
+            "Update"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
@@ -113,8 +142,18 @@ class UsuarioModel {
      */
     public function deleteUsuario($id_usuario): bool
     {
-        $stmt = $this->db->prepare("UPDATE usuarios SET activo = 0 WHERE id_usuario = :id_usuario");
-        $stmt->execute(['id_usuario' => $id_usuario]);
+        $sql = "UPDATE usuarios SET activo = 0 WHERE id_usuario = :id_usuario";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['id_usuario' => $id_usuario];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Usuario Model",             // Modelo
+            "Delete"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
