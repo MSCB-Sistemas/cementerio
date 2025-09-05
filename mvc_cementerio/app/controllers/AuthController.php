@@ -21,16 +21,17 @@ class AuthController extends Control {
             $usuario = $usuarioModel->getUsuarioByNombreUsuario($user);
 
             if ($usuario && password_verify($password, $usuario['contrasenia'])) {
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                }
-                $_SESSION['usuario_id'] = $usuario['id_usuario'];
+                // Sesión
+                $_SESSION['usuario_id'] = (int)$usuario['id_usuario'];
                 $_SESSION['usuario_nombre'] = $usuario['nombre'];
                 $_SESSION['usuario_apellido'] = $usuario['apellido'];
                 $_SESSION['usuario_tipo'] = $usuario['id_tipo_usuario'];
+                
+                // Permisos del rol
                 $_SESSION['usuario_permisos'] = $permisoModel->getPermisosPorRol($usuario['id_tipo_usuario']);
 
-                if ($remember) {
+                // Rememeber-me opcional
+                if (!empty($remember)) {
                     $this->createRememberMeToken($usuario['id_usuario']);
                 }
 
