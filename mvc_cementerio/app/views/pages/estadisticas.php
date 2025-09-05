@@ -21,28 +21,62 @@ $filtrar = isset($_GET['filtrar']);
             <button class="nav-link" id="traslados-tab" data-bs-toggle="tab" data-bs-target="#traslados" type="button" role="tab">Traslados de difuntos</button>
         </li>
         <li class="nav-item">
+            <button class="nav-link" id="vendidas-tab" data-bs-toggle="tab" data-bs-target="#vendidas" type="button" role="tab">Parcelas Vendidas</button>
+        </li>
+        <li class="nav-item">
             <button class="nav-link" id="resumen-tab" data-bs-toggle="tab" data-bs-target="#resumen" type="button" role="tab">Resumen</button>
         </li>
     </ul>
 
-<div class="tab-content mt-4">
-    <!-- Pestania Padron difuntos -->
-    <div class="tab-pane fade show active" id="tablas" role="tabpanel">
-        <form method="GET" class="row g-3 mb-4">
-            <div class="col-auto">
-                <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
-                <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" value="<?php echo !empty($datos['fecha_inicio']) ? htmlspecialchars($datos['fecha_inicio']) : '' ?>">
-            </div>
+    <div class="tab-content mt-4">
+        <!-- Pestaña para Padron de Difuntos -->
+        <div class="tab-pane fade show active" id="tablas" role="tabpanel">
+            <!-- Seleccionar tipo de filtro de búsqueda -->
+            <div class="mb-4">
+                <label for="tipo_filtro" class="form-label">Seleccionar filtro de búsqueda:</label>
+                <select id="tipo_filtro" class="form-select w-auto" onchange="mostrarFiltroDifuntos()">
+                    <option value="">Seleccionar...</option>
+                    <option value="lista_completa">Padrón general de Difuntos</option>
+                    <option value="filtro_titular_difuntos">Por Orden Alfabético</option>
+                    <option value="filtro_fecha_difuntos">Por Fecha de Defunción</option>
+                </select>
+        </div>
 
-            <div class="col-auto">
-                <label for="fecha_fin" class="form-label">Fecha Fin</label>
-                <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" value="<?php echo !empty($datos['fecha_fin']) ? htmlspecialchars($datos['fecha_fin']) : '' ?>">
-            </div>
+        <!-- Filtro por Fecha -->
+        <div id="filtro_fecha_difuntos" class="filtro-box mb-4" style="display: none;">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <label for="fecha_inicio" class="form-label">Desde</label>
+                    <input type="date" class="form-control" name="fecha_inicio" value="<?= htmlspecialchars($_GET['fecha_inicio'] ?? '') ?>">
+                </div>
+                <div class="col-md-3">
+                    <label for="fecha_fin" class="form-label">Hasta</label>
+                    <input type="date" class="form-control" name="fecha_fin" value="<?= htmlspecialchars($_GET['fecha_fin'] ?? '') ?>">
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </div>
 
-            <div class="col-auto align-self-end">
-                <button type="submit" name="filtrar" class="btn btn-primary">Filtrar</button>
-            </div>
-        </form>
+        <!-- Filtro por Apellido de Difunto -->
+        <div id="filtro_titular_difuntos" class="filtro-box mb-4" style="display: none;">
+            <form method="GET" class="row g-3">
+                <div class="col-md-2">                    
+                    <label for="letra_apellido_difunto" class="form-label">Apellido (A-Z)</label>
+                    <select name="letra_apellido_difunto" class="form-select">
+                        <option value="">Seleccionar...</option>
+                        <?php foreach (range('A', 'Z') as $letra): ?>
+                            <option value="<?= $letra ?>" <?= (isset($datos['letra_apellido_difunto']) && $datos['letra_apellido_difunto'] === $letra) ? 'selected' : '' ?>><?= $letra ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </div>
+
 
         <!-- Mostrar error solo si hay -->
         <?php if ($error): ?>
@@ -52,12 +86,18 @@ $filtrar = isset($_GET['filtrar']);
         <table class="table table-bordered table-striped">
             <thead class="th a">
                 <tr>
-                    <th><?= generarOrdenLink('fecha_fallecimiento', 'Fecha Fallecimiento', $datos) ?></th>
-                    <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
-                    <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
-                    <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>
-                    <th><?= generarOrdenLink('descripcion', 'Sexo', $datos) ?></th>
-                    <th><?= generarOrdenLink('domicilio', 'Domicilio', $datos) ?></th>
+                    <th><?= generarOrdenLink('fecha_fallecimiento', 'Fecha de Fallecimiento', $datos) ?></th>
+                        <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
+                        <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
+                        <th><?= generarOrdenLink('edad', 'Edad', $datos) ?></th>
+                        <th><?= generarOrdenLink('dni', 'Dni', $datos) ?></th>
+                        <th><?= generarOrdenLink('deudo', 'Deudo', $datos) ?></th> 
+                        <th><?= generarOrdenLink('estado_civil', 'Estado Civil', $datos) ?></th>
+                        <th><?= generarOrdenLink('nacionalidad', 'Nacionalidad', $datos) ?></th>  
+                        <th><?= generarOrdenLink('sexo', 'Sexo', $datos) ?></th>
+                        <th><?= generarOrdenLink('domicilio', 'Domicilio', $datos) ?></th>
+                        <th><?= generarOrdenLink('localidad', 'Localidad', $datos) ?></th>
+                        <th><?= generarOrdenLink('codigo_postal', 'Código Postal', $datos) ?></th>  
                 </tr>
             </thead>
             <tbody>
@@ -67,14 +107,20 @@ $filtrar = isset($_GET['filtrar']);
                             <td><?= htmlspecialchars($m['fecha_fallecimiento']) ?></td>
                             <td><?= htmlspecialchars($m['nombre']) ?></td>
                             <td><?= htmlspecialchars($m['apellido']) ?></td>
+                            <td><?= htmlspecialchars($m['edad']) ?></td>
                             <td><?= htmlspecialchars($m['dni']) ?></td>
-                            <td><?= htmlspecialchars($m['descripcion']) ?></td>
+                            <td><?= htmlspecialchars($m['deudo']) ?></td>
+                            <td><?= htmlspecialchars($m['estado_civil']) ?></td>
+                            <td><?= htmlspecialchars($m['nacionalidad'] ?? '') ?></td>
+                            <td><?= htmlspecialchars($m['sexo'] ?? '') ?></td>
                             <td><?= htmlspecialchars($m['domicilio']) ?></td>
+                            <td><?= htmlspecialchars($m['localidad']) ?></td>
+                            <td><?= htmlspecialchars($m['codigo_postal']) ?></td> 
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" class="text-center text-muted">No se encontraron resultados.</td>
+                        <td colspan="6" class="text-center text-muted">No se encontraron resultados</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -93,7 +139,7 @@ $filtrar = isset($_GET['filtrar']);
         <?php endif; ?>
     </div>
 
-    <!-- Pestania para deudores morosos-->
+    <!-- Pestaña para deudores morosos-->
     <div class="tab-pane fade" id="morosos" role="tabpanel">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="btn-group" role="group">
@@ -156,17 +202,19 @@ $filtrar = isset($_GET['filtrar']);
     </div>
 
     <!-- Pestaña de Parcelas Vendidas -->
-    <div class="tab-pane fade" id="vendidas" role="tabpanel">
-        <!-- Seleccionar tipo de filtro de búsqueda -->
-        <div class="mb-4">
-            <label for="tipo_filtro" class="form-label">Seleccionar filtro de búsqueda:</label>
-            <select id="tipo_filtro_parcelas" class="form-select w-auto" onchange="mostrarFiltroParcelas()">
-                <option value="">Seleccionar...</option>
-                <option value="lista_completa_parcelas">Listado de Parcelas</option>
-                <option value="filtro_fecha_parcelas">Por Fecha de Venta</option>
-                <option value="filtro_parcela_parcelas">Por Datos de Parcela</option>
-                <option value="filtro_titular_parcelas">Por Titular</option>
-            </select>
+    <div class="tab-content mt-4">
+        <!-- Pestaña para Padron de Difuntos -->
+        <div class="tab-pane fade" id="vendidas" role="tabpanel">
+            <!-- Seleccionar tipo de filtro de búsqueda -->
+            <div class="mb-4">
+                <label for="tipo_filtro" class="form-label">Seleccionar filtro de búsqueda:</label>
+                <select id="tipo_filtro_parcelas" class="form-select w-auto" onchange="mostrarFiltroParcelas()">
+                    <option value="">Seleccionar...</option>
+                    <option value="lista_completa_parcelas">Listado de Parcelas</option>
+                    <option value="filtro_fecha_parcelas">Por Fecha de Venta</option>
+                    <option value="filtro_parcela_parcelas">Por Datos de Parcela</option>
+                    <option value="filtro_titular_parcelas">Por Titular</option>
+                </select>
         </div>
 
         <!-- Filtro por Fecha -->
@@ -230,7 +278,7 @@ $filtrar = isset($_GET['filtrar']);
                     <label for="hilera" class="form-label">Hilera</label>
                     <input type="text" class="form-control" name="hilera">
                 </div>
-                
+
                 <div class="col-md-2 align-self-end">
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
                 </div>
@@ -240,7 +288,7 @@ $filtrar = isset($_GET['filtrar']);
         <!-- Filtro por Titular -->
         <div id="filtro_titular_parcelas" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
-                <div class="col-md-2">
+                <div class="col-md-2">        
                     <label for="letra_apellido_deudo" class="form-label">Apellido Titular (A-Z)</label>
                     <select name="letra_apellido_deudo" class="form-select">
                         <option value="">Seleccionar...</option>
@@ -255,13 +303,59 @@ $filtrar = isset($_GET['filtrar']);
             </form>
         </div>
 
-        <!-- Mostrar datos -->
-        <?php if (!empty($datos['parcelas_vendidas'])): ?>
-            <!-- Aquí iría el contenido de parcelas vendidas -->
+
+        <!-- Mostrar error solo si hay -->
+        <?php if ($error): ?>
+            <div class="alert alert-warning text-center"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+
+        <table class="table table-bordered table-striped">
+            <thead class="th a">
+                <tr>
+                    <th><?= generarOrdenLink('id_parcela', 'Parcela', $datos) ?></th>
+                    <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
+                    <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
+                    <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>    
+                    <th><?= generarOrdenLink('monto', 'Monto', $datos) ?></th>                             
+                    <th><?= generarOrdenLink('fecha_venta', 'Fecha de Venta', $datos) ?></th>    
+                    <th><?= generarOrdenLink('fecha_vencimiento', 'Fecha de Vencimiento', $datos) ?></th>  
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($datos['parcelas_vendidas'])): ?>
+                    <?php foreach ($datos['parcelas_vendidas'] as $venta): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($venta['id_parcela']) ?></td>
+                            <td><?= htmlspecialchars($venta['nombre']) ?></td>
+                            <td><?= htmlspecialchars($venta['apellido']) ?></td>
+                            <td><?= htmlspecialchars($venta['dni']) ?></td> 
+                            <td>$<?= number_format($venta['monto'], 2) ?></td>          
+                            <td><?= date('d/m/Y', strtotime($venta['fecha_venta'])) ?></td>  
+                            <td><?= date('d/m/Y', strtotime($venta['fecha_vencimiento'])) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No se encontraron resultados</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <?php if (!empty($datos['total_paginas']) && !empty($datos['pagina_actual']) && $datos['total_paginas'] > 1): ?>
+            <ul class="pagination">
+                <?php for ($i = 1; $i <= $datos['total_paginas']; $i++): ?>
+                    <li class="page-item <?= ($i == $datos['pagina_actual']) ? 'active' : '' ?>">
+                        <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $i])) ?>">
+                            <?= $i ?>
+                        </a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
         <?php endif; ?>
     </div>
      
-    <!-- Pestania de traslados -->
+    <!-- Pestaña de traslados -->
     <div class="tab-pane fade" id="traslados" role="tabpanel">
         <?php if (!empty($datos['difuntos_trasladados'])): ?>
             <table class="table table-bordered table-striped">
@@ -294,7 +388,7 @@ $filtrar = isset($_GET['filtrar']);
         <?php endif; ?>
     </div>
     
-    <!-- Pestania de resumen -->
+    <!-- Pestaña de resumen -->
     <div class="tab-pane fade" id="resumen" role="tabpanel">
         <div class="alert alert-info">
             Contenido de resumen --pendiente--
