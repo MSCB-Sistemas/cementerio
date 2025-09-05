@@ -125,9 +125,10 @@ if (isset($_SERVER['REQUEST_URI'])) {
     $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
     // Si la URI es inválida
-    if ($uri === null) {  $uri = '' }
+    if ($uri === null)   
+        $uri = '';
 
-} else {  $uri = '' }   // Si no existe REQUEST_URI
+} else {  $uri = ''; }   // Si no existe REQUEST_URI
 
 // Quitar base si corresponde
 if (!empty($base) && str_starts_with($uri, $base)) {
