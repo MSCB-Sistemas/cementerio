@@ -103,50 +103,42 @@ class EstadisticasModel extends Control {
 
     public function getParcelasVendidas($fecha_inicio, $fecha_fin)
     {
-        $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
-
         try {
-            $sql = "SELECT p.id_parcela, d.nombre, d.apellido, d.dni, pgo.total as monto, pgo.fecha_pago as fecha_venta, pgo.fecha_vencimiento
-                    FROM pago pgo
-                    INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
-                    INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
-                    WHERE DATE(pgo.fecha_pago) BETWEEN :inicio AND :fin
-                    ORDER BY pgo.fecha_pago DESC
-                ";
+            $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
 
-            $stmt = $this->db->prepare($sql);
+            $stmt = $this->db->prepare("SELECT p.id_parcela, p.numero_ubicacion, p.id_tipo_parcela, 
+                                                p.seccion, p.hilera, p.nivel, p.fraccion, p.id_orientacion,
+                                                d.nombre, d.apellido, d.dni,
+                                                pgo.total, pgo.fecha_pago, pgo.fecha_vencimiento
+                                            FROM pago pgo
+                                            INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
+                                            INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
+                                            WHERE fecha_pago BETWEEN :inicio AND :fin
+                                            ORDER BY pgo.fecha_pago DESC
+                                        ");
 
-            $stmt->bindValue(':inicio', $fecha_inicio);
-            $stmt->bindValue(':fin', $fecha_fin);
-            $stmt->execute();
-
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log("Error en getParcelasVendidas: " . $e->getMessage());
-            return [];
-        }
-    }
-
-    public function getTodasLasParcelasVendidas()
-    {
-        try {
-            $sql = "SELECT p.id_parcela, p.numero_ubicacion, p.id_tipo_parcela, 
-                   p.seccion, p.hilera, p.nivel, p.fraccion, p.id_orientacion,
-                   d.nombre as nombre_deudo, d.apellido as apellido_deudo, d.dni as dni_deudo,
-                   pgo.total as monto, pgo.fecha_pago as fecha_compra, pgo.fecha_vencimiento
-                    FROM pago pgo
-                    INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
-                    INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
-                    ORDER BY pgo.fecha_pago DESC
-                ";
-
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute();
+            $stmt->execute([':inicio' => $fecha_inicio, ':fin' => $fecha_fin]);
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Error en getTodasLasParcelasVendidas: " . $e->getMessage());
-            return [];
+            return 0;
+        }
+    }
+
+    public function getTotalParcelasVendidasEntreFechas($fecha_inicio, $fecha_fin) {
+        try {
+            $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM pago
+                                            WHERE fecha_pago BETWEEN :inicio AND :fin
+                                        ");
+            $stmt->execute([':inicio' => $fecha_inicio, ':fin' => $fecha_fin]);
+
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return isset($resultado['total']) ? (int)$resultado['total'] : 0;
+        } catch (PDOException $e) {
+            error_log("Error en getTotalParcelasVendidasEntreFechas: " . $e->getMessage());
+            return 0;
         }
     }
 

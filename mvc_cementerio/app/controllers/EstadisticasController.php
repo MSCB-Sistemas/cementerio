@@ -36,7 +36,11 @@ class EstadisticasController extends Control {
 
         $difuntos_trasladados = $this->model->getDifuntosTrasladados($sort_col, $sort_dir, $limite, $offset);
 
+        $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin);
+
         $total_defunciones = $this->model->getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin);
+        $total_parcelas_vendidas = $this->model->getTotalParcelasVendidasEntreFechas($fecha_inicio, $fecha_fin);
+        
         $total_paginas = max(1, ceil($total_defunciones / $limite));
 
         $filtros_parcela = [
@@ -51,9 +55,6 @@ class EstadisticasController extends Control {
 
         // $filtrarPorParcela = !empty(array_filter($filtros_parcela)); 
         // $filtrarPorFechaOLetra = !empty($fecha_inicio) || !empty($fecha_fin) || !empty($letra_apellido_deudo);
-
-        $parcelas_vendidas = $this->model->getParcelasVendidas($fecha_inicio, $fecha_fin);
-        $total_parcelas_vendidas = count($parcelas_vendidas);
 
         // if ($filtrarPorParcela) {
         //     $parcelas_vendidas = $this->model->getParcelasVendidasPorDatosParcela($filtros_parcela);
