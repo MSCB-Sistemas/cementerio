@@ -120,7 +120,7 @@ $filtrar = isset($_GET['filtrar']);
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" class="text-center text-muted">No se encontraron resultados</td>
+                        <td colspan="12" class="text-center text-muted">No se encontraron resultados</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -336,7 +336,7 @@ $filtrar = isset($_GET['filtrar']);
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" class="text-center text-muted">No se encontraron resultados</td>
+                        <td colspan="7" class="text-center text-muted">No se encontraron resultados</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

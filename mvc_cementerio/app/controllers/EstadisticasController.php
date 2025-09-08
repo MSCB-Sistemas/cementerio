@@ -10,7 +10,7 @@ class EstadisticasController extends Control {
 
     public function index()
     {
-        $fecha_inicio = !empty($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : date('Y-m-01');
+        $fecha_inicio = !empty($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : date('1900-01-01');
         $fecha_fin = !empty($_GET['fecha_fin']) ? $_GET['fecha_fin'] : date('Y-m-d');
         $letra_apellido_difunto = $_GET['letra_apellido_difunto'] ?? '';
         $letra_apellido_deudo = $_GET['letra_apellido_deudo'] ?? '';

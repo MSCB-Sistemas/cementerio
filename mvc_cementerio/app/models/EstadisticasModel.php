@@ -104,7 +104,7 @@ class EstadisticasModel extends Control {
         }   
     }
 
-     public function getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido = '') {
+    public function getParcelasVendidas($fecha_inicio, $fecha_fin, $letra_apellido = '') {
         $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
 
         try {
