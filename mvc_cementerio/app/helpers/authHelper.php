@@ -36,31 +36,39 @@ function userHasPermission(string $permiso): bool
  * Middleware: exige uno o varios permisos.
  * Si no cumple → redirige.
  */
-function requirePermission($permisos, ?string $fallback = null): void 
+function requirePermission(string|array $permisos, ?string $redirect = null): void 
 {
-    // Arma URLs seguras sin dobles barras
+    // Base y rutas seguras (sin //)
     $base     = rtrim(URL, '/');
     $loginUrl = $base . '/login';
-    if (!$fallback)
-        $fallback = $base . '/error-permisos';
+    if (!$redirect)
+        $redirect = $base . '/error-permisos';
 
-    // Si no hay sesión, a login
+    // 1) Si no hay sesión, a login
     if (!isLoggedIn()) {
         header('Location: ' . $loginUrl);
         exit;
     }
+    // 2) Check de permisos (string o array → OR lógico)
+    $ok = false;
 
-    // Acepta string o array → OR lógico (con que tenga uno, pasa)
-    $permisos  = (array)$permisos;
-
-    foreach ($permisos as $p) 
-        if (userHasPermission($p)) 
-            return; // ✅ tiene permiso, continuar
+    if (is_array($permisos)) {
+        // OR lógico: alcanza con uno
+        foreach ($permisos as $p) {
+            if (userHasPermission($p)) { 
+                $ok = true; 
+                break; 
+            }
+        }
+    } else {
+        $ok = userHasPermission($permisos);
+    }
     
-     // ❌ no tiene ninguno: bloqueamos
-    $_SESSION['flash_error'] = 'No tenés permisos para acceder.';
-    header('Location: '. $fallback); 
-    exit;
+    // 3) Sin permiso → redirigir a página de 403 “amigable”
+    if (!$ok) {
+        header('Location: ' . rtrim(URL,'/') . '/error-permisos');
+        exit;
+    }
 }
 
 /*

@@ -41,7 +41,9 @@ class UsuarioModel {
             return [];
         }
 
-        // Convertir activo: 1 → "Si", 0 → "No" usando if...else
+        // Convertir activo: 
+        // 1 → "Si", 
+        // 0 → "No" usando if...else
         foreach ($usuarios as &$usuario) {
             if ($usuario['activo'] === 1) {
                 $usuario['activo'] = "Si";
@@ -78,7 +80,7 @@ class UsuarioModel {
      * @param mixed $id_tipo_usuario
      * @return bool
      */
-    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $contrasenia, $id_tipo_usuario): bool
+    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $contrasenia, $id_tipo_usuario): int
     {
         $sql = "INSERT INTO usuarios (usuario, nombre, apellido, cargo, sector, telefono, email, contrasenia, id_tipo_usuario) 
                 VALUES (:usuario, :nombre, :apellido, :cargo, :sector, :telefono, :email, :contrasenia, :id_tipo_usuario)

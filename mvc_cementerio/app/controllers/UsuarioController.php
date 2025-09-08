@@ -88,9 +88,9 @@ class UsuarioController extends Control{
                 ]);
                 return;
             }
-            $contrasenia = password_hash($contrasenia, PASSWORD_DEFAULT);
-
-            if ($this->model->insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email,  $contrasenia, $tipoUsuario)) {
+            # $contrasenia = password_hash($contrasenia, PASSWORD_DEFAULT);
+            $idNuevo = $this->model->insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $contrasenia, $tipoUsuario);
+            if ($idNuevo > 0) {
                 header("Location: " . URL . "usuario");
                 exit;
             } else {
