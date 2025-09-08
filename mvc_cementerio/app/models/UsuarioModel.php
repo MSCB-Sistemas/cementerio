@@ -96,7 +96,7 @@ class UsuarioModel {
             "contrasenia" => password_hash($contrasenia, PASSWORD_DEFAULT),
             "id_tipo_usuario" => $id_tipo_usuario
         ];
-        return $stmt->execute($parametros);
+        $stmt->execute($parametros);
 
         AuditoriaHelper::log(
             $_SESSION['usuario_id'],    // usuario actual
@@ -105,7 +105,7 @@ class UsuarioModel {
             "Usuario Model",             // Modelo
             "Insert"                    // Accion
         );
-        return $this->db->lastInsertId();
+        return (int)$this->db->lastInsertId();
     }
 
     /** 

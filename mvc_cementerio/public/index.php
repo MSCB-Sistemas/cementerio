@@ -117,6 +117,8 @@ $routes = [
     'ubicacion/edit'    => ['UbicacionDifuntoController','edit',   'editar_ubicacion'],
     'ubicacion/update'  => ['UbicacionDifuntoController','update', 'editar_ubicacion'],
     'ubicacion/delete'  => ['UbicacionDifuntoController','delete', 'eliminar_ubicacion'],
+
+    'error-guards' => ['ErrorController', 'permisosError', '__public__'],
 ];
 // ====== Obtener ruta y metodo actual =====
 
