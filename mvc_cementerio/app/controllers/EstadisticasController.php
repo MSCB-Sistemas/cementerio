@@ -12,6 +12,8 @@ class EstadisticasController extends Control {
     {
         $fecha_inicio = !empty($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : date('1900-01-01');
         $fecha_fin = !empty($_GET['fecha_fin']) ? $_GET['fecha_fin'] : date('Y-m-d');
+        $fecha_inicio_traslado = $_GET['fecha_inicio_traslado'] ?? '1900-01-01';
+        $fecha_fin_traslado = $_GET['fecha_fin_traslado'] ?? date('Y-m-d');
         $letra_apellido_difunto = $_GET['letra_apellido_difunto'] ?? '';
         $letra_apellido_deudo = $_GET['letra_apellido_deudo'] ?? '';
 
@@ -68,6 +70,24 @@ class EstadisticasController extends Control {
             $total_parcelas_vendidas = count($this->model->getParcelasVendidas($fecha_inicio, $fecha_fin));
         }
 
+        $letra_apellido_traslado = $_GET['letra_apellido_traslado'] ?? '';
+        $fecha_inicio_traslado = !empty($_GET['fecha_inicio_traslado']) ? $_GET['fecha_inicio_traslado'] : date('1900-01-01');
+        $fecha_fin_traslado = !empty($_GET['fecha_fin_traslado']) ? $_GET['fecha_fin_traslado'] : date('Y-m-d');
+
+        $difuntos_trasladados = $this->model->getDifuntosTrasladados(
+            $fecha_inicio,
+            $fecha_fin,
+            $fecha_inicio_traslado,
+            $fecha_fin_traslado,
+            $letra_apellido_traslado,
+            $sort_col,
+            $sort_dir,
+            $limite,
+            $offset
+        );
+
+
+
         $datos = [
             'title' => 'Estadisticas',
             'movimientos' => $defunciones,
@@ -85,6 +105,9 @@ class EstadisticasController extends Control {
             'total_parcelas_vendidas' => $total_parcelas_vendidas,            
             'letra_apellido_difunto' => $letra_apellido_difunto,
             'letra_apellido_deudo' => $letra_apellido_deudo,
+            'letra_apellido_traslado' => $letra_apellido_traslado,
+            'fecha_inicio_traslado' => $fecha_inicio_traslado,
+            'fecha_fin_traslado' => $fecha_fin_traslado,
         ];
 
         $this->loadView("estadisticas", $datos);

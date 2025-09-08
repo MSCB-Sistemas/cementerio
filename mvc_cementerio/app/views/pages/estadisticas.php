@@ -24,7 +24,7 @@ $filtrar = isset($_GET['filtrar']);
             <button class="nav-link" id="vendidas-tab" data-bs-toggle="tab" data-bs-target="#vendidas" type="button" role="tab">Parcelas Vendidas</button>
         </li>
         <li class="nav-item">
-            <button class="nav-link" id="resumen-tab" data-bs-toggle="tab" data-bs-target="#resumen" type="button" role="tab">Resumen</button>
+            <button class="nav-link" id="estadisticas-tab" data-bs-toggle="tab" data-bs-target="#estadisticas" type="button" role="tab">Estadisticas</button>
         </li>
     </ul>
 
@@ -357,6 +357,75 @@ $filtrar = isset($_GET['filtrar']);
      
     <!-- Pestaña de traslados -->
     <div class="tab-pane fade" id="traslados" role="tabpanel">
+
+        <!-- Seleccionar tipo de filtro de búsqueda -->
+        <div class="mb-4">
+            <label for="tipo_filtro_traslados" class="form-label">Seleccionar filtro de búsqueda:</label>
+            <select id="tipo_filtro_traslados" class="form-select w-auto" onchange="mostrarFiltroTraslados()">
+                <option value="">Seleccionar...</option>
+                <option value="lista_completa_traslados">Listado completo</option>
+                <option value="filtro_alfabetico_traslados">Por Orden Alfabético</option>
+                <option value="filtro_defuncion_traslados">Por Fecha de Defunción</option>
+                <option value="filtro_traslado_traslados">Por Fecha de Traslado</option>
+            </select>
+        </div>
+
+        <!-- Filtro por apellido de difunto -->
+        <div id="filtro_alfabetico_traslados" class="filtro-box mb-4" style="display: none;">
+            <form method="GET" class="row g-3">
+                <div class="col-md-2">                    
+                    <label for="letra_apellido_traslado" class="form-label">Apellido (A-Z)</label>
+                    <select name="letra_apellido_traslado" class="form-select">
+                        <option value="">Seleccionar...</option>
+                        <?php foreach (range('A', 'Z') as $letra): ?>
+                            <option value="<?= $letra ?>" <?= (isset($datos['letra_apellido_traslado']) && $datos['letra_apellido_traslado'] === $letra) ? 'selected' : '' ?>><?= $letra ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </div>
+
+
+
+        <!-- Filtro por Fecha de Defunción -->
+        <div id="filtro_defuncion_traslados" class="filtro-box mb-4" style="display: none;">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <label for="fecha_defuncion_inicio" class="form-label">Desde</label>
+                    <input type="date" class="form-control" name="fecha_defuncion_inicio">
+                </div>
+                <div class="col-md-3">
+                    <label for="fecha_defuncion_fin" class="form-label">Hasta</label>
+                    <input type="date" class="form-control" name="fecha_defuncion_fin">
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Filtro por Fecha de Traslado -->
+        <div id="filtro_traslado_traslados" class="filtro-box mb-4" style="display: none;">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <label for="fecha_traslado_inicio" class="form-label">Desde</label>
+                    <input type="date" class="form-control" name="fecha_traslado_inicio">
+                </div>
+                <div class="col-md-3">
+                    <label for="fecha_traslado_fin" class="form-label">Hasta</label>
+                    <input type="date" class="form-control" name="fecha_traslado_fin">
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </div>
+
+
+          <!-- Tabla -->                    
         <?php if (!empty($datos['difuntos_trasladados'])): ?>
             <table class="table table-bordered table-striped">
                 <thead class="th a">
@@ -388,13 +457,57 @@ $filtrar = isset($_GET['filtrar']);
         <?php endif; ?>
     </div>
     
-    <!-- Pestaña de resumen -->
-    <div class="tab-pane fade" id="resumen" role="tabpanel">
-        <div class="alert alert-info">
-            Contenido de resumen --pendiente--
+    <!-- Pestaña de estadisticas -->
+    <div class="tab-pane fade" id="estadisticas" role="tabpanel">
+        <div class="row">
+            <!-- Registros Generales -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        Registros Generales
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Personas Registradas: <strong><?= $datos['total_personas'] ?? 0 ?></strong></li>
+                            <li class="list-group-item">Fosas: <strong><?= $datos['total_fosas'] ?? 0 ?></strong></li>
+                            <li class="list-group-item">Nichos: <strong><?= $datos['total_nichos'] ?? 0 ?></strong></li>
+                            <li class="list-group-item">Zonas Especiales: <strong><?= $datos['total_zonas_especiales'] ?? 0 ?></strong></li>
+                            <li class="list-group-item">Traslados: <strong><?= $datos['total_traslados'] ?? 0 ?></strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Defunciones Mensuales -->
+            <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                Defunciones Mensuales
+                            </div>
+                            <div class="card-body">
+                                <form method="GET" class="row g-3">
+                                    <div class="col-md-5">
+                                        <label for="fecha_inicio_def" class="form-label">Desde</label>
+                                        <input type="date" class="form-control" name="fecha_inicio_def" value="<?= htmlspecialchars($_GET['fecha_inicio_def'] ?? '') ?>">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="fecha_fin_def" class="form-label">Hasta</label>
+                                        <input type="date" class="form-control" name="fecha_fin_def" value="<?= htmlspecialchars($_GET['fecha_fin_def'] ?? '') ?>">
+                                    </div>
+                                    <div class="col-md-2 align-self-end">
+                                        <button type="submit" name="filtrar_defunciones" class="btn btn-success">Filtrar</button>
+                                    </div>
+                                </form>
+
+                                <?php if (isset($datos['total_defunciones'])): ?>
+                                    <hr>
+                                    <p class="text-center fs-5">Total de Defunciones: <strong><?= $datos['total_defunciones'] ?></strong></p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+            </div>
         </div>
     </div>
-</div>
+
 
 <?php
 // Función para generar links con ordenamiento (orden asc/desc)
@@ -580,8 +693,28 @@ function mostrarFiltroDifuntos() {
     }
 }
 
+function mostrarFiltroTraslados() {
+    const seleccion = document.getElementById('tipo_filtro_traslados').value;
+    const filtros = document.querySelectorAll('#traslados .filtro-box');
+
+    filtros.forEach(f => f.style.display = 'none');
+
+    if (seleccion === 'lista_completa_traslados') {
+        window.location.href = window.location.pathname + '?tipo_filtro_traslados=lista_completa_traslados&tab=traslados';
+        return;
+    }
+
+    if (!seleccion) return;
+
+    const filtroSeleccionado = document.getElementById(seleccion);
+    if (filtroSeleccionado) {
+        filtroSeleccionado.style.display = 'block';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     mostrarFiltroDifuntos(); 
     mostrarFiltroParcelas();
+    mostrarFiltroTraslados();
 });
 </script>
