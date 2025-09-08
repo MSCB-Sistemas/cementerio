@@ -100,6 +100,109 @@ class EstadisticasModel extends Control {
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);                                     
     }
+
+    public function getParcelasVendidas($fecha_inicio, $fecha_fin)
+    {
+        try {
+            $this->establecerFechasPorDefecto($fecha_inicio, $fecha_fin);
+
+            $stmt = $this->db->prepare("SELECT p.id_parcela, p.numero_ubicacion, p.id_tipo_parcela, 
+                                                p.seccion, p.hilera, p.nivel, p.fraccion, p.id_orientacion,
+                                                d.nombre, d.apellido, d.dni,
+                                                pgo.total, pgo.fecha_pago, pgo.fecha_vencimiento
+                                            FROM pago pgo
+                                            INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
+                                            INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
+                                            WHERE fecha_pago BETWEEN :inicio AND :fin
+                                            ORDER BY pgo.fecha_pago DESC
+                                        ");
+
+            $stmt->execute([':inicio' => $fecha_inicio, ':fin' => $fecha_fin]);
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getTodasLasParcelasVendidas: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public function getTotalParcelasVendidasEntreFechas($fecha_inicio, $fecha_fin) {
+        try {
+            $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM pago
+                                            WHERE fecha_pago BETWEEN :inicio AND :fin
+                                        ");
+            $stmt->execute([':inicio' => $fecha_inicio, ':fin' => $fecha_fin]);
+
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return isset($resultado['total']) ? (int)$resultado['total'] : 0;
+        } catch (PDOException $e) {
+            error_log("Error en getTotalParcelasVendidasEntreFechas: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public function getParcelasVendidasPorDatosParcela($filtros = [])
+    {
+        try {
+            $sql = "SELECT p.id_parcela, p.numero_ubicacion, p.id_tipo_parcela, 
+                   p.seccion, p.hilera, p.nivel, p.fraccion, p.id_orientacion,
+                   d.nombre, d.apellido, d.dni,
+                   pgo.total, pgo.fecha_pago, pgo.fecha_vencimiento
+                    FROM pago pgo
+                    INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
+                    INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
+                    WHERE 1=1
+                ";
+
+            $params = [];
+
+            if (!empty($filtros['tipo_parcela'])) {
+                $sql .= " AND p.id_tipo_parcela = :tipo_parcela";
+                $params[':tipo_parcela'] = $filtros['tipo_parcela'];
+            }
+
+            if (!empty($filtros['seccion'])) {
+                $sql .= " AND p.seccion = :seccion";
+                $params[':seccion'] = $filtros['seccion'];
+            }
+
+            if (!empty($filtros['fraccion'])) {
+                $sql .= " AND p.fraccion = :fraccion";
+                $params[':fraccion'] = $filtros['fraccion'];
+            }
+
+            if (!empty($filtros['nivel'])) {
+                $sql .= " AND p.nivel = :nivel";
+                $params[':nivel'] = $filtros['nivel'];
+            }
+
+            if (!empty($filtros['orientacion'])) {
+                $sql .= " AND p.orientacion = :orientacion";
+                $params[':orientacion'] = $filtros['orientacion'];
+            }
+
+            if (!empty($filtros['hilera'])) {
+                $sql .= " AND p.hilera = :hilera";
+                $params[':hilera'] = $filtros['hilera'];
+            }
+
+            if (!empty($filtros['numero_ubicacion'])) {
+                $sql .= " AND p.ubicacion = :ubicacion";
+                $params[':ubicacion'] = $filtros['ubicacion'];
+            }
+
+            $sql .= " ORDER BY pgo.fecha_pago DESC";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getParcelasVendidasPorDatosParcela: " . $e->getMessage());
+            return [];
+        }
+    }
 }
 
 ?>

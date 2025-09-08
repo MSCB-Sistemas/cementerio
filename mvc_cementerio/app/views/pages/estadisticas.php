@@ -21,6 +21,9 @@ $filtrar = isset($_GET['filtrar']);
             <button class="nav-link" id="traslados-tab" data-bs-toggle="tab" data-bs-target="#traslados" type="button" role="tab">Traslados de difuntos</button>
         </li>
         <li class="nav-item">
+            <button class="nav-link" id="vendidas-tab" data-bs-toggle="tab" data-bs-target="#vendidas" type="button" role="tab">Parcelas Vendidas</button>
+        </li>
+        <li class="nav-item">
             <button class="nav-link" id="resumen-tab" data-bs-toggle="tab" data-bs-target="#resumen" type="button" role="tab">Resumen</button>
         </li>
     </ul>
@@ -40,7 +43,7 @@ $filtrar = isset($_GET['filtrar']);
             </div>
 
             <div class="col-auto align-self-end">
-                <button type="submit" name="filtrar" class="btn btn-primary">Filtrar</button>
+                <button type="submit" name="filtrar" class="btn btn-primary">Buscar</button>
             </div>
         </form>
 
@@ -61,8 +64,8 @@ $filtrar = isset($_GET['filtrar']);
                 </tr>
             </thead>
             <tbody>
-                <?php if (!empty($datos['movimientos'])): ?>
-                    <?php foreach ($datos['movimientos'] as $m): ?>
+                <?php if (!empty($datos['datos_difuntos'])): ?>
+                    <?php foreach ($datos['datos_difuntos'] as $m): ?>
                         <tr>
                             <td><?= htmlspecialchars($m['fecha_fallecimiento']) ?></td>
                             <td><?= htmlspecialchars($m['nombre']) ?></td>
@@ -106,24 +109,27 @@ $filtrar = isset($_GET['filtrar']);
             </div>
         </div>
 
-        <?php if (!empty($datos['deudores_morosos'])): ?>
-            <table class="table table-bordered table-striped" id="tabla-morosos">
-                <thead class="th a">
-                    <tr>
-                        <th><?= generarOrdenLink('Parcela', 'Parcela', $datos) ?></th>
-                        <th><?= generarOrdenLink('DNI', 'DNI', $datos) ?></th>
-                        <th><?= generarOrdenLink('Nombre', 'Nombre', $datos) ?></th>
-                        <th><?= generarOrdenLink('Apellido', 'Apellido', $datos) ?></th>
-                        <th><?= generarOrdenLink('Fecha de vencimiento', 'Fecha vencimiento', $datos) ?></th>
-                        <th><?= generarOrdenLink('Monto', 'Total', $datos) ?></th>
-                        <th><?= generarOrdenLink('Dias de Mora', 'Dia/s de mora', $datos) ?></th>
-                        <th><?= generarOrdenLink('Acciones', 'Acciones', $datos)?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($datos['deudores_morosos'] as $index => $moroso):
-                        $estado = 'activo'; 
-                    ?>
+        <!-- Mostrar error solo si hay -->
+        <?php if ($error): ?>
+            <div class="alert alert-warning text-center"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+
+        <table class="table table-bordered table-striped" id="tabla-morosos">
+            <thead class="th a">
+                <tr>
+                    <th><?= generarOrdenLink('Parcela', 'Parcela', $datos) ?></th>
+                    <th><?= generarOrdenLink('DNI', 'DNI', $datos) ?></th>
+                    <th><?= generarOrdenLink('Nombre', 'Nombre', $datos) ?></th>
+                    <th><?= generarOrdenLink('Apellido', 'Apellido', $datos) ?></th>
+                    <th><?= generarOrdenLink('Fecha de vencimiento', 'Fecha vencimiento', $datos) ?></th>
+                    <th><?= generarOrdenLink('Monto', 'Total', $datos) ?></th>
+                    <th><?= generarOrdenLink('Dias de Mora', 'Dia/s de mora', $datos) ?></th>
+                    <th><?= generarOrdenLink('Acciones', 'Acciones', $datos)?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($datos['deudores_morosos'])): ?>
+                    <?php foreach ($datos['deudores_morosos'] as $index => $moroso): $estado = 'activo'; ?>
                         <tr class="fila-moroso" data-estado="<?= $estado ?>">
                             <td><?= htmlspecialchars($moroso['id_parcela']) ?></td>
                             <td><?= htmlspecialchars($moroso['dni']) ?></td>
@@ -145,14 +151,77 @@ $filtrar = isset($_GET['filtrar']);
                             </td>
                         </tr>
                     <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No se encontraron resultados.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <?php if (!empty($datos['total_paginas']) && ($datos['total_paginas']) > 1): ?>
+            <ul class="pagination">
+                <?php for ($i = 1; $i <= $datos['total_paginas']; $i++): ?>
+                    <li class="page-item <?= ($i == $datos['pagina_actual']) ? 'active' : '' ?>">
+                        <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $i])) ?>">
+                            <?= $i ?>
+                        </a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
+
+    <!-- Pestania de traslados -->
+    <div class="tab-pane fade" id="traslados" role="tabpanel">
+
+        <!-- Mostrar error solo si hay -->
+        <?php if ($error): ?>
+            <div class="alert alert-warning text-center"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+        
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="th a">
+                    <tr>
+                    <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
+                    <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
+                    <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>
+                    <th><?= generarOrdenLink('fecha_fallecimiento', 'Fecha de defunción', $datos) ?></th>
+                    <th><?= generarOrdenLink('fecha_retiro', 'Fecha de traslado', $datos) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($datos['difuntos_trasladados'])): ?>
+                        <?php foreach ($datos['difuntos_trasladados'] as $difunto_trasladado): ?>
+                            <tr>
+                            <td><?= htmlspecialchars($difunto_trasladado['nombre']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['apellido']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['dni']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['fecha_fallecimiento']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['fecha_retiro']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="10" class="text-center text-muted">No se encontraron resultados.</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
-        <?php else: ?>
-            <div class="text-center py-4">
-                <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
-                <p class="text-muted">No hay deudores morosos</p>
-            </div>
-        <?php endif; ?>
+
+            <?php if (!empty($datos['total_paginas_parcelas']) && $datos['total_paginas_parcelas'] > 1): ?>
+                <ul class="pagination">
+                    <?php for ($i = 1; $i <= $datos['total_paginas']; $i++): ?>
+                        <li class="page-item <?= ($i == ($datos['pagina_actual_parcelas'] ?? 1)) ? 'active' : '' ?>">
+                            <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina_parcelas' => $i])) ?>">
+                                <?= $i ?>
+                            </a>
+                        </li>
+                    <?php endfor; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
     </div>
 
     <!-- Pestaña de Parcelas Vendidas -->
@@ -162,10 +231,9 @@ $filtrar = isset($_GET['filtrar']);
             <label for="tipo_filtro" class="form-label">Seleccionar filtro de búsqueda:</label>
             <select id="tipo_filtro_parcelas" class="form-select w-auto" onchange="mostrarFiltroParcelas()">
                 <option value="">Seleccionar...</option>
-                <option value="lista_completa_parcelas">Listado de Parcelas</option>
-                <option value="filtro_fecha_parcelas">Por Fecha de Venta</option>
-                <option value="filtro_parcela_parcelas">Por Datos de Parcela</option>
-                <option value="filtro_titular_parcelas">Por Titular</option>
+                <option value="filtro_fecha_parcelas">Fecha de Venta</option>
+                <option value="filtro_parcela_parcelas">NO FUNCIONA - ARREGLAR - Datos de Parcela</option>
+                <option value="filtro_titular_parcelas">NO FUNCIONA - ARREGLAR - Titular</option>
             </select>
         </div>
 
@@ -187,11 +255,11 @@ $filtrar = isset($_GET['filtrar']);
         </div>
 
         <!-- Filtro por Datos de Parcela -->
-        <div id="filtro_parcela_parcelas" class="filtro-box mb-4" style="display: none;">
+        <!-- <div id="filtro_parcela_parcelas" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-2">
                     <label for="ubicacion" class="form-label">Nº de Ubicación</label>
-                    <input type="text" class="form-control" name="ubicacion">
+                    <input type="text" class="form-control" name="ubicacion" value="<?= htmlspecialchars($_GET['ubicacion'] ?? '') ?>">
                 </div>
                 <div class="col-md-2">
                     <label for="tipo_parcela" class="form-label">Tipo</label>
@@ -235,10 +303,10 @@ $filtrar = isset($_GET['filtrar']);
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
                 </div>
             </form>
-        </div>
+        </div> -->
 
         <!-- Filtro por Titular -->
-        <div id="filtro_titular_parcelas" class="filtro-box mb-4" style="display: none;">
+        <!-- <div id="filtro_titular_parcelas" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-2">
                     <label for="letra_apellido_deudo" class="form-label">Apellido Titular (A-Z)</label>
@@ -253,44 +321,78 @@ $filtrar = isset($_GET['filtrar']);
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
                 </div>
             </form>
-        </div>
+        </div> -->
+
+        <!-- Mostrar error solo si hay -->
+        <?php if ($error): ?>
+            <div class="alert alert-warning text-center"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
 
         <!-- Mostrar datos -->
-        <?php if (!empty($datos['parcelas_vendidas'])): ?>
-            <!-- Aquí iría el contenido de parcelas vendidas -->
-        <?php endif; ?>
-    </div>
-     
-    <!-- Pestania de traslados -->
-    <div class="tab-pane fade" id="traslados" role="tabpanel">
-        <?php if (!empty($datos['difuntos_trasladados'])): ?>
+        <div class="table-responsive">
             <table class="table table-bordered table-striped">
                 <thead class="th a">
                     <tr>
-                    <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
-                    <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
-                    <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>
-                    <th><?= generarOrdenLink('fecha_fallecimiento', 'Fecha de defunción', $datos) ?></th>
-                    <th><?= generarOrdenLink('fecha_retiro', 'Fecha de traslado', $datos) ?></th>
+                        <th><?= generarOrdenLink('numero_ubicacion', 'N° Ubicación', $datos) ?></th>
+                        <th><?= generarOrdenLink('tipo_parcela', 'Tipo', $datos) ?></th>
+                        <th><?= generarOrdenLink('nombre', 'Titular', $datos) ?></th>
+                        <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
+                        <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>
+                        <th><?= generarOrdenLink('seccion', 'Sección', $datos) ?></th>
+                        <th><?= generarOrdenLink('hilera', 'Hilera', $datos) ?></th>
+                        <th><?= generarOrdenLink('nivel', 'Nivel', $datos) ?></th>
+                        <th><?= generarOrdenLink('fecha_pago', 'Fecha Venta', $datos) ?></th>
+                        <th><?= generarOrdenLink('fecha_vencimiento', 'Fecha Vencimiento', $datos) ?></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($datos['difuntos_trasladados'] as $difunto_trasladado): ?>
+                    <?php if (!empty($datos['parcelas_vendidas'])): ?>
+                        <?php foreach ($datos['parcelas_vendidas'] as $parcela): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($parcela['numero_ubicacion']) ?></td>
+                                <td>
+                                    <?php 
+                                    $tipo = '';
+                                    switch ($parcela['id_tipo_parcela']) {
+                                        case 1: $tipo = 'Nicho'; break;
+                                        case 2: $tipo = 'Fosa'; break;
+                                        case 3: $tipo = 'Panteón'; break;
+                                        case 4: $tipo = 'Osario'; break;
+                                        case 5: $tipo = 'Especial'; break;
+                                        default: $tipo = 'Desconocido';
+                                    }
+                                    echo $tipo;
+                                    ?>
+                                </td>
+                                <td><?= htmlspecialchars($parcela['nombre']) ?></td>
+                                <td><?= htmlspecialchars($parcela['apellido']) ?></td>
+                                <td><?= htmlspecialchars($parcela['dni']) ?></td>
+                                <td><?= htmlspecialchars($parcela['seccion']) ?></td>
+                                <td><?= htmlspecialchars($parcela['hilera']) ?></td>
+                                <td><?= htmlspecialchars($parcela['nivel']) ?></td>
+                                <td><?= !empty($parcela['fecha_pago']) ? date('d/m/Y', strtotime($parcela['fecha_pago'])) : 'Sin fecha' ?></td>
+                                <td><?= !empty($parcela['fecha_vencimiento']) ? date('d/m/Y', strtotime($parcela['fecha_vencimiento'])) : 'Sin fecha' ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <tr>
-                        <td><?= htmlspecialchars($difunto_trasladado['nombre']) ?></td>
-                            <td><?= htmlspecialchars($difunto_trasladado['apellido']) ?></td>
-                            <td><?= htmlspecialchars($difunto_trasladado['dni']) ?></td>
-                            <td><?= htmlspecialchars($difunto_trasladado['fecha_fallecimiento']) ?></td>
-                            <td><?= htmlspecialchars($difunto_trasladado['fecha_retiro']) ?></td>
+                            <td colspan="10" class="text-center text-muted">No se encontraron resultados.</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
-        <?php else: ?>
-            <div class="text-center py-4">
-                <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
-                <p class="text-muted">No hay difuntos trasladados</p>
-            </div>
+        </div>
+
+        <?php if (!empty($datos['total_paginas_parcelas']) && $datos['total_paginas_parcelas'] > 1): ?>
+            <ul class="pagination">
+                <?php for ($i = 1; $i <= $datos['total_paginas_parcelas']; $i++): ?>
+                    <li class="page-item <?= ($i == ($datos['pagina_actual_parcelas'] ?? 1)) ? 'active' : '' ?>">
+                        <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina_parcelas' => $i])) ?>">
+                            <?= $i ?>
+                        </a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
         <?php endif; ?>
     </div>
     
@@ -338,7 +440,6 @@ function generarOrdenLink($columna, $etiqueta, $datos) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Restaurar el tab activo guardado
     const lastTab = localStorage.getItem('activeTab');
     if (lastTab) {
         const tabElement = document.querySelector(`[data-bs-target="${lastTab}"]`);
@@ -347,78 +448,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Escuchar cambio de pestaña y guardarlo
     const tabLinks = document.querySelectorAll('[data-bs-toggle="tab"]');
     tabLinks.forEach(tab => {
         tab.addEventListener('shown.bs.tab', function(e) {
             const activeTab = e.target.getAttribute('data-bs-target');
             localStorage.setItem('activeTab', activeTab);
         });
-    });
-});
-
-const botonesEstado = document.querySelectorAll('.btn-toggle-estado');
-botonesEstado.forEach(boton => {
-    boton.addEventListener('click', function() {
-        const idDeuda = this.getAttribute('data-id');
-        const estadoActual = this.getAttribute('data-estado-actual');
-        const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
-
-        // Aca va un ajax.
-        console.log('Cambiando estado de deuda ' + idDeuda + ' de ' + estadoActual + ' a ' + nuevoEstado);
-
-        // Si se elige "lista_completa", recarga sin parámetros
-        if (seleccion === 'lista_completa') {
-            window.location.href = window.location.pathname + '?tab=tablas';
-            return;
-        }
-
-        if (!seleccion) return; // No mostrar nada si no hay selección
-        
-        setTimeout(() => {
-            this.setAttribute('data-estado-actual', nuevoEstado);
-
-            const fila = this.closest('.fila-moroso');
-
-            if (nuevoEstado === 'activo') {
-                this.classList.remove('btn-success');
-                this.classList.add('btn-warning');
-                this.innerHTML = '<i class="fas fa-toggle-off"></i> Desactivar';
-
-                const badge = fila.querySelector('.estado-badge');
-                if (badge) {
-                    badge.classList.remove('bg-secondary');
-                    badge.classList.add('bg-success');
-                    badge.textContent = 'Activo';
-                }
-
-                fila.setAttribute('data-estado', 'activo');
-
-                if (document.getElementById('ver-activos').classList.contains('active')) {
-                    fila.style.display = '';
-                }
-
-            } else {
-                this.classList.remove('btn-warning');
-                this.classList.add('btn-success');
-                this.innerHTML = '<i class="fas fa-toggle-off"></i> Activar';
-
-                const badge = fila.querySelector('.estado-badge');
-                if (badge) {
-                    badge.classList.remove('bg-success');
-                    badge.classList.add('bg-secondary');
-                    badge.textContent = 'Inactivo';
-                }
-
-                fila.setAttribute('data-estado', 'inactivo');
-
-                if (document.getElementById('ver-activos').classList.contains('active')) {
-                    fila.style.display = 'none';
-                }
-            }
-
-            alert("Deuda " + (nuevoEstado === 'activo' ? 'activada' : 'desactivada') + " correctamente");
-        }, 300);
     });
 });
 
@@ -456,25 +491,6 @@ function mostrarFiltroParcelas() {
 
     if (seleccion === 'lista_completa_parcelas') {
         window.location.href = window.location.pathname + '?tipo_filtro_parcelas=lista_completa_parcelas&tab=vendidas';
-        return;
-    }
-
-    if (!seleccion) return;
-
-    const filtroSeleccionado = document.getElementById(seleccion);
-    if (filtroSeleccionado) {
-        filtroSeleccionado.style.display = 'block';
-    }
-}
-
-function mostrarFiltroDifuntos() {
-    const seleccion = document.getElementById('tipo_filtro').value;
-    const filtros = document.querySelectorAll('#tablas .filtro-box');
-
-    filtros.forEach(f => f.style.display = 'none');
-
-    if (seleccion === 'lista_completa') {
-        window.location.href = window.location.pathname + '?tab=tablas';
         return;
     }
 
