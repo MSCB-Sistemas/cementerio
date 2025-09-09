@@ -26,6 +26,10 @@ $routes = [
     'home' => ['homeController', 'index'],
     'estadisticas' => ['EstadisticasController', 'index'],
 
+    // URL's traslados.
+    'traslados' => ['TrasladoController', 'index'],
+    'traslados/save' => ['TrasladoController', 'save'],
+
     // URL's difunto.
     'difunto' => ['DifuntoController', 'index'],
     'difunto/create' => ['DifuntoController', 'create'],
