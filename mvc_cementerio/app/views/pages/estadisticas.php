@@ -468,10 +468,8 @@ $filtrar = isset($_GET['filtrar']);
                     </div>
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Personas Registradas: <strong><?= $datos['total_personas'] ?? 0 ?></strong></li>
-                            <li class="list-group-item">Fosas: <strong><?= $datos['total_fosas'] ?? 0 ?></strong></li>
-                            <li class="list-group-item">Nichos: <strong><?= $datos['total_nichos'] ?? 0 ?></strong></li>
-                            <li class="list-group-item">Zonas Especiales: <strong><?= $datos['total_zonas_especiales'] ?? 0 ?></strong></li>
+                            <li class="list-group-item">Personas Fallecidas Registradas: <strong><?= $datos['total_difuntos'] ?? 0 ?></strong></li>
+                            <li class="list-group-item">Parcelas Ocupadas: <strong><?= $datos['total_parcelas'] ?? 0 ?></strong></li>
                             <li class="list-group-item">Traslados: <strong><?= $datos['total_traslados'] ?? 0 ?></strong></li>
                         </ul>
                     </div>
@@ -481,7 +479,7 @@ $filtrar = isset($_GET['filtrar']);
             <div class="col-md-6 mb-4">
                         <div class="card">
                             <div class="card-header bg-success text-white">
-                                Defunciones Mensuales
+                                Defunciones Mensuales 
                             </div>
                             <div class="card-body">
                                 <form method="GET" class="row g-3">
