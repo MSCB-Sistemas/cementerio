@@ -21,7 +21,7 @@ function currentUser(): ?array
 function userHasPermission(string $permiso): bool 
 {
     if (!isLoggedIn())  { return false }
-    
+
     if(isset($_SESSION['usuario_permisos'])){
         $permisos = $_SESSION['usuario_permisos'];
     }else{
@@ -31,8 +31,8 @@ function userHasPermission(string $permiso): bool
 }
 
 /**
- * Middleware: exige uno o varios permisos.
- * Si no cumple → redirige.
+ * Middleware: exige uno o varios permisos (OR lógico).
+ * Si no cumple → redirige (por defecto /error-permisos).
  */
 function requirePermission(string|array $permisos, ?string $redirect = null): void 
 {
@@ -42,29 +42,20 @@ function requirePermission(string|array $permisos, ?string $redirect = null): vo
     if (!$redirect)
         $redirect = $base . '/error-permisos';
 
-    // 1) Si no hay sesión, a login
+    // 1) Si no hay sesión → login
     if (!isLoggedIn()) {
-        header('Location: ' . $loginUrl);
+        //Enviar código de estado 303 en la redirección (post-login / post-checks).
+        header('Location: ' . $loginUrl, true, 303); 
         exit;
     }
     // 2) Check de permisos (string o array → OR lógico)
-    $ok = false;
-
-    if (is_array($permisos)) {
-        // OR lógico: alcanza con uno
-        foreach ($permisos as $p) {
-            if (userHasPermission($p)) { 
-                $ok = true; 
-                break; 
-            }
+    foreach ((array)$permisos as $p) {
+        if (userHasPermission($p)) {
+            return; // autorizado → continuar con el flujo normal
         }
-    } else {
-        $ok = userHasPermission($permisos);
     }
     
-    // 3) Sin permiso → redirigir a página de 403 “amigable”
-    if (!$ok) {
-        header('Location: ' . rtrim(URL,'/') . '/error-permisos');
-        exit;
-    }
+    // 3) Sin permiso → redirigir a página “amigable”
+    header('Location: ' . $fallback, true, 303);
+    exit;
 }
