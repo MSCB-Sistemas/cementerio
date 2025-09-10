@@ -49,7 +49,7 @@ class AuthController extends Control
                 $_SESSION['usuario_tipo'] = (int)$usuario['id_tipo_usuario'];
                 
                 // Permisos del rol (desde BD) → array de strings
-                $_SESSION['usuario_permisos'] = $this->permisoModel->getPermisosPorRol($usuario['id_tipo_usuario']);
+                $_SESSION['usuario_permisos'] = $this->permisoModel->getPermisosPorRol((int)$usuario['id_tipo_usuario']);
 
                 // Remember-me (opcional)
                 if ($remember) {

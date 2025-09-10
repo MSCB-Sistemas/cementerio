@@ -45,7 +45,7 @@ class UsuarioModel {
         // 1 → "Si", 
         // 0 → "No" usando if...else
         foreach ($usuarios as &$usuario) {
-            if ($usuario['activo'] === 1) {
+            if ((int)$usuario['activo'] === 1) {
                 $usuario['activo'] = "Si";
             } else {
                 $usuario['activo'] = "No";

@@ -162,7 +162,7 @@ class UsuarioController extends Control{
                     'id_tipo_usuario' => $tipoUsuario
                 ];
                 $tipos = $this->tipoUsuariosModel->getAllTiposUsuarios();
-                $this->loadView('usuario/UsuarioForm', [
+                $this->loadView('usuarios/UsuarioForm', [
                     'title' => 'Editar usuario',
                     'action' => URL . 'usuario/update/' . $id,
                     'values' => $usuario,
