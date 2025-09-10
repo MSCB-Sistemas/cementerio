@@ -56,6 +56,6 @@ function requirePermission(string|array $permisos, ?string $redirect = null): vo
     }
     
     // 3) Sin permiso → redirigir a página “amigable”
-    header('Location: ' . $fallback, true, 303);
+    header('Location: ' . $redirect, true, 303);
     exit;
 }

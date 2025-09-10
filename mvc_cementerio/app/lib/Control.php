@@ -17,14 +17,30 @@ class Control
     protected function loadView(string $view, array $datos = [], string $layout = 'main')
     {
         $viewFile = APP . '/views/pages/' . $view . '.php';
-
         if (!file_exists($viewFile)) { die($viewFile); }
+
+        // FLASH de error o confirmacion de algún middleware/controlador.
+        if (isset($_SESSION['flash_error'])) {
+            $datos['flash_error'] = $_SESSION['flash_error'];
+        // los borra en la sesión así no aparece en el proximo request
+            unset($_SESSION['flash_error']);
+        } else {
+            // La vista lo recibe solo en la primera carga
+            $datos['flash_error'] = null;
+        }
+        
+        if (isset($_SESSION['flash_ok'])) {
+            $datos['flash_ok'] = $_SESSION['flash_ok'];
+            unset($_SESSION['flash_ok']);
+        } else {
+            $datos['flash_ok'] = null;
+        }
 
         // Variables disponibles en la vista
         extract($datos, EXTR_SKIP);
 
         if ($layout) {
-            $viewPath = $viewFile;  // queda disponible para el layout
+            $viewPath = $viewFile;  // el layout hace require de este path
             require_once APP . "/views/layout/{$layout}.php";
         } else {
             require_once $viewFile;
@@ -61,6 +77,21 @@ class Control
         return $permisos;
     }
 
+    protected function can(string $permiso): bool 
+    {   
+        if (isset($_SESSION['usuario_permisos'])) {
+            $perms = $_SESSION['usuario_permisos'];
+        } else {
+            $perms = [];
+        }
+        return in_array($permiso, $perms, true);
+    }
+
+    protected function requirePermissionInController(string|array $permisos, ?string $redirect = null): void 
+    {
+        requirePermission($permisos, $redirect); // reusa el helper global
+    }
+
     /** ===== Remember-me (token en claro) ===== */    
     // No abre sesión (ya está abierta en init.php). No redirige.
     protected function refreshRememberMeIfNeeded(): void
@@ -68,23 +99,23 @@ class Control
         if ($this->isLogin()) return;
 
         if (isset($_COOKIE["remember_token"])){
-            $token = $_COOKIE["remember_token"];
+            $rawToken = $_COOKIE["remember_token"];
         }else{
-            $token = null;
+            $rawToken = null;
         }
 
         if (isset($_COOKIE["id_usuario"])){
-            $usuarioId = (int)$_COOKIE["remember_token"];
+            $usuarioId = (int)$_COOKIE["id_usuario"];
         }else{
             $usuarioId = null;
         }
 
-        if (!$token || !$usuarioId) return;
+        if (!$rawToken || !$usuarioId) return;
 
         // Validar contra BD (token en claro)
         $tokenModel = $this->loadModel("RememberTokensModel");
         $usuarioData = $tokenModel->validateRememberMeToken((int)$usuarioId, $token);
-        if(!usuarioData) return;
+        if(!$usuarioData) return;   // token inválido → no se auto-loguea
 
         // Rehidratar sesión (pone TODAS las claves que usa toda tu app)
         $_SESSION["usuario_id"] = $usuarioData["id_usuario"];
@@ -100,17 +131,16 @@ class Control
         $this->createRememberMeToken($_SESSION['usuario_id']);
     }
 
-    protected function createRememberMeToken($id_usuario): void 
+    protected function createRememberMeToken(int $id_usuario): void 
     {
-        $token = bin2hex(random_bytes(32));
+        $rawToken = bin2hex(random_bytes(32));
         $expiry = time() + 60 * 60 * 24 * 30;   //30 días
 
+        // Guarda token en BD
         $tokenModel = $this->loadModel("RememberTokensModel");
         $tokenModel->insertRememberMeToken($id_usuario, $token, $expiry);
 
-        $secure = isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] === "on";
-        //setcookie("remember_token", $token, $expiry,'/', '', $secure, true);
-        //setcookie("id_usuario", (string)$id_usuario, $expiry,'/', '', $secure, true);
+        $secure = (!empty($_SERVER['HTTPS']) && $_SERVER["HTTPS"] === "on");
 
         // Cookies modernas (sin redireccionar)
         setcookie('remember_token', $rawToken, [
@@ -132,12 +162,12 @@ class Control
         ]);
     }
 
-    protected function requireLogin(string $fallback = URL . 'login'): void
+    protected function requireLogin(string $redirect = URL . 'login'): void
     {
         // NO session_start() acá: la sesión ya se abrió en init.php
         if (!($this->isLogin())) {
             $_SESSION['flash_error'] = 'Debés iniciar sesión.';
-            header('Location: ' . rtrim($fallback, '/'));
+            header('Location: ' . rtrim($redirect, '/'));
             exit;
         }
     }

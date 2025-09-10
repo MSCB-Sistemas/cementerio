@@ -54,7 +54,8 @@ class RememberTokensModel {
      * @param string $token Token a validar.
      * @return array|false Arreglo asociativo con el ID del usuario si es válido, false en caso contrario.
      */
-    public function validateRememberMeToken($id_usuario, $token) {
+    public function validateRememberMeToken(int $id_usuario, string $token): ?array 
+    {
         $stmt = $this->db->prepare("SELECT u.*
             FROM remember_tokens rt
             INNER JOIN usuarios u ON u.id_usuario = rt.id_usuario
