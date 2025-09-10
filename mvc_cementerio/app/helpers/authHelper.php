@@ -1,29 +1,27 @@
 <?php
-function isLoggedIn(){
+function isLoggedIn():bool
+{
     // Solo revisa si hay usuario en la sesión
-    return isset($_SESSION['usuario_id']);
+    return !empty($_SESSION['usuario_id']);
 }
 
 function currentUser(): ?array 
 {
     // Devuelve el array completo del usuario (id, nombre, rol, permisos)
-    if (!isset($_SESSION['usuario_id'])) 
-        return null;
-
+    if (!isLoggedIn()) { return null }
     return [
         'id'        => (int)($_SESSION['usuario_id']),
         'nombre'    => $_SESSION['usuario_nombre'],
         'apellido'  => $_SESSION['usuario_apellido'],
-        'rol'       => $_SESSION['usuario_tipo'],
+        'rol'       => (int)$_SESSION['usuario_tipo'],
         'permisos'  => $_SESSION['usuario_permisos'],
     ];
 }
 
 function userHasPermission(string $permiso): bool 
 {
-    if (!isLoggedIn())
-        return false;
-
+    if (!isLoggedIn())  { return false }
+    
     if(isset($_SESSION['usuario_permisos'])){
         $permisos = $_SESSION['usuario_permisos'];
     }else{
@@ -70,19 +68,3 @@ function requirePermission(string|array $permisos, ?string $redirect = null): vo
         exit;
     }
 }
-
-/*
-function requireLogin()
-{
-    session_start();
-    if (!isset($_SESSION['usuario_id'])) {
-        header('Location: ' . URL . 'login');
-        exit;
-    }
-}*/
-/*
-function isLoggedInAdmin()
-{
-    return isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 1;
-}
-?>*/

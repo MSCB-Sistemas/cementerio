@@ -183,6 +183,7 @@ if (!isset($routes[$ruta])) {
 // ====== Guards (auth + guards) ======
 // construyo base URL para redirecciones (si tenés URL constante, úsala)
 $baseUrl = rtrim(URL, '/'); // viene de config.php
+$fallbackError = $baseUrl . '/error-permisos';
 
 if ($guard === '__login__') {
     if (!isLoggedIn()) {
@@ -191,10 +192,10 @@ if ($guard === '__login__') {
     }
 } elseif (is_string($guard) && $guard !== '__public__') {
     // String simple de guard
-    requirePermission($guard, $baseUrl . '/error-guards');
+    requirePermission($guard, $fallbackError);
 } elseif (is_array($guard)) {
     // Array de guards (OR lógico en tu helper)
-    requirePermission($guard, $baseUrl . '/error-guards');
+    requirePermission($guard, $fallbackError);
 }
 
 // 3️⃣​​​​​​​​​. Armar la ruta al archivo del controlador
