@@ -79,17 +79,19 @@ class Control
 
     protected function can(string $permiso): bool 
     {   
-        if (isset($_SESSION['usuario_permisos'])) {
-            $perms = $_SESSION['usuario_permisos'];
-        } else {
-            $perms = [];
-        }
-        return in_array($permiso, $perms, true);
+        return in_array($permiso, $this->permisos(), true);
     }
 
-    protected function requirePermissionInController(string|array $permisos, ?string $redirect = null): void 
+    protected function requirePermissionInController(string|array $permisos, ?string $fallback = null): void 
     {
-        requirePermission($permisos, $redirect); // reusa el helper global
+        requirePermission($permisos, $fallback); // reusa el helper global
+    }
+
+    protected function fallback$fallback(string $path): void
+    {
+        $base = rtrim(URL, '/');
+        header('Location: ' . $base . '/' . ltrim($path, '/'));
+        exit;
     }
 
     /** ===== Remember-me (token en claro) ===== */    
@@ -162,12 +164,12 @@ class Control
         ]);
     }
 
-    protected function requireLogin(string $redirect = URL . 'login'): void
+    protected function requireLogin(string $fallback = URL . 'login'): void
     {
         // NO session_start() acá: la sesión ya se abrió en init.php
         if (!($this->isLogin())) {
             $_SESSION['flash_error'] = 'Debés iniciar sesión.';
-            header('Location: ' . rtrim($redirect, '/'));
+            header('Location: ' . rtrim($fallback, '/'));
             exit;
         }
     }

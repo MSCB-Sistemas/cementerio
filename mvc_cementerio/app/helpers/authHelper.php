@@ -56,6 +56,27 @@ function requirePermission(string|array $permisos, ?string $redirect = null): vo
     }
     
     // 3) Sin permiso → redirigir a página “amigable”
+    $_SESSION['missing_perms'] = (array)$permisos;
     header('Location: ' . $redirect, true, 303);
     exit;
 }
+
+// (opcional) Helper “AND” por si alguna ruta requiere todos los permisos
+function requireAllPermissions(array $permisos, ?string $redirect = null): void
+{
+    $base     = rtrim(URL, '/');
+    $redirect = $redirect ?: ($base . '/error-permisos');
+
+    if (!isLoggedIn()) {
+        header('Location: ' . $base . '/login', true, 303); exit;
+    }
+
+    $userPerms = $_SESSION['usuario_permisos'] ?? [];
+    $faltantes = array_diff($permisos, $userPerms);
+
+    if (!$faltantes) return; // ✅
+
+    $_SESSION['flash_error'] = 'No tenés permisos para acceder.';
+    header('Location: ' . $redirect, true, 303); exit;
+}
+
