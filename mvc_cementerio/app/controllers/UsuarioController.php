@@ -13,7 +13,11 @@ class UsuarioController extends Control{
     public function index()
     {
         #$this->requirePermissionInController('ver_usuario');
-
+        // ★ flags para toggles en la vista
+        $puedeCrear    = $this->can('crear_usuario');
+        $puedeEditar   = $this->can('editar_usuario');
+        $puedeEliminar = $this->can('eliminar_usuario');
+        
         $usuarios = $this->model->getAllUsuarios();
 
         $datos = [
@@ -87,9 +91,15 @@ class UsuarioController extends Control{
         // ★ permiso explícito
         #$this->requirePermissionInController('crear_usuario');
 
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { $this->redirect('usuario'); }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') 
+        { 
+            $this->redirect('usuario'); 
+        }
         // método POST + CSRF
-        if (!csrf_check($_POST['csrf'] ?? '')) { http_response_code(419); exit('CSRF'); }
+        if (!csrf_check($_POST['csrf'] ?? '')) 
+        { 
+            http_response_code(419); exit('CSRF'); 
+        }
 
         $usuario     = trim($_POST["usuario"]  ?? '');
         $nombre      = trim($_POST["nombre"]   ?? '');
@@ -172,7 +182,10 @@ class UsuarioController extends Control{
         // ★ permiso + POST + CSRF
         #$this->requirePermission('editar_usuario');
 
-        if ($_SERVER["REQUEST_METHOD"] !== "POST") { $this->redirect('usuario'); }
+        if ($_SERVER["REQUEST_METHOD"] !== "POST") 
+        { 
+            $this->redirect('usuario'); 
+        }
         if (!csrf_check($_POST['csrf'] ?? '')) 
         { 
             http_response_code(419); 
@@ -189,7 +202,7 @@ class UsuarioController extends Control{
         $tipoUsuario = $_POST["tipo_usuario"] ?? '';
 
         $errores = [];
-            if (empty($usuario))        $errores[] = "El usuario es obligatorio.";
+        if (empty($usuario))        $errores[] = "El usuario es obligatorio.";
         if (empty($nombre))         $errores[] = "El nombre es obligatorio.";
         if (empty($apellido))       $errores[] = "El apellido es obligatorio.";
         if (empty($contrasenia))    $errores[] = "El nombre es obligatorio.";
@@ -235,60 +248,107 @@ class UsuarioController extends Control{
     public function delete($id)
     {
         #$this->requirePermissionInController('eliminar_usuario');
+        if ($_SERVER["REQUEST_METHOD"] !== "POST") 
+        { 
+            $this->redirect('usuario'); 
+        }
+        if (!csrf_check($_POST['csrf'] ?? '')) 
+        { 
+            http_response_code(419); 
+            exit('CSRF'); 
+        }
 
-        if ($this->model->deleteUsuario($id)) {
-            header("Location: " . URL . "usuario");
-            exit;
+        if ($this->model->deleteUsuario((int)$id)) {
+            $_SESSION['flash_ok'] = 'Usuario eliminado.';
+            $this->redirect('usuario');
         } else {
-            die("No se pudo eliminar al usuario.");
+            $_SESSION['flash_error'] = 'No se pudo eliminar al usuario.';
+            $this->redirect('usuario');
         }
     }
 
     public function activate($id)
     {
         #$this->requirePermissionInController('editar_usuario');
+        if ($_SERVER["REQUEST_METHOD"] !== "POST") 
+        { 
+            $this->redirect('usuario'); 
+        }
+        if (!csrf_check($_POST['csrf'] ?? '')) 
+        { 
+            http_response_code(419); 
+            exit('CSRF'); 
+        }
 
-        if ($this->model->activateUsuario($id)) {
-            header("Location: " . URL . "usuario");
-            exit;
+        if ($this->model->activateUsuario((int)$id)) {
+            $_SESSION['flash_ok'] = 'Usuario activado.';
+            $this->redirect('usuario');
         } else {
-            die("No se pudo activar al usuario");
+            $_SESSION['flash_error'] = 'No se pudo activar al usuario.';
+            $this->redirect('usuario');
         }
     }
 
     public function changePass($id)
     {
+        // ★ regla: un usuario puede cambiar su propia clave;
+        // para cambiar la de otro, exige permiso de edición.
+        $id = (int)$id;
+        if ($this->userId() !== $id && !$this->can('editar_usuario')) {
+            $_SESSION['flash_error'] = 'No podés cambiar la contraseña de otro usuario.';
+            $this->redirect('usuario');
+        }
+
         $this->loadView('usuarios/UsuarioFormPass', [
             'title' => 'Cambiar clave',
             'action' => URL . 'usuario/savePass/' . $id,
-            'errores' => []
+            'errores' => [],
+            'csrf'    => csrf_token(),
         ]);
     }
 
     public function savePass($id)
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $password = trim($_POST["password"]);
+        $id = (int)$id;
+        if ($this->userId() !== $id && !$this->can('editar_usuario')) {
+            $_SESSION['flash_error'] = 'No podés cambiar la contraseña de otro usuario.';
+            $this->redirect('usuario');
+        }
 
-            $errores = [];
-            if (empty($password)) $errores[] = "El campo nueva contrasenia es obligatorio.";
+        if ($_SERVER["REQUEST_METHOD"] !== "POST") 
+        { 
+            $this->redirect('usuario'); 
+        }
+        if (!csrf_check($_POST['csrf'] ?? '')) 
+        { 
+            http_response_code(419); 
+            exit('CSRF'); 
+        }
 
-            if (!empty($errores)) {
-                $this->loadView("usuarios/UsuarioFormPass", [
-                    'title' => 'Cambiar clave',
-                    'action' => URL . 'usuario/savePass/' . $id,
-                    'errores' => $errores
-                ]);
-                return;
-            }
+        $contrasenia = trim($_POST["password"] ?? '');
 
-            $password = password_hash($password, PASSWORD_DEFAULT);
-            if ($this->model->updatePassword($id, $password)) {
-                header('Location: ' . URL . 'usuario');
-                exit;
-            } else {
-                die("Error al cambiar la clave");
-            }
+        $errores = [];
+        if (empty($contrasenia)) 
+        {
+            $errores[] = "El campo nueva contrasenia es obligatorio.";
+        }
+        if (!empty($errores)) {
+            $this->loadView("usuarios/UsuarioFormPass", [
+                'title'     => 'Cambiar clave',
+                'action'    => URL . 'usuario/savePass/' . $id,
+                'errores'   => $errores,
+                'csrf'    => csrf_token(),
+            ]);
+            return;
+        }
+
+        $hash = password_hash($contrasenia, PASSWORD_DEFAULT);
+        if ($this->model->updatePassword($id, $hash)) {
+            $_SESSION['flash_ok'] = 'Contraseña actualizada.';
+            $this->redirect('usuario');
+        } else {
+            $_SESSION['flash_error'] = 'Error al cambiar la contraseña.';
+            $this->redirect('usuario');
         }
     }
 }
