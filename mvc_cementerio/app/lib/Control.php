@@ -22,9 +22,11 @@ class Control
         // FLASH de error o confirmacion de algún middleware/controlador.
         if (isset($_SESSION['flash_error'])) {
             $datos['flash_error'] = $_SESSION['flash_error'];
-        // los borra en la sesión así no aparece en el proximo request
+        
+            // los borra en la sesión así no aparece en el proximo request
             unset($_SESSION['flash_error']);
         } else {
+            
             // La vista lo recibe solo en la primera carga
             $datos['flash_error'] = null;
         }
