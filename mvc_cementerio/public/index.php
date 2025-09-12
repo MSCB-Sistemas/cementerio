@@ -10,7 +10,8 @@ $base = '/cementerio/mvc_cementerio';
 //   - '__login__'   => requiere estar logueado
 //   - 'guard_x'   => requiere ese guard RBAC (OR si pasas array de guards)
 
-
+// Así router y sidebar (vistas) usan la misma fuente.
+$routes = require __DIR__ . '/../app/config/routes.php';
 
 // ====== Obtener ruta y metodo actual =====
 
