@@ -89,12 +89,11 @@ class EstadisticasController extends Control {
             $offset
         );
 
+        $total_difuntos = $this->model->getTotalDifuntos();
         $total_defunciones = $this->model->getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin, $letra_apellido_difunto);
-        $total_paginas = max(1, ceil($total_defunciones / $limite));
-
-        $total_difuntos = $this->model->getTotalDefuncionesEntreFechas($fecha_inicio, $fecha_fin);
         $total_parcelas = $this->model->getTotalParcelasOcupadas();
         $total_traslados = $this->model->getTotalTraslados();
+        $total_paginas = max(1, ceil($total_defunciones / $limite));
 
         $datos = [
             'title' => 'Estadisticas',

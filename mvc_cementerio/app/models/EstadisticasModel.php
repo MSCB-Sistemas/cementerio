@@ -21,6 +21,18 @@ class EstadisticasModel extends Control {
         }
     }
 
+    public function getTotalDifuntos()
+    {
+        try {
+            $stmt = $this->db->query("SELECT COUNT(*) as total FROM difunto");
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            return isset($resultado['total']) ? (int)$resultado['total'] : 0;
+        } catch (PDOException $e) {
+            error_log("Error en getTotalDifuntos: " . $e->getMessage());
+            return 0;
+        }
+    }
+ 
     public function getDeudosMorosos()
     {
         $fecha_actual = date('Y-m-d');
