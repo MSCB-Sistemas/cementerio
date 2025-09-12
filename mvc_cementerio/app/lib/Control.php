@@ -89,7 +89,7 @@ class Control
         requirePermission($permisos, $fallback); // reusa el helper global
     }
 
-    protected function fallback$fallback(string $path): void
+    protected function fallback(string $path): void
     {
         $base = rtrim(URL, '/');
         header('Location: ' . $base . '/' . ltrim($path, '/'));

@@ -17,9 +17,7 @@
   <!-- Tema de color (cambiado a naranja) -->
   <meta name="theme-color" content="#fd7e14">
 
-  <?php if (isset($datos['error'])) {
-    $error = $datos['error'];
-  } ?>
+  <?php if (isset($datos['error'])) { $error = $datos['error']; } ?>
 
   <style>
     :root {
