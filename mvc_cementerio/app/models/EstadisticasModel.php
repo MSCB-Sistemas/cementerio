@@ -86,10 +86,19 @@ class EstadisticasModel extends Control {
         $columnas_permitidas = ['nombre', 'apellido', 'fecha_fallecimiento', 'fecha_retiro'];
         $sort_col = in_array($sort_col, $columnas_permitidas) ? $sort_col :'fecha_retiro';
         $sort_dir = strtoupper($sort_dir) === 'DESC' ? 'DESC' : 'ASC';
-        $stmt = $this->db->prepare("SELECT d.*, d.dni, d.nombre, d.apellido, d.fecha_fallecimiento, u.fecha_retiro
+        $stmt = $this->db->prepare("SELECT d.*, d.dni, d.nombre, d.apellido, d.fecha_fallecimiento, u.fecha_retiro, 
+                                    u.id_parcela AS parcela_origen, u2.id_parcela AS parcela_destino, u2.fecha_ingreso AS fecha_ingreso_destino
                                      FROM difunto d 
                                      INNER JOIN ubicacion_difunto u
                                      ON  d.id_difunto = u.id_difunto
+                                     LEFT JOIN ubicacion_difunto u2
+                                     ON d.id_difunto = u2.id_difunto 
+                                     AND u2.fecha_ingreso = (
+                                     SELECT MIN(u3.fecha_ingreso)
+                                     FROM ubicacion_difunto u3
+                                     WHERE u3.id_difunto = d.id_difunto
+                                     AND u3.fecha_ingreso > u.fecha_retiro
+                                     )
                                      WHERE u.fecha_retiro != '0000-00-00'
                                      ORDER BY $sort_col $sort_dir
                                      LIMIT :limite OFFSET :offset

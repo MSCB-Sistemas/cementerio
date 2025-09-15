@@ -188,7 +188,10 @@ $filtrar = isset($_GET['filtrar']);
                     <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
                     <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>
                     <th><?= generarOrdenLink('fecha_fallecimiento', 'Fecha de defunción', $datos) ?></th>
-                    <th><?= generarOrdenLink('fecha_retiro', 'Fecha de traslado', $datos) ?></th>
+                    <th><?= generarOrdenLink('fecha_retiro', 'Fecha de retiro', $datos) ?></th>
+                    <th><?= generarOrdenLink('parcela_origen', 'Parcela de Origen', $datos) ?></th>
+                    <th><?= generarOrdenLink('parcela_destino', 'Parcela Destino', $datos) ?></th>
+                    <th><?= generarOrdenLink('fecha_ingreso_destino', 'Fecha de ingreso a nueva parcela', $datos) ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -200,6 +203,9 @@ $filtrar = isset($_GET['filtrar']);
                                 <td><?= htmlspecialchars($difunto_trasladado['dni']) ?></td>
                                 <td><?= htmlspecialchars($difunto_trasladado['fecha_fallecimiento']) ?></td>
                                 <td><?= htmlspecialchars($difunto_trasladado['fecha_retiro']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['parcela_origen']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['parcela_destino']) ?>
+                                <td><?= htmlspecialchars($difunto_trasladado['fecha_ingreso_destino']) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
