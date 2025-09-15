@@ -1,5 +1,5 @@
 <?php
-return = [
+return [
 
     // Login / Home / Estadísticas
     ''                => ['AuthController',       'login',        '__public__'],

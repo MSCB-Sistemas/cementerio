@@ -2,8 +2,10 @@
 $user = currentUser();
 $base = rtrim(URL, '/');
 
+// ---- permisos
 // $can: verifica si el usuario tiene un permiso
-$can = function($perm) use ($user) {
+$can = function($perm) use ($user) 
+{
     if ($perm === '__login__') {
         return (bool)$user;   // cualquiera logueado
     }
@@ -24,9 +26,7 @@ $canAny = function(array $perms) use ($can)
 {
     if (empty($perms)) return true;       // sin guard => visible
     foreach ($perms as $p) {
-        if ($can($p)) {
-            return true;
-        }
+        if ($can($p)) { return true; }
     }
     return false;
 };
@@ -57,19 +57,20 @@ $activePath = trim($requestPath, '/');
 // 1) Cargar rutas compartidas
 $routes = require APP . '/config/routes.php';
 
-// 2) Elegimos solo “rutas de índice” (sin slash), que tienen página listable
+// 2) Solo “rutas de índice” (sin slash)
 $indexRoutes = [];
 foreach ($routes as $key => [$ctrl, $method, $guard]) 
 {
     if (strpos($key, '/') === false) 
     {
         // ignorar login/logout/públicas que no quieras en el menú
-        if (in_array($key, ['', 
-                            'login', 
-                            'logout', 
-                            'error-permisos'], 
-                    true)) 
-            continue;
+        $ignorar = ['', 
+                    'login', 
+                    'logout', 
+                    'error-permisos'
+                    ];
+        
+                    if (in_array($key, $ignorar, true)) continue;
         $indexRoutes[$key] = $routes[$key];
         //Ese array es la base para construir el $MENU dinámico del sidebar.
     }
@@ -141,6 +142,7 @@ foreach ($indexRoutes as $path => $def)
             'perms' => [],                // visible para todos los logueados; cada hijo filtra lo suyo
             'children' => $abmChildren
         ];
+        //var_dump($MENU);
     }
 }
 ?>
