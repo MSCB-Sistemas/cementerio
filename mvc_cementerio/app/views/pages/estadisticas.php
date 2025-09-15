@@ -46,12 +46,12 @@ $filtrar = isset($_GET['filtrar']);
         <div id="filtro_fecha_difuntos" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-3">
-                    <label for="fecha_inicio" class="form-label">Desde</label>
-                    <input type="date" class="form-control" name="fecha_inicio" value="<?= htmlspecialchars($_GET['fecha_inicio'] ?? '') ?>">
+                    <label for="fecha_inicio_defuncion" class="form-label">Desde</label>
+                    <input type="date" class="form-control" name="fecha_inicio_defuncion" value="<?= htmlspecialchars($_GET['fecha_inicio_defuncion'] ?? '') ?>">
                 </div>
                 <div class="col-md-3">
-                    <label for="fecha_fin" class="form-label">Hasta</label>
-                    <input type="date" class="form-control" name="fecha_fin" value="<?= htmlspecialchars($_GET['fecha_fin'] ?? '') ?>">
+                    <label for="fecha_fin_defuncion" class="form-label">Hasta</label>
+                    <input type="date" class="form-control" name="fecha_fin_defuncion" value="<?= htmlspecialchars($_GET['fecha_fin_defuncion'] ?? '') ?>">
                 </div>
                 <div class="col-md-2 align-self-end">
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
@@ -221,12 +221,12 @@ $filtrar = isset($_GET['filtrar']);
         <div id="filtro_fecha_parcelas" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-3">
-                    <label for="fecha_inicio" class="form-label">Desde</label>
-                    <input type="date" class="form-control" name="fecha_inicio" value="<?= htmlspecialchars($_GET['fecha_inicio'] ?? '') ?>">
+                    <label for="fecha_inicio_parcela" class="form-label">Desde</label>
+                    <input type="date" class="form-control" name="fecha_inicio_parcela" value="<?= htmlspecialchars($_GET['fecha_inicio_parcela'] ?? '') ?>">
                 </div>
                 <div class="col-md-3">
-                    <label for="fecha_fin" class="form-label">Hasta</label>
-                    <input type="date" class="form-control" name="fecha_fin" value="<?= htmlspecialchars($_GET['fecha_fin'] ?? '') ?>">
+                    <label for="fecha_fin_parcela" class="form-label">Hasta</label>
+                    <input type="date" class="form-control" name="fecha_fin_parcela" value="<?= htmlspecialchars($_GET['fecha_fin_parcela'] ?? '') ?>">
                 </div>
                 <div class="col-md-2 align-self-end">
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
@@ -394,12 +394,12 @@ $filtrar = isset($_GET['filtrar']);
         <div id="filtro_defuncion_traslados" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-3">
-                    <label for="fecha_defuncion_inicio" class="form-label">Desde</label>
-                    <input type="date" class="form-control" name="fecha_defuncion_inicio">
+                    <label for="fecha_inicio_defuncion_traslado" class="form-label">Desde</label>
+                    <input type="date" class="form-control" name="fecha_inicio_defuncion_traslado">
                 </div>
                 <div class="col-md-3">
-                    <label for="fecha_defuncion_fin" class="form-label">Hasta</label>
-                    <input type="date" class="form-control" name="fecha_defuncion_fin">
+                    <label for="fecha_fin_defuncion_traslado" class="form-label">Hasta</label>
+                    <input type="date" class="form-control" name="fecha_fin_defuncion_traslado">
                 </div>
                 <div class="col-md-2 align-self-end">
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
@@ -411,12 +411,12 @@ $filtrar = isset($_GET['filtrar']);
         <div id="filtro_traslado_traslados" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-3">
-                    <label for="fecha_traslado_inicio" class="form-label">Desde</label>
-                    <input type="date" class="form-control" name="fecha_traslado_inicio">
+                    <label for="fecha_inicio_traslado" class="form-label">Desde</label>
+                    <input type="date" class="form-control" name="fecha_inicio_traslado">
                 </div>
                 <div class="col-md-3">
-                    <label for="fecha_traslado_fin" class="form-label">Hasta</label>
-                    <input type="date" class="form-control" name="fecha_traslado_fin">
+                    <label for="fecha_fin_traslado" class="form-label">Hasta</label>
+                    <input type="date" class="form-control" name="fecha_fin_traslado">
                 </div>
                 <div class="col-md-2 align-self-end">
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
@@ -484,27 +484,30 @@ $filtrar = isset($_GET['filtrar']);
                             <div class="card-body">
                                 <form method="GET" class="row g-3">
                                     <div class="col-md-5">
-                                        <label for="fecha_defuncion_inicio" class="form-label">Desde</label>
-                                        <input type="date" class="form-control" name="fecha_defuncion_inicio" value="<?= htmlspecialchars($_GET['fecha_inicio_def'] ?? '') ?>">
+                                        <label for="fecha_inicio_mensual" class="form-label">Desde</label>
+                                        <input type="date" class="form-control" name="fecha_inicio_mensual" value="<?= htmlspecialchars($_GET['fecha_inicio_mensual'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-5">
-                                        <label for="fecha_defuncion_fin" class="form-label">Hasta</label>
-                                        <input type="date" class="form-control" name="fecha_defuncion_fin" value="<?= htmlspecialchars($_GET['fecha_fin_def'] ?? '') ?>">
+                                        <label for="fecha_fin_mensual" class="form-label">Hasta</label>
+                                        <input type="date" class="form-control" name="fecha_fin_mensual" value="<?= htmlspecialchars($_GET['fecha_fin_mensual'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-2 align-self-end">
                                         <button type="submit" name="filtrar_defunciones" class="btn btn-success">Filtrar</button>
                                     </div>
                                 </form>
 
-                                <?php if (isset($_GET['filtrar_defunciones']) && isset($datos['total_defunciones'])): ?>
+                                <?php if (isset($_GET['filtrar_defunciones']) && isset($datos['total_defunciones_mensuales'])): ?>
                                     <hr>
-                                    <p class="text-center fs-5">Total de defunciones en el rango seleccionado: <strong><?= $datos['total_defunciones'] ?></strong></p>
+                                    <p class="text-center fs-5">
+                                        Total de defunciones en el rango seleccionado: 
+                                        <strong><?= $datos['total_defunciones_mensuales'] ?></strong>
+                                    </p>
                                 <?php endif; ?>
                             </div>
                         </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
 
 <?php
