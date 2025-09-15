@@ -165,9 +165,14 @@ class EstadisticasModel extends Control {
 
         $params = [];
 
-        if (!empty($filtros['tipo_parcela'])) {
-            $sql .= " AND p.tipo = :tipo_parcela";
-            $params[':tipo_parcela'] = $filtros['tipo_parcela'];
+        if (!empty($filtros['numero_ubicacion'])) {
+            $sql .= " AND p.numero_ubicacion = :numero_ubicacion";
+            $params[':numero_ubicacion'] = $filtros['numero_ubicacion'];
+        }
+
+        if (!empty($filtros['id_tipo_parcela'])) {
+            $sql .= " AND p.id_tipo_parcela = :id_tipo_parcela";
+            $params[':id_tipo_parcela'] = $filtros['id_tipo_parcela'];
         }
 
         if (!empty($filtros['seccion'])) {
@@ -185,9 +190,9 @@ class EstadisticasModel extends Control {
             $params[':nivel'] = $filtros['nivel'];
         }
 
-        if (!empty($filtros['orientacion'])) {
-            $sql .= " AND p.orientacion = :orientacion";
-            $params[':orientacion'] = $filtros['orientacion'];
+        if (!empty($filtros['id_orientacion'])) {
+            $sql .= " AND p.id_orientacion = :id_orientacion";
+            $params[':id_orientacion'] = $filtros['id_orientacion'];
         }
 
         if (!empty($filtros['hilera'])) {
@@ -195,10 +200,7 @@ class EstadisticasModel extends Control {
             $params[':hilera'] = $filtros['hilera'];
         }
 
-        if (!empty($filtros['ubicacion'])) {
-            $sql .= " AND p.ubicacion = :ubicacion";
-            $params[':ubicacion'] = $filtros['ubicacion'];
-        }
+        
 
         $sql .= " ORDER BY pgo.fecha_pago DESC";
 

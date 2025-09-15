@@ -238,18 +238,18 @@ $filtrar = isset($_GET['filtrar']);
         <div id="filtro_parcela_parcelas" class="filtro-box mb-4" style="display: none;">
             <form method="GET" class="row g-3">
                 <div class="col-md-2">
-                    <label for="ubicacion" class="form-label">Nº de Ubicación</label>
-                    <input type="text" class="form-control" name="ubicacion">
+                    <label for="numero_ubicacion" class="form-label">Nº de Ubicación</label>
+                    <input type="text" class="form-control" name="numero_ubicacion">
                 </div>
                 <div class="col-md-2">
-                    <label for="tipo_parcela" class="form-label">Tipo</label>
-                    <select name="tipo_parcela" class="form-select">
+                    <label for="id_tipo_parcela" class="form-label">Tipo</label>
+                    <select name="id_tipo_parcela" class="form-select">
                         <option value="">Seleccionar...</option>
-                        <option value="N">Nicho</option>
-                        <option value="F">Fosa</option>
-                        <option value="P">Panteón</option>
-                        <option value="O">Osario</option>
-                        <option value="E">Especial</option>
+                        <option value="1">Nicho</option>
+                        <option value="2">Fosa</option>
+                        <option value="3">Panteón</option>
+                        <option value="4">Osario</option>
+                        <option value="5">Especial</option>
                     </select>
                 </div>
                 <div class="col-md-2">
@@ -265,13 +265,13 @@ $filtrar = isset($_GET['filtrar']);
                     <input type="text" class="form-control" name="nivel">
                 </div>
                 <div class="col-md-2">
-                    <label for="orientacion" class="form-label">Orientación</label>
-                    <select name="orientacion" class="form-select">
+                    <label for="id_orientacion" class="form-label">Orientación</label>
+                    <select name="id_orientacion" class="form-select">
                         <option value="">Seleccionar...</option>
-                        <option value="N">Norte</option>
-                        <option value="S">Sur</option>
-                        <option value="E">Este</option>
-                        <option value="O">Oeste</option>
+                        <option value="1">Norte</option>
+                        <option value="2">Sur</option>
+                        <option value="3">Este</option>
+                        <option value="4">Oeste</option>
                     </select>
                 </div>
                 <div class="col-md-2">

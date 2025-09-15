@@ -70,15 +70,15 @@ class EstadisticasController extends Control {
 
         
         $filtros_parcela = [
-            'tipo_parcela' => $_GET['tipo_parcela'] ?? '',
+            'numero_ubicacion' => $_GET['numero_ubicacion'] ?? '',
+            'id_tipo_parcela' => $_GET['id_tipo_parcela'] ?? '',
             'seccion' => $_GET['seccion'] ?? '',
             'fraccion' => $_GET['fraccion'] ?? '',
             'nivel' => $_GET['nivel'] ?? '',
-            'orientacion' => $_GET['orientacion'] ?? '',
-            'hilera' => $_GET['hilera'] ?? '',
-            'ubicacion' => $_GET['ubicacion'] ?? ''
+            'id_orientacion' => $_GET['id_orientacion'] ?? '',
+            'hilera' => $_GET['hilera'] ?? ''        
         ];
-        $uso_filtro_parcela = array_filter($filtros_parcela);
+        $uso_filtro_parcela = array_filter($filtros_parcela, fn($v) => $v !== '');
 
         if ($uso_filtro_parcela) {
             $parcelas_vendidas = $this->model->getParcelasVendidasPorDatosParcela($filtros_parcela);
