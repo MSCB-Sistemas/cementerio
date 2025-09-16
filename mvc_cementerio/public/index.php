@@ -27,8 +27,8 @@ $routes = [
     'estadisticas' => ['EstadisticasController', 'index'],
 
     // URL's traslados.
-    'traslados' => ['TrasladoController', 'index'],
-    'traslados/save' => ['TrasladoController', 'save'],
+    'pagoFunc' => ['PagoFuncController', 'index'],
+    'pagoFunc/save' => ['PagoFuncController', 'save'],
 
     // URL's difunto.
     'difunto' => ['DifuntoController', 'index'],

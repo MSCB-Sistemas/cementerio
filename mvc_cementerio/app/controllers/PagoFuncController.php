@@ -1,14 +1,14 @@
 <?php
-class TrasladoController extends Control {
-    private TrasladoModel $model;
+class PagoFuncController extends Control {
+    private PagoFuncModel $model;
 
     public function __construct() {
         $this->requireLogin();
-        $this->model = $this->loadModel('TrasladoModel');
+        $this->model = $this->loadModel('PagoFuncModel');
     }
 
     public function index($errores = []) {
-        $model = $this->loadModel('TrasladoModel');
+        $model = $this->loadModel('PagoFuncModel');
         $traslados = $model->getAllTraslados();
 
         $parcelas = $this->loadModel('ParcelaModel')->getAllParcelas();
@@ -16,16 +16,16 @@ class TrasladoController extends Control {
         $difuntos = $this->loadModel('DifuntoModel')->getAllDifuntos();
 
         $datos = [
-            'title' => 'Listado de Traslados',
+            'title' => 'Generar pago',
             'data' => $traslados,
-            'action' => URL . 'traslados/save',
+            'action' => URL . 'pagoFunc/save',
             'parcelas' => $parcelas,
             'deudos' => $deudos,
             'difuntos' => $difuntos,
             'errores' => $errores
         ];
 
-        $this->loadView('traslado/TrasladoForm', $datos );
+        $this->loadView('pagoFunc/PagoForm', $datos );
     }
 
     public function save() {
@@ -44,7 +44,7 @@ class TrasladoController extends Control {
             if (empty($fecha_vencimiento)) $errores[] = 'Ingrese la fecha de vencimiento';
 
             if (empty($errores)) {
-                $model = $this->loadModel('TrasladoModel');
+                $model = $this->loadModel('PagoFuncModel');
 
                 if ($model->verificarParcelaOcupada($id_parcela)) {
                     $errores[] = 'La parcela seleccionada ya está ocupada';
@@ -67,7 +67,7 @@ class TrasladoController extends Control {
 
                     if ($nuevo_pago_id) {
                         if ($model->realizarTraslado($id_difunto, $id_parcela, $fecha_traslado)) {
-                            header('Location: ' . URL . '/traslados');
+                            header('Location: ' . URL . '/pagoFunc');
                             exit;
                         }
                     }
@@ -79,5 +79,53 @@ class TrasladoController extends Control {
 
         $this->index($errores);
     }
+
+    public function infoDifunto() {
+        $id_difunto = $_GET['id_difunto'] ?? null;
+        $html = '<p class="text-muted">Sin información</p>';
+    
+        if ($id_difunto) {
+            $model = $this->loadModel('PagoFuncModel');
+            $historial = $model->obtenerHistorialTraslados($id_difunto);
+            $ubicacion = $model->obtenerUbicacionActual($id_difunto);
+    
+            ob_start();
+            echo '<ul class="list-group">';
+            if ($ubicacion) {
+                echo '<li class="list-group-item">Ubicación actual: Parcela ' . htmlspecialchars($ubicacion['id_parcela']) . '</li>';
+            }
+            foreach ($historial as $h) {
+                echo '<li class="list-group-item">Traslado a parcela ' . $h['id_parcela'] . ' en ' . $h['fecha'] . '</li>';
+            }
+            echo '</ul>';
+            $html = ob_get_clean();
+        }
+    
+        echo json_encode(['html' => $html]);
+    }
+    
+    public function infoParcela() {
+        $id_parcela = $_GET['id_parcela'] ?? null;
+        $html = '<p class="text-muted">Sin información</p>';
+    
+        if ($id_parcela) {
+            $model = $this->loadModel('PagoFuncModel');
+            $ocupada = $model->verificarParcelaOcupada($id_parcela);
+            $pago = $model->obtenerPagoPorParcela($id_parcela);
+    
+            if ($ocupada) {
+                $html = '<div class="alert alert-danger">Parcela ocupada. ';
+                if ($pago) {
+                    $html .= 'Pago asociado ID: ' . $pago['id_pago'] . ' (Venc: ' . $pago['fecha_vencimiento'] . ')';
+                }
+                $html .= '</div>';
+            } else {
+                $html = '<div class="alert alert-success">Parcela disponible</div>';
+            }
+        }
+    
+        echo json_encode(['html' => $html]);
+    }
+    
 }
 ?>

@@ -24,6 +24,9 @@
             </div>
             <button type="button" class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#modalParcela">+</button>
         </div>
+        <div class="col-12 mt-2">
+            <div id="infoParcela"></div>
+        </div>
 
         <!-- Deudo -->
         <div class="col-md-6 d-flex align-items-end">
@@ -57,6 +60,9 @@
             </div>
             <button type="button" class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#modalDifunto">+</button>
         </div>
+        <div class="col-12 mt-2">
+            <div id="infoDifunto"></div>
+        </div>
 
         <!-- Fecha -->
         <div class="col-md-3">
@@ -71,8 +77,62 @@
         </div>
     </div>
 
+    <!-- Observaciones -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <label for="observaciones" class="form-label">Observaciones</label>
+            <textarea class="form-control" id="observaciones" name="observaciones" rows="3" placeholder="Agregue observaciones relevantes sobre el pago"></textarea>
+        </div>
+    </div>
+
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
         <button type="submit" class="btn btn-success"> <i class="bi bi-save"></i> Guardar</button>
         <a href="<?= URL ?>" class="btn btn-secondary"> <i class="bi bi-x-circle"></i> Cancelar</a>
     </div>
 </form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+    $("#parcela").change(function () {
+        let id = $(this).val();
+        if (id) {
+            $.getJSON("<?= URL ?>/ajax/info_parcela.php", {id: id}, function (data) {
+                if (data.error) {
+                    $("#infoParcela").html("<div class='alert alert-danger'>" + data.error + "</div>");
+                } else {
+                    $("#infoParcela").html(
+                        "<div class='card card-body mt-2'>" +
+                        "<strong>Tipo:</strong> " + data.id_tipo_parcela + "<br>" +
+                        "<strong>Ubicación:</strong> " + data.numero_ubicacion + " / " + data.hilera + " / " + data.seccion + " / " + data.fraccion + " / " + data.nivel +
+                        "</div>"
+                    );
+                }
+            });
+        } else {
+            $("#infoParcela").html("");
+        }
+    });
+
+    $("#difunto").change(function () {
+        let id = $(this).val();
+        if (id) {
+            $.getJSON("<?= URL ?>/ajax/info_difunto.php", {id: id}, function (data) {
+                if (data.error) {
+                    $("#infoDifunto").html("<div class='alert alert-danger'>" + data.error + "</div>");
+                } else {
+                    $("#infoDifunto").html(
+                        "<div class='card card-body mt-2'>" +
+                        "<strong>DNI:</strong> " + data.dni + "<br>" +
+                        "<strong>Nombre:</strong> " + data.nombre + " " + data.apellido + "<br>" +
+                        "<strong>Fecha fallecimiento:</strong> " + data.fecha_fallecimiento +
+                        "</div>"
+                    );
+                }
+            });
+        } else {
+            $("#infoDifunto").html("");
+        }
+    });
+});
+</script>

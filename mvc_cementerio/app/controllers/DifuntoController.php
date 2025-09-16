@@ -24,7 +24,7 @@ class DifuntoController extends Control
         $datos = [
             'title' => 'Lista de difuntos',
             'urlCrear' => URL . 'difunto/create',
-            'columnas' => ['ID', 'Deudo', 'Nombre', 'Apellido', 'DNI', 'Edad', 'Fecha fallecimiento', 'Genero', 'Nacionalidad', 'Estado civil', 'Domicilio', 'Localidad', 'Codigo postal'],
+            'columnas' => ['ID', 'Deudo', 'Nombre', 'Apellido', 'DNI', 'Edad', 'Fecha defuncion', 'Genero', 'Nacionalidad', 'Estado civil', 'Domicilio', 'Localidad', 'Codigo postal'],
             'columnas_claves' => ['id_difunto', 'nombre_deudo', 'nombre', 'apellido', 'dni', 'edad', 'fecha_fallecimiento', 'sexo', 'nacionalidad', 'estado_civil', 'domicilio', 'localidad', 'codigo_postal'],
             'data' => $difuntos,
             'acciones' => function ($fila) {

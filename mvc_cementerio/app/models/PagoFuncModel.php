@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../config/config.php';
 require_once 'Database.php';
 
-class TrasladoModel {
+class PagoFuncModel {
     private PDO $db;
 
     public function __construct() {
