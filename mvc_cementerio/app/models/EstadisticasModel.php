@@ -40,7 +40,7 @@ class EstadisticasModel extends Control {
         $stmt = $this->db->prepare("SELECT p.*, d.dni, d.nombre, d.apellido FROM pago p
                                         INNER JOIN deudo d ON p.id_deudo = d.id_deudo
                                         WHERE p.fecha_vencimiento < :fecha_actual
-                                        ORDER BY p.fecha_vencimiento DESC");
+                                        ORDER BY p.id_parcela ASC");
         $stmt->bindParam(":fecha_actual", $fecha_actual, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -132,7 +132,7 @@ class EstadisticasModel extends Control {
                 $sql .= " AND d.apellido LIKE :letra_apellido_deudo";
             }
 
-            $sql .= " ORDER BY pgo.fecha_pago DESC";
+            $sql .= "ORDER BY p.id_parcela ASC";
 
             $stmt = $this->db->prepare($sql);
 
