@@ -33,7 +33,7 @@ class AuthController extends Control {
                 $this->loadView('loginView', $datos, 'login');
             }
         } else {
-            $this->loadView('loginView', $datos, 'login');
+            $this->loadView('LoginView', $datos, 'login');
         }
     }
 
