@@ -36,7 +36,7 @@ $filtrar = isset($_GET['filtrar']);
                 <label for="tipo_filtro" class="form-label">Seleccionar filtro de búsqueda:</label>
                 <select id="tipo_filtro" class="form-select w-auto" onchange="mostrarFiltroDifuntos()">
                     <option value="">Seleccionar...</option>
-                    <option value="lista_completa">Padrón general de Difuntos</option>
+                    <option value="lista_completa_difuntos">Padrón general de Difuntos</option>
                     <option value="filtro_titular_difuntos">Por Orden Alfabético</option>
                     <option value="filtro_fecha_difuntos">Por Fecha de Defunción</option>
                 </select>
@@ -309,12 +309,14 @@ $filtrar = isset($_GET['filtrar']);
             <div class="alert alert-warning text-center"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
+        <!-- Tabla con datos de parcelas vendidas-->
         <table class="table table-bordered table-striped">
             <thead class="th a">
                 <tr>
                     <th><?= generarOrdenLink('id_parcela', 'Parcela', $datos) ?></th>
-                    <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
-                    <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
+                    <th><?= generarOrdenLink('id_tipo_parcela', ' Tipo de Parcela', $datos) ?></th>
+                    <th><?= generarOrdenLink('nombre', 'Nombre Titular', $datos) ?></th>
+                    <th><?= generarOrdenLink('apellido', 'Apellido Titular', $datos) ?></th>
                     <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>    
                     <th><?= generarOrdenLink('monto', 'Monto', $datos) ?></th>                             
                     <th><?= generarOrdenLink('fecha_venta', 'Fecha de Venta', $datos) ?></th>    
@@ -324,19 +326,32 @@ $filtrar = isset($_GET['filtrar']);
             <tbody>
                 <?php if (!empty($datos['parcelas_vendidas'])): ?>
                     <?php foreach ($datos['parcelas_vendidas'] as $venta): ?>
+                        <?php                            
+                            $tipos = [
+                                1 => 'Nicho',
+                                2 => 'Fosa',
+                                3 => 'Panteón',
+                                4 => 'Osario',
+                                5 => 'Especial'
+                            ];
+
+                            $tipoParcela = $tipos[$venta['id_tipo_parcela']] ?? 'Desconocido';
+                        ?>
                         <tr>
                             <td><?= htmlspecialchars($venta['id_parcela']) ?></td>
+                            <td><?= htmlspecialchars($tipoParcela) ?></td>
                             <td><?= htmlspecialchars($venta['nombre']) ?></td>
                             <td><?= htmlspecialchars($venta['apellido']) ?></td>
-                            <td><?= htmlspecialchars($venta['dni']) ?></td> 
-                            <td>$<?= number_format($venta['monto'], 2) ?></td>          
-                            <td><?= date('d/m/Y', strtotime($venta['fecha_venta'])) ?></td>  
+                            <td><?= htmlspecialchars($venta['dni']) ?></td>
+                            <td>$<?= number_format($venta['monto'], 2) ?></td>
+                            <td><?= date('d/m/Y', strtotime($venta['fecha_venta'])) ?></td>
                             <td><?= date('d/m/Y', strtotime($venta['fecha_vencimiento'])) ?></td>
                         </tr>
                     <?php endforeach; ?>
+
                 <?php else: ?>
                     <tr>
-                        <td colspan="7" class="text-center text-muted">No se encontraron resultados</td>
+                        <td colspan="8" class="text-center text-muted">No se encontraron resultados</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -572,7 +587,6 @@ $filtrar = isset($_GET['filtrar']);
             const estadoActual = this.getAttribute('data-estado-actual');
             const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
 
-            // Aca va un ajax.
             console.log('Cambiando estado de deuda ' + idDeuda + ' de ' + estadoActual + ' a ' + nuevoEstado);
 
             // Si se elige "lista_completa", recarga sin parámetros
@@ -656,24 +670,7 @@ $filtrar = isset($_GET['filtrar']);
         });
     });
 
-    function mostrarFiltroParcelas() {
-        const seleccion = document.getElementById('tipo_filtro_parcelas').value;
-        const filtros = document.querySelectorAll('#vendidas .filtro-box');
-
-        filtros.forEach(f => f.style.display = 'none');
-
-        if (seleccion === 'lista_completa_parcelas') {
-            window.location.href = window.location.pathname + '?tipo_filtro_parcelas=lista_completa_parcelas&tab=vendidas';
-            return;
-        }
-
-        if (!seleccion) return;
-
-        const filtroSeleccionado = document.getElementById(seleccion);
-        if (filtroSeleccionado) {
-            filtroSeleccionado.style.display = 'block';
-        }
-    }
+    
 
     function mostrarFiltroDifuntos() {
         const seleccion = document.getElementById('tipo_filtro').value;
@@ -681,7 +678,7 @@ $filtrar = isset($_GET['filtrar']);
 
         filtros.forEach(f => f.style.display = 'none');
 
-        if (seleccion === 'lista_completa') {
+        if (seleccion === 'lista_completa_difuntos') {
             window.location.href = window.location.pathname + '?tab=tablas';
             return;
         }
@@ -702,6 +699,25 @@ $filtrar = isset($_GET['filtrar']);
 
         if (seleccion === 'lista_completa_traslados') {
             window.location.href = window.location.pathname + '?tipo_filtro_traslados=lista_completa_traslados&tab=traslados';
+            return;
+        }
+
+        if (!seleccion) return;
+
+        const filtroSeleccionado = document.getElementById(seleccion);
+        if (filtroSeleccionado) {
+            filtroSeleccionado.style.display = 'block';
+        }
+    }
+
+    function mostrarFiltroParcelas() {
+        const seleccion = document.getElementById('tipo_filtro_parcelas').value;
+        const filtros = document.querySelectorAll('#vendidas .filtro-box');
+
+        filtros.forEach(f => f.style.display = 'none');
+
+        if (seleccion === 'lista_completa_parcelas') {
+            window.location.href = window.location.pathname + '?tipo_filtro_parcelas=lista_completa_parcelas&tab=vendidas';
             return;
         }
 

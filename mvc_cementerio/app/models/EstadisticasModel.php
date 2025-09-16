@@ -121,7 +121,7 @@ class EstadisticasModel extends Control {
 
         try {
             $sql = "
-                SELECT p.id_parcela, d.nombre, d.apellido, d.dni, pgo.total as monto, pgo.fecha_pago as fecha_venta, pgo.fecha_vencimiento
+                SELECT p.id_parcela, p.id_tipo_parcela, d.nombre, d.apellido, d.dni, pgo.total as monto, pgo.fecha_pago as fecha_venta, pgo.fecha_vencimiento
                 FROM pago pgo
                 INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
                 INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
@@ -156,7 +156,7 @@ class EstadisticasModel extends Control {
     public function getParcelasVendidasPorDatosParcela($filtros = []) {
     try {
         $sql = "
-            SELECT p.id_parcela, d.nombre, d.apellido, d.dni, pgo.total as monto, pgo.fecha_pago as fecha_venta, pgo.fecha_vencimiento
+            SELECT p.id_parcela, p.id_tipo_parcela, d.nombre, d.apellido, d.dni, pgo.total as monto, pgo.fecha_pago as fecha_venta, pgo.fecha_vencimiento
             FROM pago pgo
             INNER JOIN parcela p ON pgo.id_parcela = p.id_parcela
             INNER JOIN deudo d ON pgo.id_deudo = d.id_deudo
