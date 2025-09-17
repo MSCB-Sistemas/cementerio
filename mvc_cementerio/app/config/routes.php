@@ -1,13 +1,16 @@
 <?php
 return [
 
-    // Login / Home / Estadísticas
+// Login / Home / Estadísticas
     ''                => ['AuthController',       'login',        '__public__'],
     'login'           => ['AuthController',       'login',        '__public__'],
     'logout'          => ['AuthController',       'logout',       '__login__'],
     'home'            => ['HomeController',       'index',        '__login__'],
+    
+// Listados / estadísticas
     'estadisticas'    => ['EstadisticasController','index',       'ver_estadisticas'],
 
+// ABM (rutas “index” con sus permisos de ver)
     // Usuario 
     'usuario'         => ['UsuarioController',    'index',        'ver_usuario'],
     'usuario/create'  => ['UsuarioController',    'create',       'crear_usuario'],
