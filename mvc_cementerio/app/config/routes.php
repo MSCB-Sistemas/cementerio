@@ -10,7 +10,7 @@ return [
 // Listados / estadísticas
     'estadisticas'    => ['EstadisticasController','index',       'ver_estadisticas'],
 
-// ABM (rutas “index” con sus permisos de ver)
+// ABM (rutas “index” con sus permisos)
     // Usuario 
     'usuario'         => ['UsuarioController',    'index',        'ver_usuario'],
     'usuario/create'  => ['UsuarioController',    'create',       'crear_usuario'],
