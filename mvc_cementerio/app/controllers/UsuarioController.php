@@ -12,8 +12,6 @@ class UsuarioController extends Control{
 
     public function index()
     {
-        #$this->requirePermissionInController('ver_usuario');
-        // ★ flags para toggles en la vista
         $puedeCrear    = $this->can('crear_usuario');
         $puedeEditar   = $this->can('editar_usuario');
         $puedeEliminar = $this->can('eliminar_usuario');
@@ -34,18 +32,14 @@ class UsuarioController extends Control{
 
                 $html = '';
                 if ($puedeEditar) 
-                    {
-                        $html .= '<a href="'.$url.'/edit/'.$id.'" class="btn btn-sm btn-primary">Editar</a> ';
-                        // (Opcional) Activar vía POST: usar un form pequeñito en lugar de link GET
-                        $html .= '<form action="'.$url.'/activate/'.$id.'" method="post" style="display:inline">'
-                            .  '<input type="hidden" name="csrf" value="'.htmlspecialchars(csrf_token()).'">'
-                            .  '<button class="btn btn-sm btn-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</button>'
-                            .  '</form> ';
-                    }
+                {
+                    $html .= '<a href="'.$url.'/edit/'.$id.'" class="btn btn-sm btn-primary">Editar</a> ';
+                    $html .= '<form action="'.$url.'/activate/'.$id.'" method="post" style="display:inline">'
+                          .  '<button class="btn btn-sm btn-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</button>'
+                          .  '</form> ';
+                }
                 if ($puedeEliminar) {
-                    // ★ DELETE por POST + CSRF (no por GET)
                     $html .= '<form action="'.$url.'/delete/'.$id.'" method="post" style="display:inline" onsubmit="return confirm(\'¿Eliminar este usuario?\');">'
-                          .  '<input type="hidden" name="csrf" value="'.htmlspecialchars(csrf_token()).'">'
                           .  '<button class="btn btn-sm btn-danger">Eliminar</button>'
                           .  '</form>';
                 }
@@ -53,15 +47,6 @@ class UsuarioController extends Control{
             },
             'puedeCrear'      => $puedeCrear,   // por si tu partial muestra el botón “Nuevo”
             'errores'         => [],
-                /*return '
-                    <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-primary">Editar</a>
-                    <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-danger">Eliminar</a>
-                    <a href="' . $url . '/activate/' . $id . '" class="btn btn-sm btn-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</a>
-                    <a href="' . $url . '/changePass/' . $id . '" class="btn btn-sm btn-warning">Cambiar clave</a>
-                ';
-            },
-            'errores' => [],
-            */
         ];
 
         $this->loadView('partials/tablaAbm', $datos);
@@ -69,9 +54,6 @@ class UsuarioController extends Control{
 
     public function create()
     {
-        // ★ permiso explícito
-        #$this->requirePermissionInController('crear_usuario');
-
         $tipos = $this->tipoUsuariosModel->getAllTiposUsuarios();
         $datos = [
             'title'   => 'Crear usuario',
@@ -80,7 +62,6 @@ class UsuarioController extends Control{
             'errores' => [],
             'tipos'   => $tipos,
             'update'  => false,
-            'csrf'    => csrf_token(),
         ];
 
         $this->loadView('usuarios/UsuarioForm', $datos);
@@ -88,17 +69,9 @@ class UsuarioController extends Control{
 
     public function save()
     {
-        // ★ permiso explícito
-        #$this->requirePermissionInController('crear_usuario');
-
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') 
         { 
             $this->redirect('usuario'); 
-        }
-        // método POST + CSRF
-        if (!csrf_check($_POST['csrf'] ?? '')) 
-        { 
-            http_response_code(419); exit('CSRF'); 
         }
 
         $usuario     = trim($_POST["usuario"]  ?? '');
@@ -116,7 +89,7 @@ class UsuarioController extends Control{
         if (empty($usuario))        $errores[] = "El usuario es obligatorio.";
         if (empty($nombre))         $errores[] = "El nombre es obligatorio.";
         if (empty($apellido))       $errores[] = "El apellido es obligatorio.";
-        if (empty($contrasenia))    $errores[] = "El nombre es obligatorio.";
+        if (empty($contrasenia))    $errores[] = "La contraseña es obligatoria.";
         if (empty($tipoUsuario))    $errores[] = "Debe seleccionar un tipo de usuario.";
         if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) $errores[] = "Email inválido.";
 
@@ -129,7 +102,6 @@ class UsuarioController extends Control{
                 'errores' => $errores,
                 'tipos'   => $tipos,
                 'update' => false,
-                'csrf'    => csrf_token(),
             ]);
             return;
         }
@@ -146,9 +118,6 @@ class UsuarioController extends Control{
 
     public function edit($id)
     {
-        // ★ permiso
-        #$this->requirePermissionInController('editar_usuario');
-        
         $usuario = $this->model->getUsuarioId((int)$id);
         if (!$usuario) { 
             $_SESSION['flash_error'] = "Usuario no encontrado."; 
@@ -159,7 +128,7 @@ class UsuarioController extends Control{
 
         $this->loadView("usuarios/UsuarioForm", [
             'title' => "Editar usuario",
-            'action' => rtrim(URL,'/') . 'usuario/update/' . (int)$id,
+            'action' => rtrim(URL,'/') . '/usuario/update/' . (int)$id,
             'values' => [
                 'usuario'         => $usuario['usuario'],
                 'nombre'          => $usuario['nombre'],
@@ -173,23 +142,14 @@ class UsuarioController extends Control{
             'errores' => [],
             'tipos' => $tipos,
             'update' => true,
-            'csrf'    => csrf_token(),
         ]);
     }
 
     public function update($id)
     {
-        // ★ permiso + POST + CSRF
-        #$this->requirePermission('editar_usuario');
-
         if ($_SERVER["REQUEST_METHOD"] !== "POST") 
         { 
             $this->redirect('usuario'); 
-        }
-        if (!csrf_check($_POST['csrf'] ?? '')) 
-        { 
-            http_response_code(419); 
-            exit('CSRF'); 
         }
 
         $usuario     = trim($_POST["usuario"] ?? '');
@@ -205,7 +165,7 @@ class UsuarioController extends Control{
         if (empty($usuario))        $errores[] = "El usuario es obligatorio.";
         if (empty($nombre))         $errores[] = "El nombre es obligatorio.";
         if (empty($apellido))       $errores[] = "El apellido es obligatorio.";
-        if (empty($contrasenia))    $errores[] = "El nombre es obligatorio.";
+        
         if (empty($tipoUsuario))    $errores[] = "Debe seleccionar un tipo de usuario.";
         if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) $errores[] = "Email inválido.";
 
@@ -231,7 +191,6 @@ class UsuarioController extends Control{
                 'errores' => $errores,
                 'tipos'   => $tipos,
                 'update'  => true,
-                'csrf'    => csrf_token(),
             ]);
             return;
         }
@@ -247,15 +206,9 @@ class UsuarioController extends Control{
 
     public function delete($id)
     {
-        #$this->requirePermissionInController('eliminar_usuario');
         if ($_SERVER["REQUEST_METHOD"] !== "POST") 
         { 
             $this->redirect('usuario'); 
-        }
-        if (!csrf_check($_POST['csrf'] ?? '')) 
-        { 
-            http_response_code(419); 
-            exit('CSRF'); 
         }
 
         if ($this->model->deleteUsuario((int)$id)) {
@@ -269,15 +222,9 @@ class UsuarioController extends Control{
 
     public function activate($id)
     {
-        #$this->requirePermissionInController('editar_usuario');
         if ($_SERVER["REQUEST_METHOD"] !== "POST") 
         { 
             $this->redirect('usuario'); 
-        }
-        if (!csrf_check($_POST['csrf'] ?? '')) 
-        { 
-            http_response_code(419); 
-            exit('CSRF'); 
         }
 
         if ($this->model->activateUsuario((int)$id)) {
@@ -303,7 +250,6 @@ class UsuarioController extends Control{
             'title' => 'Cambiar clave',
             'action' => URL . 'usuario/savePass/' . $id,
             'errores' => [],
-            'csrf'    => csrf_token(),
         ]);
     }
 
@@ -319,11 +265,6 @@ class UsuarioController extends Control{
         { 
             $this->redirect('usuario'); 
         }
-        if (!csrf_check($_POST['csrf'] ?? '')) 
-        { 
-            http_response_code(419); 
-            exit('CSRF'); 
-        }
 
         $contrasenia = trim($_POST["password"] ?? '');
 
@@ -337,7 +278,6 @@ class UsuarioController extends Control{
                 'title'     => 'Cambiar clave',
                 'action'    => URL . 'usuario/savePass/' . $id,
                 'errores'   => $errores,
-                'csrf'    => csrf_token(),
             ]);
             return;
         }

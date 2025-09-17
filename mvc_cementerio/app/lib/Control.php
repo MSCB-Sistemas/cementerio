@@ -84,15 +84,15 @@ class Control
         return in_array($permiso, $this->permisos(), true);
     }
 
-    protected function requirePermissionInController(string|array $permisos, ?string $fallback = null): void 
+    protected function requirePermissionInController(string|array $permisos, ?string $redirect = null): void 
     {
-        requirePermission($permisos, $fallback); // reusa el helper global
+        requirePermission($permisos, $redirect); // reusa el helper global
     }
 
-    protected function fallback(string $path): void
+    protected function redirect(string $path, int $code = 303): void
     {
         $base = rtrim(URL, '/');
-        header('Location: ' . $base . '/' . ltrim($path, '/'));
+        header('Location: ' . $base . '/' . ltrim($path, '/'), true, $code);
         exit;
     }
 
@@ -166,12 +166,12 @@ class Control
         ]);
     }
 
-    protected function requireLogin(string $fallback = URL . 'login'): void
+    protected function requireLogin(string $redirect = URL . 'login'): void
     {
         // NO session_start() acá: la sesión ya se abrió en init.php
         if (!($this->isLogin())) {
             $_SESSION['flash_error'] = 'Debés iniciar sesión.';
-            header('Location: ' . rtrim($fallback, '/'));
+            header('Location: ' . rtrim($redirect, '/'));
             exit;
         }
     }

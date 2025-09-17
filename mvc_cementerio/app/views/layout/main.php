@@ -11,14 +11,13 @@ $can = function($perm) use ($user)
     }
 
     if ($user) {
-        if (isset($user['permisos']) && in_array($perm, $user['permisos'])) {
+        if (isset($user['permisos']) && in_array($perm, $user['permisos'], true)) 
+        {
             return true;
-        } else {
-            return false;
+        } else {  
+            return false; 
         }
-    } else {
-        return false;
-    }
+    } else {   return false; }
 };
 
 // $canAny: devuelve true si tiene al menos uno de los permisos del array
@@ -31,7 +30,8 @@ $canAny = function(array $perms) use ($can)
     return false;
 };
 
-$guardToPerms = function($guard) {
+$guardToPerms = function($guard) 
+{
     if ($guard === '__public__' || $guard === null) return [];        // visible a todos
     if ($guard === '__login__') return ['__login__'];                 // requiere login
     if (is_string($guard)) return [$guard];                           // permiso único
@@ -41,7 +41,8 @@ $guardToPerms = function($guard) {
 
 // Construcción de Ruta activa (para marcar “active”)
 $requestPath = '';
-if (isset($_SERVER['REQUEST_URI'])) {
+if (isset($_SERVER['REQUEST_URI'])) 
+{
     $parsed = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     if ($parsed !== null) {
         $requestPath = $parsed;
@@ -70,7 +71,7 @@ foreach ($routes as $key => [$ctrl, $method, $guard])
                     'error-permisos'
                     ];
         
-                    if (in_array($key, $ignorar, true)) continue;
+        if (in_array($key, $ignorar, true)) continue;
         $indexRoutes[$key] = $routes[$key];
         //Ese array es la base para construir el $MENU dinámico del sidebar.
     }
@@ -96,7 +97,7 @@ $labelFor = [
 
 $groupFor = [
   'home'         => null,           // ítems sueltos
-  'estadisticas' => null,
+  'estadisticas' => 'LISTA',
   // Todo lo demás al grupo ABM:
   'usuario'        => 'ABM',
   'deudo'          => 'ABM',
@@ -112,38 +113,56 @@ $groupFor = [
   'pago'           => 'ABM',
 ];
 
-// 4) Construcción del $MENU
+// 4) Construcción del $MENU (⚠️ el grupo ABM se inserta UNA sola vez al final)
 $MENU = [];
+$solo = [];
+$listaChildren = [];
 $abmChildren = [];
 
 foreach ($indexRoutes as $path => $def) 
 {
     [$ctrl, $method, $guard] = $def;
+
     $label = $labelFor[$path] ?? ucfirst($path);
     $perms = $guardToPerms($guard);
     $href  = $base . '/' . $path;
     $group = $groupFor[$path] ?? 'ABM'; // por defecto mandamos al grupo ABM
 
-    // Ítems sueltos (home, estadísticas, etc.)
-    if ($group === null) {
-        $MENU[] = ['label' => $label, 'href' => $href, 'perms' => $perms];
+    if ($group === null) 
+    {
+        // Ítems sueltos (home, estadísticas, etc.)
+        $solo []= ['label' => $label, 'href' => $href, 'perms' => $perms];
         continue;
     }
 
-    // Hijos del grupo ABM
-    if ($group === 'ABM') {
-        $abmChildren[] = ['label' => $label, 'href' => $href, 'perms' => $perms];
+    if ($group === 'LISTA') 
+    {
+        $listaChildren[] = ['label' => $label, 'href' => $href, 'perms' => $perms];
+        continue;
     }
+        
+    // Resto de Hijos al grupo ABM
+    $abmChildren[] = ['label' => $label, 'href' => $href, 'perms' => $perms];
+}
 
-    // Insertamos el grupo ABM si quedó con elementos
-    if (!empty($abmChildren)) {
-        $MENU[] = [
-            'label' => 'Alta, Baja y Modificación',
-            'perms' => [],                // visible para todos los logueados; cada hijo filtra lo suyo
-            'children' => $abmChildren
-        ];
-        //var_dump($MENU);
-    }
+// unir: primero sueltos, luego (si hay) un solo grupo ABM
+$MENU = $solo;
+
+if (!empty($listaChildren)) {
+    $MENU[] = [
+        'label'    => 'Listados y Estadísticas',
+        'perms'    => [],              // visible a logueados; hijos filtran por permisos
+        'children' => $listaChildren,
+    ];
+}
+
+if (!empty($abmChildren)) 
+{
+    $MENU[] = [
+        'label' => 'Alta, Baja y Modificación',
+        'perms' => [],                // visible para todos los logueados; cada hijo filtra lo suyo
+        'children' => $abmChildren
+    ];
 }
 ?>
 
@@ -156,5 +175,4 @@ foreach ($indexRoutes as $path => $def)
             <?php require_once $viewPath; ?>
         </div>
     </main>
-
 <?php require_once APP . '/views/inc/footer.php' ?>
