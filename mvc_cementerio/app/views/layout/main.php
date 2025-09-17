@@ -126,7 +126,7 @@ foreach ($indexRoutes as $path => $def)
     $perms = $guardToPerms($guard);
     $href  = $base . '/' . $path;
     $group = array_key_exists($path, $groupFor) ? $groupFor[$path] : 'ABM';
-
+    
     if ($group === null) 
     {
         // Ítems sueltos (home, estadísticas, etc.)
