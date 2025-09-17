@@ -10,9 +10,9 @@ class DeudoController extends Control {
 
     public function index()
     {
-        $puedeCrear    = $this->can('crear_usuario');
-        $puedeEditar   = $this->can('editar_usuario');
-        $puedeEliminar = $this->can('eliminar_usuario');
+        $puedeCrear    = $this->can('crear_deudo');
+        $puedeEditar   = $this->can('editar_deudo');
+        $puedeEliminar = $this->can('eliminar_deudo');
 
         $deudos = $this->model->getAllDeudos();
         
@@ -25,18 +25,18 @@ class DeudoController extends Control {
             "acciones"  => function (array $fila) use ($puedeEditar, $puedeEliminar)
             {
                 $id = $fila['id_deudo'];
-                $url = rtrim(URL,'/') . '/usuario';
+                $url = rtrim(URL,'/') . '/deudo';
 
                 $html = '';
                 if ($puedeEditar) 
                 {
                     $html .= '<a href="'.$url.'/edit/'.$id.'" class="btn btn-sm btn-primary">Editar</a> ';
                     $html .= '<form action="'.$url.'/activate/'.$id.'" method="post" style="display:inline">'
-                          .  '<button class="btn btn-sm btn-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</button>'
+                          .  '<button class="btn btn-sm btn-success" onclick="return confirm(\'¿Activar este deudo?\');">Activar</button>'
                           .  '</form> ';
                 }
                 if ($puedeEliminar) {
-                    $html .= '<form action="'.$url.'/delete/'.$id.'" method="post" style="display:inline" onsubmit="return confirm(\'¿Eliminar este usuario?\');">'
+                    $html .= '<form action="'.$url.'/delete/'.$id.'" method="post" style="display:inline" onsubmit="return confirm(\'¿Eliminar este deudo?\');">'
                           .  '<button class="btn btn-sm btn-danger">Eliminar</button>'
                           .  '</form>';
                 }
