@@ -16,9 +16,9 @@ class ParcelaController extends Control {
 
     public function index()
     {
-        $puedeCrear    = $this->can('crear_usuario');
-        $puedeEditar   = $this->can('editar_usuario');
-        $puedeEliminar = $this->can('eliminar_usuario');
+        $puedeCrear    = $this->can('crear_parcela');
+        $puedeEditar   = $this->can('editar_parcela');
+        $puedeEliminar = $this->can('eliminar_parcela');
 
         $parcela = $this->model->getAllParcelas();
 
@@ -31,7 +31,7 @@ class ParcelaController extends Control {
             'acciones' => function (array $fila) use ($puedeEditar, $puedeEliminar)
             {
                 $id = $fila['id_parcela'];
-                $url = rtrim(URL,'/') . '/usuario';
+                $url = rtrim(URL,'/') . '/parcela';
 
                 $html = '';
                 if ($puedeEditar) 
