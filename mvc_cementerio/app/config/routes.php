@@ -31,7 +31,7 @@ return [
     'difunto/delete'  => ['DifuntoController',    'delete',       'eliminar_difunto'],
 
     // Estado civil
-    'estadoCivil'         => ['EstadoCivilController', 'index',   '__login__'],
+    'estadoCivil'         => ['EstadoCivilController', 'index',   'ver_estado_civil'],
     'estadoCivil/create'  => ['EstadoCivilController', 'create',  'crear_estado_civil'],
     'estadoCivil/save'    => ['EstadoCivilController', 'save',    'crear_estado_civil'],
     'estadoCivil/edit'    => ['EstadoCivilController', 'edit',    'editar_estado_civil'],
@@ -39,7 +39,7 @@ return [
     'estadoCivil/delete'  => ['EstadoCivilController', 'delete',  'eliminar_estado_civil'],
 
     // Parcela
-    'parcela'         => ['ParcelaController','index',            '__login__'],
+    'parcela'         => ['ParcelaController','index',            'ver_parcela'],
     'parcela/create'  => ['ParcelaController','create',           'crear_parcela'],
     'parcela/save'    => ['ParcelaController','save',             'crear_parcela'],
     'parcela/edit'    => ['ParcelaController','edit',             'editar_parcela'],
@@ -47,7 +47,7 @@ return [
     'parcela/delete'  => ['ParcelaController','delete',           'eliminar_parcela'],
 
     // Sexo
-    'sexo'            => ['SexoController', 'index',              '__login__'],
+    'sexo'            => ['SexoController', 'index',              'ver_sexo'],
     'sexo/create'     => ['SexoController', 'create',             'crear_sexo'],
     'sexo/save'       => ['SexoController', 'save',               'crear_sexo'],
     'sexo/edit'       => ['SexoController', 'edit',               'editar_sexo'],
@@ -55,7 +55,7 @@ return [
     'sexo/delete'     => ['SexoController', 'delete',             'eliminar_sexo'],
 
     // Pago
-    'pago'            => ['PagoController', 'index',              '__login__'],
+    'pago'            => ['PagoController', 'index',              'ver_pago'],
     'pago/create'     => ['PagoController', 'create',             'crear_pago'],
     'pago/save'       => ['PagoController', 'save',               'crear_pago'],
     'pago/edit'       => ['PagoController', 'edit',               'editar_pago'],
@@ -63,7 +63,7 @@ return [
     'pago/delete'     => ['PagoController', 'delete',             'eliminar_pago'],
 
     // TipoParcela
-    'tipoParcela'         => ['TipoParcelaController', 'index',   '__login__'],
+    'tipoParcela'         => ['TipoParcelaController', 'index',   'ver_tipo_parcela'],
     'tipoParcela/create'  => ['TipoParcelaController', 'create',  'crear_tipo_parcela'],
     'tipoParcela/save'    => ['TipoParcelaController', 'save',    'crear_tipo_parcela'],
     'tipoParcela/edit'    => ['TipoParcelaController', 'edit',    'editar_tipo_parcela'],
@@ -79,7 +79,7 @@ return [
     'tipoUsuario/delete'  => ['TipoUsuariosController', 'delete', 'eliminar_tipo_usuario'],
 
     // Deudo
-    'deudo'           => ['DeudoController', 'index',             '__login__'],
+    'deudo'           => ['DeudoController', 'index',             'ver_deudo'],
     'deudo/create'    => ['DeudoController', 'create',            'crear_deudo'],
     'deudo/save'      => ['DeudoController', 'save',              'crear_deudo'],
     'deudo/edit'      => ['DeudoController', 'edit',              'editar_deudo'],
@@ -88,7 +88,7 @@ return [
 
 
     // Nacionalidades
-    'nacionalidades'         => ['NacionalidadesController','index', '__login__'],
+    'nacionalidades'         => ['NacionalidadesController','index', 'ver_nacionalidad'],
     'nacionalidades/create'  => ['NacionalidadesController','create','crear_nacionalidad'],
     'nacionalidades/save'    => ['NacionalidadesController','save',  'crear_nacionalidad'],
     'nacionalidades/edit'    => ['NacionalidadesController','edit',  'editar_nacionalidad'],
@@ -96,7 +96,7 @@ return [
     'nacionalidades/delete'  => ['NacionalidadesController','delete','eliminar_nacionalidad'],
 
     // Orientaciones
-    'orientaciones'         => ['OrientacionController','index',   '__login__'],
+    'orientaciones'         => ['OrientacionController','index',   'ver_orientacion'],
     'orientaciones/create'  => ['OrientacionController','create',  'crear_orientacion'],
     'orientaciones/save'    => ['OrientacionController','save',    'crear_orientacion'],
     'orientaciones/edit'    => ['OrientacionController','edit',    'editar_orientacion'],
@@ -104,7 +104,7 @@ return [
     'orientaciones/delete'  => ['OrientacionController','delete',  'eliminar_orientacion'],
 
     // Ubicaciones
-    'ubicacion'         => ['UbicacionDifuntoController','index',  '__login__'],
+    'ubicacion'         => ['UbicacionDifuntoController','index',  'ver_ubicacion'],
     'ubicacion/create'  => ['UbicacionDifuntoController','create', 'crear_ubicacion'],
     'ubicacion/save'    => ['UbicacionDifuntoController','save',   'crear_ubicacion'],
     'ubicacion/edit'    => ['UbicacionDifuntoController','edit',   'editar_ubicacion'],

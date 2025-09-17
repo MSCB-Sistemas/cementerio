@@ -79,8 +79,8 @@ foreach ($routes as $key => [$ctrl, $method, $guard])
 
 // 3) Mapeo de labels y grupos (controlás texto y agrupación acá)
 $labelFor = [
-  'home'            => 'Inicio',
-  'estadisticas'    => 'Listas',
+  'home'            => 'Home',
+  'estadisticas'    => 'Listas y Estadísticas',
   'usuario'         => 'Usuarios',
   'deudo'           => 'Deudos',
   'difunto'         => 'Difuntos',
@@ -97,7 +97,7 @@ $labelFor = [
 
 $groupFor = [
   'home'         => null,           // ítems sueltos
-  'estadisticas' => 'LISTA',
+  'estadisticas' => null,
   // Todo lo demás al grupo ABM:
   'usuario'        => 'ABM',
   'deudo'          => 'ABM',
@@ -116,7 +116,6 @@ $groupFor = [
 // 4) Construcción del $MENU (⚠️ el grupo ABM se inserta UNA sola vez al final)
 $MENU = [];
 $solo = [];
-$listaChildren = [];
 $abmChildren = [];
 
 foreach ($indexRoutes as $path => $def) 
@@ -126,7 +125,7 @@ foreach ($indexRoutes as $path => $def)
     $label = $labelFor[$path] ?? ucfirst($path);
     $perms = $guardToPerms($guard);
     $href  = $base . '/' . $path;
-    $group = $groupFor[$path] ?? 'ABM'; // por defecto mandamos al grupo ABM
+    $group = array_key_exists($path, $groupFor) ? $groupFor[$path] : 'ABM';
 
     if ($group === null) 
     {
@@ -135,27 +134,18 @@ foreach ($indexRoutes as $path => $def)
         continue;
     }
 
-    if ($group === 'LISTA') 
-    {
-        $listaChildren[] = ['label' => $label, 'href' => $href, 'perms' => $perms];
-        continue;
-    }
-        
     // Resto de Hijos al grupo ABM
-    $abmChildren[] = ['label' => $label, 'href' => $href, 'perms' => $perms];
+    if ($group === 'ABM') 
+    {
+        $abmChildren[] = ['label' => $label, 'href' => $href, 'perms' => $perms];
+        continue;
+    }    
 }
 
-// unir: primero sueltos, luego (si hay) un solo grupo ABM
+// Primero items sueltos
 $MENU = $solo;
 
-if (!empty($listaChildren)) {
-    $MENU[] = [
-        'label'    => 'Listados y Estadísticas',
-        'perms'    => [],              // visible a logueados; hijos filtran por permisos
-        'children' => $listaChildren,
-    ];
-}
-
+// Luego (si hay) un único grupo ABM
 if (!empty($abmChildren)) 
 {
     $MENU[] = [
@@ -166,7 +156,9 @@ if (!empty($abmChildren))
 }
 ?>
 
-<?php require_once APP . '/views/inc/header.php' ?>
+<?php   #echo '<pre>'; print_r($MENU); echo '</pre>';
+        #exit;
+ require_once APP . '/views/inc/header.php' ?>
 
 <body>
     <main class="d-flex flex-nowrap" style="min-height: 100vh">
