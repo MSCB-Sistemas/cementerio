@@ -19,9 +19,9 @@ class DifuntoController extends Control
 
     public function index()
     {
-        $puedeCrear    = $this->can('crear_usuario');
-        $puedeEditar   = $this->can('editar_usuario');
-        $puedeEliminar = $this->can('eliminar_usuario');
+        $puedeCrear    = $this->can('crear_difunto');
+        $puedeEditar   = $this->can('editar_difunto');
+        $puedeEliminar = $this->can('eliminar_difunto');
 
         $difuntos = $this->model->getAllDifuntos();
 
@@ -34,7 +34,7 @@ class DifuntoController extends Control
             'acciones' => function (array $fila) use ($puedeEditar, $puedeEliminar)
             {
                 $id = $fila['id_difunto'];
-                $url = rtrim(URL,'/') . '/usuario';
+                $url = rtrim(URL,'/') . '/difunto';
                 
                 $html = '';
                 if ($puedeEditar) 
