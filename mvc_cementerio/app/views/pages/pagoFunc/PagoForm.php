@@ -81,7 +81,7 @@
     <div class="row mb-4">
         <div class="col-12">
             <label for="observaciones" class="form-label">Observaciones</label>
-            <textarea class="form-control" id="observaciones" name="observaciones" rows="3" placeholder="Agregue observaciones relevantes sobre el pago"></textarea>
+            <textarea class="form-control" id="observaciones" name="observaciones" rows="3" placeholder="Escribir..."></textarea>
         </div>
     </div>
 
@@ -95,44 +95,28 @@
 <script>
 $(document).ready(function () {
     $("#parcela").change(function () {
-        let id = $(this).val();
-        if (id) {
-            $.getJSON("<?= URL ?>/ajax/info_parcela.php", {id: id}, function (data) {
-                if (data.error) {
-                    $("#infoParcela").html("<div class='alert alert-danger'>" + data.error + "</div>");
-                } else {
-                    $("#infoParcela").html(
-                        "<div class='card card-body mt-2'>" +
-                        "<strong>Tipo:</strong> " + data.id_tipo_parcela + "<br>" +
-                        "<strong>Ubicación:</strong> " + data.numero_ubicacion + " / " + data.hilera + " / " + data.seccion + " / " + data.fraccion + " / " + data.nivel +
-                        "</div>"
-                    );
-                }
+        const id_parcela = $(this).val();
+        if (id_parcela) {
+            $.getJSON('<?= URL ?>/pagoFunc/infoParcela', { id_parcela: id_parcela }, function (reponse) {
+                $('#infoParcela').html(reponse.html);
+            }).fail(() => {
+                $('#infoParcela').html('<p class="text-danger">Error al cargar la informacion de la parcela.</p>');
             });
-        } else {
-            $("#infoParcela").html("");
         }
     });
 
-    $("#difunto").change(function () {
-        let id = $(this).val();
-        if (id) {
-            $.getJSON("<?= URL ?>/ajax/info_difunto.php", {id: id}, function (data) {
-                if (data.error) {
-                    $("#infoDifunto").html("<div class='alert alert-danger'>" + data.error + "</div>");
-                } else {
-                    $("#infoDifunto").html(
-                        "<div class='card card-body mt-2'>" +
-                        "<strong>DNI:</strong> " + data.dni + "<br>" +
-                        "<strong>Nombre:</strong> " + data.nombre + " " + data.apellido + "<br>" +
-                        "<strong>Fecha fallecimiento:</strong> " + data.fecha_fallecimiento +
-                        "</div>"
-                    );
-                }
+    $('#difunto').change(function () {
+        const idDifunto = $(this).val();
+        if (idDifunto) {
+            $.getJSON('<?= URL ?>/pagoFunc/infoDifunto', { id_difunto: idDifunto }, function (response) {
+                $('#infoDifunto').html(response.html);
+            }).fail(() => {
+                $('#infoDifunto').html('<p class="text-danger">Error al cargar información del difunto.</p>');
             });
         } else {
-            $("#infoDifunto").html("");
+            $('#infoDifunto').empty();
         }
     });
+
 });
 </script>

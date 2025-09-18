@@ -83,26 +83,29 @@ class PagoFuncController extends Control {
     public function infoDifunto() {
         $id_difunto = $_GET['id_difunto'] ?? null;
         $html = '<p class="text-muted">Sin información</p>';
-    
+
         if ($id_difunto) {
             $model = $this->loadModel('PagoFuncModel');
             $historial = $model->obtenerHistorialTraslados($id_difunto);
             $ubicacion = $model->obtenerUbicacionActual($id_difunto);
-    
+
             ob_start();
-            echo '<ul class="list-group">';
             if ($ubicacion) {
-                echo '<li class="list-group-item">Ubicación actual: Parcela ' . htmlspecialchars($ubicacion['id_parcela']) . '</li>';
+                echo '<div class="alert alert-info">Ubicación actual: Parcela ' . htmlspecialchars($ubicacion['id_parcela']) . '</div>';
             }
-            foreach ($historial as $h) {
-                echo '<li class="list-group-item">Traslado a parcela ' . $h['id_parcela'] . ' en ' . $h['fecha'] . '</li>';
+            if ($historial) {
+                echo '<ul class="list-group mt-2">';
+                foreach ($historial as $h) {
+                    echo '<li class="list-group-item">Traslado a parcela ' . $h['id_parcela'] . ' en ' . $h['fecha'] . '</li>';
+                }
+                echo '</ul>';
             }
-            echo '</ul>';
             $html = ob_get_clean();
         }
-    
+
         echo json_encode(['html' => $html]);
     }
+
     
     public function infoParcela() {
         $id_parcela = $_GET['id_parcela'] ?? null;
@@ -111,17 +114,29 @@ class PagoFuncController extends Control {
         if ($id_parcela) {
             $model = $this->loadModel('PagoFuncModel');
             $ocupada = $model->verificarParcelaOcupada($id_parcela);
-            $pago = $model->obtenerPagoPorParcela($id_parcela);
+            $pagos = $model->obtenerPagosPorParcela($id_parcela);
     
+            ob_start();
             if ($ocupada) {
-                $html = '<div class="alert alert-danger">Parcela ocupada. ';
-                if ($pago) {
-                    $html .= 'Pago asociado ID: ' . $pago['id_pago'] . ' (Venc: ' . $pago['fecha_vencimiento'] . ')';
-                }
-                $html .= '</div>';
+                echo '<div class="alert alert-danger">Parcela ocupada. ';
             } else {
-                $html = '<div class="alert alert-success">Parcela disponible</div>';
+                echo '<div class="alert alert-success">Parcela disponible</div>';
             }
+
+            if ($pagos) {
+                echo '<div class="table-responsive mt-2"><table class="table table-sm">';
+                echo '<thead><tr><th>ID Pago</th><th>Vencimiento</th><th>Monto</th><th>Estado</th></tr></thead><tbody>';
+                foreach ($pagos as $p) {
+                    echo '<tr>';
+                    echo '<td>' . $p['id_pago'] . '</td>';
+                    echo '<td>' . $p['fecha_vencimiento'] . '</td>';
+                    echo '<td>' . $p['monto'] . '</td>';
+                    echo '<td>' . ($p['pagado'] ? 'Pagado' : 'Pendiente') . '</td>';
+                    echo '</tr>';
+                }
+                echo '</tbody></table></div>';
+            }
+            $html = ob_get_clean();
         }
     
         echo json_encode(['html' => $html]);

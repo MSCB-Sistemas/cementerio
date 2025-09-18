@@ -11,37 +11,29 @@ class PagoFuncModel {
 
     public function getAllTraslados() {
         $sql = "SELECT ubi.id_ubicacion_difunto,
-        
-        -- Datos del deudo
-        CONCAT(de.dni,' - ', de.nombre, de.apellido) AS Deudo,
-
-        -- Datos del difunto
-        CONCAT(di.dni,' - ', di.nombre, di.apellido) AS Difunto,
-
-        -- Datos de la parcela
-        CONCAT(pa.id_parcela,' - ', pa.id_tipo_parcela,' - ', pa.numero_ubicacion,' - ', pa.hilera,'/', pa.seccion,'/', pa.fraccion,'/', pa.nivel) AS Parcela,
-
-        -- Datos de pago
-        CONCAT(pg.id_deudo, pg.id_parcela, pg.fecha_pago, pg.total, pg.fecha_vencimiento) AS Pago
-
-        FROM ubicacion_difunto ubi
-        JOIN difunto di ON ubi.id_difunto = di.id_difunto
-        JOIN deudo de ON di.id_deudo = de.id_deudo
-        JOIN parcela pa ON ubi.id_parcela = pa.id_parcela
-        JOIN pago pg ON pa.id_parcela = pg.id_parcela
-        ";
+                CONCAT(de.dni,' - ', de.nombre, de.apellido) AS Deudo,
+                CONCAT(di.dni,' - ', di.nombre, di.apellido) AS Difunto,
+                CONCAT(pa.id_parcela,' - ', pa.id_tipo_parcela,' - ', pa.numero_ubicacion,' - ', pa.hilera,'/', pa.seccion,'/', pa.fraccion,'/', pa.nivel) AS Parcela,
+                CONCAT(pg.id_deudo, ' - ', pg.id_parcela, ' - ', pg.fecha_pago, ' - ', pg.total, ' - ', pg.fecha_vencimiento) AS Pago
+                FROM ubicacion_difunto ubi
+                JOIN difunto di ON ubi.id_difunto = di.id_difunto
+                JOIN deudo de ON di.id_deudo = de.id_deudo
+                JOIN parcela pa ON ubi.id_parcela = pa.id_parcela
+                JOIN pago pg ON pa.id_parcela = pg.id_parcela";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function verificarParcelaOcupada($id_parcela) {
-        $sql = "SELECT COUNT(*) as ocupada FROM ubicacion_difunto WHERE id_parcela = :id_parcela";
+        $sql = "SELECT COUNT(*) AS ocupada 
+                FROM ubicacion_difunto 
+                WHERE id_parcela = :id_parcela";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(['id_parcela' => $_POST['id_parcela']]);
+        $stmt->execute(['id_parcela' => $id_parcela]);
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['ocupada'] > 0;
@@ -49,10 +41,11 @@ class PagoFuncModel {
 
     public function obtenerUbicacionActual($id_difunto) {
         $sql = "SELECT ubi.*, pg.id_pago
-                FROM ubicaion_difunto ubi
+                FROM ubicacion_difunto ubi
                 JOIN pago pg ON ubi.id_parcela = pg.id_parcela
                 WHERE ubi.id_difunto = :id_difunto
-                ORDER BY ubi.fecha_ubicacion DESC LIMIT 1";
+                ORDER BY ubi.fecha_ubicacion DESC 
+                LIMIT 1";
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':id_difunto', $id_difunto, PDO::PARAM_INT);
@@ -96,5 +89,26 @@ class PagoFuncModel {
 
         return $stmt->execute();
     }
+
+    public function obtenerPagosPorParcela($id_parcela) {
+    $sql = "SELECT pg.id_pago,
+                   pg.id_deudo,
+                   pg.id_parcela,
+                   pg.fecha_pago,
+                   pg.fecha_vencimiento,
+                   pg.total,
+                   CONCAT(de.dni, ' - ', de.nombre, ' ', de.apellido) AS Deudo
+            FROM pago pg
+            JOIN deudo de ON pg.id_deudo = de.id_deudo
+            WHERE pg.id_parcela = :id_parcela
+            ORDER BY pg.fecha_pago DESC";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindValue(':id_parcela', $id_parcela, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }
 ?>
