@@ -193,5 +193,18 @@ class ParcelaController extends Control {
             die("No se pudo eliminar la parcela");
         }
     }
+
+    public function obtenerInfoParcela($id = null) {
+        header('Content-Type: application/json');
+        $model = new ParcelaModel();
+
+        $data = [
+            'pagos'    => $model->obtenerPagosPorParcela($id),
+            'difuntos' => $model->obtenerDifuntosPorParcela($id),
+        ];
+
+        echo json_encode($data);
+        exit;
+    }
 }
 ?>

@@ -89,26 +89,5 @@ class PagoFuncModel {
 
         return $stmt->execute();
     }
-
-    public function obtenerPagosPorParcela($id_parcela) {
-    $sql = "SELECT pg.id_pago,
-                   pg.id_deudo,
-                   pg.id_parcela,
-                   pg.fecha_pago,
-                   pg.fecha_vencimiento,
-                   pg.total,
-                   CONCAT(de.dni, ' - ', de.nombre, ' ', de.apellido) AS Deudo
-            FROM pago pg
-            JOIN deudo de ON pg.id_deudo = de.id_deudo
-            WHERE pg.id_parcela = :id_parcela
-            ORDER BY pg.fecha_pago DESC";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->bindValue(':id_parcela', $id_parcela, PDO::PARAM_INT);
-    $stmt->execute();
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
 }
 ?>

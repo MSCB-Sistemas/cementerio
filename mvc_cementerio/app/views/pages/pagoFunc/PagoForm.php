@@ -24,9 +24,6 @@
             </div>
             <button type="button" class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#modalParcela">+</button>
         </div>
-        <div class="col-12 mt-2">
-            <div id="infoParcela"></div>
-        </div>
 
         <!-- Deudo -->
         <div class="col-md-6 d-flex align-items-end">
@@ -60,9 +57,6 @@
             </div>
             <button type="button" class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#modalDifunto">+</button>
         </div>
-        <div class="col-12 mt-2">
-            <div id="infoDifunto"></div>
-        </div>
 
         <!-- Fecha -->
         <div class="col-md-3">
@@ -74,6 +68,10 @@
         <div class="col-md-3">
             <label for="fecha_vencimiento" class="form-label">Fecha Vencimiento</label>
             <input type="date" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento" required>
+        </div>
+
+        <div class="col-12 mt-2">
+            <div class="accordion" id="accordionParcelaInfo"></div>
         </div>
     </div>
 
@@ -93,30 +91,77 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function () {
-    $("#parcela").change(function () {
-        const id_parcela = $(this).val();
-        if (id_parcela) {
-            $.getJSON('<?= URL ?>/pagoFunc/infoParcela', { id_parcela: id_parcela }, function (reponse) {
-                $('#infoParcela').html(reponse.html);
-            }).fail(() => {
-                $('#infoParcela').html('<p class="text-danger">Error al cargar la informacion de la parcela.</p>');
-            });
-        }
-    });
+document.getElementById('parcela').addEventListener('change', function() {
+    const idParcela = this.value;
+    if (!idParcela) {
+        document.getElementById('accordionParcelaInfo').innerHTML = '';
+        return;
+    }
 
-    $('#difunto').change(function () {
-        const idDifunto = $(this).val();
-        if (idDifunto) {
-            $.getJSON('<?= URL ?>/pagoFunc/infoDifunto', { id_difunto: idDifunto }, function (response) {
-                $('#infoDifunto').html(response.html);
-            }).fail(() => {
-                $('#infoDifunto').html('<p class="text-danger">Error al cargar información del difunto.</p>');
-            });
-        } else {
-            $('#infoDifunto').empty();
-        }
-    });
+    fetch(`/cementerio/mvc_cementerio/parcela/obtenerInfoParcela/${idParcela}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            const accordion = document.getElementById('accordionParcelaInfo')
+            accordion.innerHTML = "";
 
+            let pagosHtml = `<div class="accordion-item">
+                <h2 class="accordion-header" id="headingPagos">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePagos" aria-expanded="true" aria-controls="collapsePagos">
+                        Pagos asociados
+                    </button>
+                </h2>
+                <div id="collapsePagos" class="accordion-collapse collapse show" aria-labelledby="headingPagos" data-bs-parent="#accordionParcelaInfo">
+                    <div class="accordion-body">`;
+
+            if (data.pagos.length > 0) {
+                pagosHtml += "<ul class='list-group'>";
+                data.pagos.forEach(p => {
+                    pagosHtml += `<li class="list-group-item">
+                        <strong>Fecha pago:</strong> ${p.fecha_pago} | 
+                        <strong>Vencimiento:</strong> ${p.fecha_vencimiento} | 
+                        <strong>Total:</strong> $${p.total} | 
+                        <strong>Deudo:</strong> ${p.Deudo}
+                    </li>`;
+                });
+                pagosHtml += "</ul>";
+            } else {
+                pagosHtml += "<p>No hay pagos asociados a esta parcela.</p>";
+            }
+
+            pagosHtml += `</div></div></div>`;
+
+            let difuntosHtml = `<div class="accordion-item">
+                <h2 class="accordion-header" id="headingDifuntos">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDifuntos" aria-expanded="false" aria-controls="collapseDifuntos">
+                        Difuntos asociados
+                    </button>
+                </h2>
+                <div id="collapseDifuntos" class="accordion-collapse collapse" aria-labelledby="headingDifuntos" data-bs-parent="#accordionParcelaInfo">
+                    <div class="accordion-body">`;
+
+            if (data.difuntos.length > 0) {
+                difuntosHtml += "<ul class='list-group'>";
+                data.difuntos.forEach(d => {
+                    difuntosHtml += `<li class="list-group-item">
+                        <strong>DNI:</strong> ${d.dni} | 
+                        <strong>Nombre:</strong> ${d.nombre} ${d.apellido} | 
+                        <strong>Fecha ubicación:</strong> ${d.fecha_ubicacion}
+                    </li>`;
+                });
+                difuntosHtml += "</ul>";
+            } else {
+                difuntosHtml += "<em>No hay difuntos registrados en esta parcela.</em>";
+            }
+
+            difuntosHtml += `</div></div></div>`;
+
+            accordion.innerHTML = pagosHtml + difuntosHtml;
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById('accordionParcelaInfo').innerHTML = "<div class='alert alert-danger'>Error al cargar la información de la parcela.</div>";
+        });
+        
 });
 </script>

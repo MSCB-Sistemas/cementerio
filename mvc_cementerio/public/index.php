@@ -53,6 +53,7 @@ $routes = [
     'parcela/edit'=> ['ParcelaController', 'edit'],
     'parcela/update'=> ['ParcelaController', 'update'],
     'parcela/delete'=> ['ParcelaController', 'delete'],
+    'parcela/obtenerInfoParcela' => ['ParcelaController', 'obtenerInfoParcela'],
 
     // URL's sexo.
     'sexo' => ['SexoController', 'index'],

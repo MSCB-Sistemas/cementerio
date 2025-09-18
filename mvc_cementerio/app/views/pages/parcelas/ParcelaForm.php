@@ -38,7 +38,7 @@
                         
                         <div class="mb-3">
                             <label for="deudo" class="form-label fw-bold">Deudo</label>
-                            <select class="form-select" id="deudo" name="deudo" required>
+                            <select class="form-select" id="deudo" name="deudo">
                                 <option value="">Seleccione...</option>
                                 <?php foreach ($datos['deudos'] as $n): ?>
                                     <option value="<?= $n['id_deudo'] ?>"
@@ -47,9 +47,6 @@
                                     </option>
                                 <?php endforeach ?>
                             </select>
-                            <div class="invalid-feedback">
-                                Por favor seleccione un deudo
-                            </div>
                         </div>
                         
                         <div class="mb-3">
