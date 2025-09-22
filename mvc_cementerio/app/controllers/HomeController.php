@@ -10,13 +10,11 @@ class HomeController extends Control
 
     public function index()
     {
-        $datos = [
-            'title' => 'Home',
-        ];
+        $datos = ['title' => 'Home'];
         $this->loadView('home/HomeView', $datos);
     }
 
     public function login() {
-        $this->loadView('loginView', '', 'login');
+        $this->loadView('loginView', [], 'login');
     }
 }

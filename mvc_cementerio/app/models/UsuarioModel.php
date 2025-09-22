@@ -41,9 +41,11 @@ class UsuarioModel {
             return [];
         }
 
-        // Convertir activo: 1 → "Si", 0 → "No" usando if...else
+        // Convertir activo: 
+        // 1 → "Si", 
+        // 0 → "No" usando if...else
         foreach ($usuarios as &$usuario) {
-            if ($usuario['activo'] === 1) {
+            if ((int)$usuario['activo'] === 1) {
                 $usuario['activo'] = "Si";
             } else {
                 $usuario['activo'] = "No";
@@ -78,7 +80,7 @@ class UsuarioModel {
      * @param mixed $id_tipo_usuario
      * @return bool
      */
-    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $contrasenia, $id_tipo_usuario): bool
+    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $contrasenia, $id_tipo_usuario): int
     {
         $sql = "INSERT INTO usuarios (usuario, nombre, apellido, cargo, sector, telefono, email, contrasenia, id_tipo_usuario) 
                 VALUES (:usuario, :nombre, :apellido, :cargo, :sector, :telefono, :email, :contrasenia, :id_tipo_usuario)
@@ -96,7 +98,7 @@ class UsuarioModel {
             "contrasenia" => password_hash($contrasenia, PASSWORD_DEFAULT),
             "id_tipo_usuario" => $id_tipo_usuario
         ];
-        return $stmt->execute($parametros);
+        $stmt->execute($parametros);
 
         AuditoriaHelper::log(
             $_SESSION['usuario_id'],    // usuario actual
@@ -105,7 +107,7 @@ class UsuarioModel {
             "Usuario Model",             // Modelo
             "Insert"                    // Accion
         );
-        return $this->db->lastInsertId();
+        return (int)$this->db->lastInsertId();
     }
 
     /** 

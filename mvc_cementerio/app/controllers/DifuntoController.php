@@ -19,23 +19,40 @@ class DifuntoController extends Control
 
     public function index()
     {
+        $puedeCrear    = $this->can('crear_difunto');
+        $puedeEditar   = $this->can('editar_difunto');
+        $puedeEliminar = $this->can('eliminar_difunto');
+
         $difuntos = $this->model->getAllDifuntos();
 
         $datos = [
-            'title' => 'Lista de difuntos',
-            'urlCrear' => URL . 'difunto/create',
-            'columnas' => ['ID', 'Deudo', 'Nombre', 'Apellido', 'DNI', 'Edad', 'Fecha fallecimiento', 'Genero', 'Nacionalidad', 'Estado civil', 'Domicilio', 'Localidad', 'Codigo postal'],
-            'columnas_claves' => ['id_difunto', 'nombre_deudo', 'nombre', 'apellido', 'dni', 'edad', 'fecha_fallecimiento', 'sexo', 'nacionalidad', 'estado_civil', 'domicilio', 'localidad', 'codigo_postal'],
-            'data' => $difuntos,
-            'acciones' => function ($fila) {
+            'title'             => 'Lista de difuntos',
+            'urlCrear'          => URL . 'difunto/create',
+            'columnas'          => ['ID', 'Deudo', 'Nombre', 'Apellido', 'DNI', 'Edad', 'Fecha fallecimiento', 'Genero', 'Nacionalidad', 'Estado civil', 'Domicilio', 'Localidad', 'Codigo postal'],
+            'columnas_claves'   => ['id_difunto', 'nombre_deudo', 'nombre', 'apellido', 'dni', 'edad', 'fecha_fallecimiento', 'sexo', 'nacionalidad', 'estado_civil', 'domicilio', 'localidad', 'codigo_postal'],
+            'data'              => $difuntos,
+            'acciones' => function (array $fila) use ($puedeEditar, $puedeEliminar)
+            {
                 $id = $fila['id_difunto'];
-                $url = URL . 'difunto';
-                return '
-                    <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
-                    <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
-                ';
+                $url = rtrim(URL,'/') . '/difunto';
+                
+                $html = '';
+                if ($puedeEditar) 
+                {
+                    $html .= '<a href="'.$url.'/edit/'.$id.'" class="btn btn-sm btn-primary">Editar</a> ';
+                    $html .= '<form action="'.$url.'/activate/'.$id.'" method="post" style="display:inline">'
+                          .  '<button class="btn btn-sm btn-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</button>'
+                          .  '</form> ';
+                }
+                if ($puedeEliminar) {
+                    $html .= '<form action="'.$url.'/delete/'.$id.'" method="post" style="display:inline" onsubmit="return confirm(\'¿Eliminar este usuario?\');">'
+                          .  '<button class="btn btn-sm btn-danger">Eliminar</button>'
+                          .  '</form>';
+                }
+                return $html;
             },
-            'errores' => [],
+            'puedeCrear'      => $puedeCrear,   // por si tu partial muestra el botón “Nuevo”
+            'errores'         => [],
         ];
 
         $this->loadView('partials/tablaAbm', $datos);

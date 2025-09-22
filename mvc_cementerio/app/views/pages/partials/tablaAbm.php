@@ -2,12 +2,13 @@
     <div class="card shadow">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h2 class="mb-0"><?= $datos['title'] ?></h2>
-            <?php if (!empty($datos['urlCrear'])): ?>
+            <?php if (!empty($datos['urlCrear']) && !empty($datos['puedeCrear'])): ?>
                 <a href="<?= $datos['urlCrear'] ?>" class="btn btn-light">
                     <i class="bi bi-plus-circle"></i> Nuevo
                 </a>
             <?php endif; ?>
         </div>
+
 
         <div class="card-body">
             <div class="row mb-4">
