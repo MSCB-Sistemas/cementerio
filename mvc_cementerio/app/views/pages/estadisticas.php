@@ -191,6 +191,69 @@ $filtrar = isset($_GET['filtrar']);
                             </td>
                         </tr>
                     <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No se encontraron resultados.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <?php if (!empty($datos['total_paginas']) && ($datos['total_paginas']) > 1): ?>
+            <ul class="pagination">
+                <?php for ($i = 1; $i <= $datos['total_paginas']; $i++): ?>
+                    <li class="page-item <?= ($i == $datos['pagina_actual']) ? 'active' : '' ?>">
+                        <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $i])) ?>">
+                            <?= $i ?>
+                        </a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
+
+    <!-- Pestania de traslados -->
+    <div class="tab-pane fade" id="traslados" role="tabpanel">
+
+        <!-- Mostrar error solo si hay -->
+        <?php if ($error): ?>
+            <div class="alert alert-warning text-center"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+        
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="th a">
+                    <tr>
+                    <th><?= generarOrdenLink('nombre', 'Nombre', $datos) ?></th>
+                    <th><?= generarOrdenLink('apellido', 'Apellido', $datos) ?></th>
+                    <th><?= generarOrdenLink('dni', 'DNI', $datos) ?></th>
+                    <th><?= generarOrdenLink('fecha_fallecimiento', 'Fecha de defunción', $datos) ?></th>
+                    <th><?= generarOrdenLink('fecha_retiro', 'Fecha de retiro', $datos) ?></th>
+                    <th><?= generarOrdenLink('parcela_origen', 'Parcela de Origen', $datos) ?></th>
+                    <th><?= generarOrdenLink('parcela_destino', 'Parcela Destino', $datos) ?></th>
+                    <th><?= generarOrdenLink('fecha_ingreso_destino', 'Fecha de ingreso a nueva parcela', $datos) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($datos['difuntos_trasladados'])): ?>
+                        <?php foreach ($datos['difuntos_trasladados'] as $difunto_trasladado): ?>
+                            <tr>
+                            <td><?= htmlspecialchars($difunto_trasladado['nombre']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['apellido']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['dni']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['fecha_fallecimiento']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['fecha_retiro']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['parcela_origen']) ?></td>
+                                <td><?= htmlspecialchars($difunto_trasladado['parcela_destino']) ?>
+                                <td><?= htmlspecialchars($difunto_trasladado['fecha_ingreso_destino']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="10" class="text-center text-muted">No se encontraron resultados.</td>
+                        </tr>
+                    <?php endif; ?>
+
                 </tbody>
             </table>
         <?php else: ?>
