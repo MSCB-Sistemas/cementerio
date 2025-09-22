@@ -1,13 +1,16 @@
 <?php
-require_once __DIR__ . '/../app/config/config.php';
-require_once __DIR__ . '/../app/config/errores.php';
-require_once __DIR__ . '/../app/lib/Control.php';
+// Abre sesión y carga helpers
+require_once __DIR__ . '/../app/init.php';
 
 $base = '/cementerio/mvc_cementerio';
 
-// 📋​ Rutas disponibles: ruta => [Controlador, metodo]
-$routes = [
+// ====== Definición de rutas: 'ruta' => [Controller, method, guard] ======
+// guards:
+//   - '__public__'  => accesible sin login
+//   - '__login__'   => requiere estar logueado
+//   - 'guard_x'   => requiere ese guard RBAC (OR si pasas array de guards)
 
+<<<<<<< HEAD
     // URL's usuario.
     'usuario' => ['UsuarioController', 'index'],
     'usuario/create' => ['UsuarioController', 'create'],
@@ -25,177 +28,125 @@ $routes = [
     'logout' => ['AuthController', 'logout'],
     'home' => ['HomeController', 'index'],
     'estadisticas' => ['EstadisticasController', 'index'],
+=======
+// Así router y sidebar (vistas) usan la misma fuente.
+$routes = require __DIR__ . '/../app/config/routes.php';
+>>>>>>> restriccion-user-dani
 
-    // URL's difunto.
-    'difunto' => ['DifuntoController', 'index'],
-    'difunto/create' => ['DifuntoController', 'create'],
-    'difunto/save' => ['DifuntoController', 'save'],
-    'difunto/edit' => ['DifuntoController', 'edit'],
-    'difunto/update' => ['DifuntoController', 'update'],
-    'difunto/delete' => ['DifuntoController', 'delete'],
+// ====== Obtener ruta y metodo actual =====
 
-    // URL's estado civil.
-    'estadoCivil' => ['EstadoCivilController', 'index'],
-    'estadoCivil/create' => ['EstadoCivilController', 'create'],
-    'estadoCivil/save' => ['EstadoCivilController', 'save'],
-    'estadoCivil/edit' => ['EstadoCivilController', 'edit'],
-    'estadoCivil/update' => ['EstadoCivilController', 'update'],
-    'estadoCivil/delete' => ['EstadoCivilController', 'delete'],
+// Path limpio sin querystring, o '' si no existe
+if (isset($_SERVER['REQUEST_URI'])) {
+    $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-    // URL's parcela.
-    'parcela' => ['ParcelaController','index'],
-    'parcela/save'=> ['ParcelaController', 'save'],
-    'parcela/create'=> ['ParcelaController', 'create'],
-    'parcela/edit'=> ['ParcelaController', 'edit'],
-    'parcela/update'=> ['ParcelaController', 'update'],
-    'parcela/delete'=> ['ParcelaController', 'delete'],
+    // Si la URI es inválida
+    if ($uri === null)   
+        $uri = '';
 
-    // URL's sexo.
-    'sexo' => ['SexoController', 'index'],
-    'sexo/create' => ['SexoController', 'create'],
-    'sexo/save' => ['SexoController', 'save'],
-    'sexo/edit' => ['SexoController', 'edit'],
-    'sexo/update' => ['SexoController', 'update'],
-    'sexo/delete' => ['SexoController', 'delete'],
+} else {  $uri = ''; }   // Si no existe REQUEST_URI
 
-    // URL's pagos
-    'pago' => ['PagoController', 'index'],
-    'pago/create' => ['PagoController', 'create'],
-    'pago/save' => ['PagoController', 'save'],
-    'pago/edit' => ['PagoController', 'edit'],
-    'pago/update' => ['PagoController', 'update'],
-    'pago/delete' => ['PagoController', 'delete'],
+// Quitar base si corresponde
+if (!empty($base) && str_starts_with($uri, $base)) {
+    $uri = substr($uri, strlen($base));
+}
 
-    // URL's tipos de parcela.
-    'tipoParcela'=> ['TipoParcelaController', 'index'],
-    'tipoParcela/create'=> ['TipoParcelaController', 'create'],
-    'tipoParcela/save'=> ['TipoParcelaController', 'save'],
-    'tipoParcela/edit'=> ['TipoParcelaController', 'edit'],
-    'tipoParcela/update'=> ['TipoParcelaController', 'update'],
-    'tipoParcela/delete'=> ['TipoParcelaController', 'delete'],
+// Limpia slashes iniciales/finales
+$uri = trim($uri, '/');
 
-    // URL's tipos de usuario.
-    'tipoUsuario'=> ['TipoUsuariosController', 'index'],
-    'tipoUsuario/create'=> ['TipoUsuariosController', 'create'],
-    'tipoUsuario/save'=> ['TipoUsuariosController', 'save'],
-    'tipoUsuario/edit'=> ['TipoUsuariosController', 'edit'],
-    'tipoUsuario/update'=> ['TipoUsuariosController', 'update'],
-    'tipoUsuario/delete'=> ['TipoUsuariosController', 'delete'],
+// Segmentar en partes (vacío → array vacío)
+if ($uri === ''){
+    $segments = [];
+} else{
+    $segments = explode('/', $uri);
+}
 
-    // URL's deudo.
-    'deudo' => ['DeudoController', 'index'],
-    'deudo/create' => ['DeudoController', 'create'],
-    'deudo/save' => ['DeudoController', 'save'],
-    'deudo/edit' => ['DeudoController', 'edit'],
-    'deudo/update' => ['DeudoController', 'update'],
-    'deudo/delete' => ['DeudoController', 'delete'],
+// Método HTTP (por defecto GET si no está seteado)
+if (isset($_SERVER['REQUEST_METHOD'])){
+    $method = $_SERVER['REQUEST_METHOD'];
+} else{
+    $method = 'GET';
+}
 
-
-    //URL's nacionalidades
-    'nacionalidades' => ['NacionalidadesController','index'],
-    'nacionalidades/create' => ['NacionalidadesController', 'create'],
-    'nacionalidades/save' => ['NacionalidadesController', 'save'],
-    'nacionalidades/edit' => ['NacionalidadesController', 'edit'],
-    'nacionalidades/update' => ['NacionalidadesController', 'update'],
-    'nacionalidades/delete' => ['NacionalidadesController', 'delete'],
-
-    //URL's orientaciones
-    'orientaciones' => ['OrientacionController', 'index'],
-    'orientaciones/create' => ['OrientacionController', 'create'],
-    'orientaciones/save' => ['OrientacionController', 'save'],
-    'orientaciones/edit' => ['OrientacionController', 'edit'],
-    'orientaciones/update' => ['OrientacionController', 'update'],
-    'orientaciones/delete' => ['OrientacionController', 'delete'],
-
-    //URL's ubicaciones
-    'ubicacion' => ['UbicacionDifuntoController', 'index'],
-    'ubicacion/create' => ['UbicacionDifuntoController', 'create'],
-    'ubicacion/save' => ['UbicacionDifuntoController', 'save'],
-    'ubicacion/edit' => ['UbicacionDifuntoController', 'edit'],
-    'ubicacion/update' => ['UbicacionDifuntoController', 'update'],
-    'ubicacion/delete' => ['UbicacionDifuntoController', 'delete'],
-];
-
-// Obtener ruta y metodo actual
-$uri = $_SERVER['REQUEST_URI'];
-// var_dump($uri);
-$uri = str_replace($base, '', $uri);
-$uri = trim(parse_url($uri, PHP_URL_PATH), '/');
-$method = $_SERVER['REQUEST_METHOD'];
-//var_dump($_SERVER['REQUEST_URI']);
-
-// var_dump($method);
-
-// Separar en partes la ruta para manejar mejor los parametros
-$partes = explode('/', $uri);
-
-// var_dump($partes);
-
-// Inicializa vairables
+// Inicializa variables
 $ruta = '';
 $parametro = null;
 
-// Logica para GET con 1 variable (ejemplo: usuario/12)
-
-if (($method === 'GET' || $method === 'POST') && count($partes) === 3) {
-    // var_dump($method);
-    $ruta = $partes[0] . '/' . $partes[1];
-    $parametro = $partes[2];
-} else {
-    // sino arma ruta normal
-    $ruta = implode('/', $partes);
-}
-
-// var_dump($ruta);
-
-// 1️⃣​. Si la ruta esta definida en el arreglo de rutas
-if (isset($routes[$ruta])) {
-    
-    // 2️⃣​. Obtener el nombre del controlador y del metodo asociado a la ruta
-    $controlador = $routes[$ruta][0];
-    $metodo = $routes[$ruta][1];
-
-    // 3️⃣​​​​​​​​​. Armar la ruta al archivo del controlador
-    $archivo = __DIR__ . '/../app/controllers/' . $controlador . '.php';
-
-    // 4️⃣. Verifica si el controlador existe
-    if (file_exists($archivo)) {
-        require_once $archivo;
-
-        // 5️⃣. Verifica si la clase existe
-        if (class_exists($controlador)) {
-            $obj = new $controlador();
-
-            // 6️⃣. Verifica si el metodo existe
-            if (method_exists($obj, $metodo)) {
-
-                // 7️⃣. Si hay parametro se pasa
-                if ($parametro !== null) {
-                    $obj->$metodo($parametro);
-                } 
-                // 8️⃣. sino se llama al metodo sin parametros
-                else {
-                    $obj->$metodo();
-                }
-                exit;
-            } 
-            // 9️⃣. error el metodo no exite
-            else {
-                echo errorMensaje('405', "Método '$metodo' no existe.");
-            }
-        } 
-        // 🔟. error la clase no existe
-        else {
-            echo errorMensaje('404', "Controlador '$controlador' no encontrado.");
-        }
-    } 
-    // 11 ​😔​ (me quede sin stickers). El archivo del controlador no existe
-    else {
-        echo errorMensaje('404', "Archivo del controlador no encontrado.");
+if (count($segments) >= 2) {
+    // Usamos los dos primeros como clave de ruta (p.ej. usuario/edit)
+    $ruta = $segments[0] . '/' . $segments[1];
+    // Si hay tercer segmento, lo tomamos como parámetro
+    if (isset($segments[2])) {
+        $parametro = $segments[2];
     }
-} 
-// 12 😭. La ruta no esta definida
-else {
-    echo errorMensaje('404', "Ruta '$ruta' no encontrada.");
+} elseif (count($segments) === 1) {
+    $ruta = $segments[0]; // p.ej. 'login' o 'usuario'
+} else {
+    $ruta = ''; // raíz → login
 }
+
+// 1️⃣​. Si la ruta está definida en el arreglo de rutas
+if (!isset($routes[$ruta])) {
+    echo errorMensaje('404', "Ruta '$ruta' no encontrada.");
+    exit;
+}
+    
+// 2️⃣​. Obtener el nombre del controlador, el metodo asociado a la ruta y guard.
+[$controlador, $metodo, $guard] = $routes[$ruta];
+
+// ====== Guards (auth + guards) ======
+// construyo base URL para redirecciones (si tenés URL constante, úsala)
+$baseUrl = rtrim(URL, '/'); // viene de config.php
+$fallbackError = $baseUrl . '/error-permisos';
+
+if ($guard === '__login__') {
+    if (!isLoggedIn()) {
+        header('Location: ' . $baseUrl . '/login');
+        exit;
+    }
+} elseif (is_string($guard) && $guard !== '__public__') {
+    // String simple de guard
+    requirePermission($guard, $fallbackError);
+} elseif (is_array($guard)) {
+    // Array de guards (OR lógico en tu helper)
+    requirePermission($guard, $fallbackError);
+}
+
+// 3️⃣​​​​​​​​​. Armar la ruta al archivo del controlador
+$archivo = __DIR__ . '/../app/controllers/' . $controlador . '.php';
+
+// 4️⃣. Verifica si el archivo del controlador existe
+if (!file_exists($archivo)) {
+    echo errorMensaje('404', "Archivo del controlador no encontrado.");
+    exit;
+}
+require_once $archivo;
+
+// 5️⃣. Verifica si la clase existe
+if (!class_exists($controlador)) {
+    echo errorMensaje('404', "Controlador '$controlador' no encontrado.");
+    exit;
+}
+
+// 6️⃣. Crear instancia y verificar método
+$obj = new $controlador();
+
+if (!method_exists($obj, $metodo)) {
+    echo errorMensaje('405', "Método '$metodo' no existe.");
+    exit;
+}
+    
+// 7️⃣. Llamada con o sin parámetro
+try {
+    if ($parametro !== null) {
+        $obj->$metodo($parametro);
+    } else {
+        $obj->$metodo();
+    }
+
+} catch (Throwable $e) {
+    // 8) ​😔​ (me quedé sin stickers). Captura de emergencia
+    echo errorMensaje('500', "Ups… algo salió mal: " . $e->getMessage());
+    exit;
+}
+
 ?>

@@ -12,7 +12,12 @@ class UbicacionDifuntoController extends Control{
        $this->parcelaModel = $this->loadModel("ParcelaModel");
     }
 
-    public function index(){
+    public function index()
+    {
+        $puedeCrear    = $this->can('crear_ubicacion');
+        $puedeEditar   = $this->can('editar_ubicacion');
+        $puedeEliminar = $this->can('eliminar_ubicacion');
+
         $ubicaciones = $this->model->getAllUbicaciones();
 
         $datos = [
@@ -21,15 +26,28 @@ class UbicacionDifuntoController extends Control{
             'columnas' => ['ID', 'ID de parcela', 'ID del difunto', 'Fecha de ingreso', 'Fecha de retiro'],
             'columnas_claves' => ['id_ubicacion_difunto', 'id_parcela', 'id_difunto', 'fecha_ingreso', 'fecha_retiro'],
             'data' => $ubicaciones,
-            'acciones' => function($fila){
+            'acciones' => function (array $fila) use ($puedeEditar, $puedeEliminar)
+            {
                 $id = $fila['id_ubicacion_difunto'];
-                $url = URL . 'ubicacion';
-                return '
-                    <a href="' . $url . '/edit/' . $id . '" class="btn btn-sm btn-outline-primary">Editar</a>
-                    <a href="' . $url . '/delete/' . $id . '" class="btn btn-sm btn-outline-primary">Eliminar</a>
-                ';
+                $url = rtrim(URL,'/') . '/ubicacion';
+
+                $html = '';
+                if ($puedeEditar) 
+                {
+                    $html .= '<a href="'.$url.'/edit/'.$id.'" class="btn btn-sm btn-primary">Editar</a> ';
+                    $html .= '<form action="'.$url.'/activate/'.$id.'" method="post" style="display:inline">'
+                          .  '<button class="btn btn-sm btn-success" onclick="return confirm(\'¿Activar este usuario?\');">Activar</button>'
+                          .  '</form> ';
+                }
+                if ($puedeEliminar) {
+                    $html .= '<form action="'.$url.'/delete/'.$id.'" method="post" style="display:inline" onsubmit="return confirm(\'¿Eliminar este usuario?\');">'
+                          .  '<button class="btn btn-sm btn-danger">Eliminar</button>'
+                          .  '</form>';
+                }
+                return $html;
             },
-            'errores' => [],
+            'puedeCrear'      => $puedeCrear,   // por si tu partial muestra el botón “Nuevo”
+            'errores'         => [],
         ];
 
         $this->loadView('partials/tablaAbm', $datos);

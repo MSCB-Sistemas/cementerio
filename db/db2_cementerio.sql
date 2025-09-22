@@ -274,11 +274,10 @@ DROP TABLE IF EXISTS `permisos`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `permisos` (
   `id_permiso` int NOT NULL AUTO_INCREMENT,
-  `nombre_permiso` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish2_ci NOT NULL,
-  `descripcion` varchar(255) COLLATE utf8mb4_spanish2_ci DEFAULT NULL,
+  `nombre_permiso` varchar(100) COLLATE utf8mb4_spanish2_ci NOT NULL,
   PRIMARY KEY (`id_permiso`),
-  UNIQUE KEY `permisos_unique` (`nombre_permiso`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+  UNIQUE KEY `nombre_permiso` (`nombre_permiso`)
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -287,7 +286,7 @@ CREATE TABLE `permisos` (
 
 LOCK TABLES `permisos` WRITE;
 /*!40000 ALTER TABLE `permisos` DISABLE KEYS */;
-INSERT INTO `permisos` VALUES (1,'crear_usuario','Permite registrar nuevos usuarios'),(2,'editar_usuario','Permite actualizar la información de un usuario'),(3,'eliminar_usuario','Elimina de la BD al usuario'),(4,'ver_estadisticas','Permite ver la tabla de Estadísticas'),(5,'ver_usuario','Permite ver la info de usuarios'),(10,'ver_difunto','Permite ver la tabla de Difuntos'),(11,'crear_difunto','Permite registrar nuevo difunto'),(12,'ver_parcela','Permite ver parcelas'),(13,'ver_deudo','Permite ver deudo'),(14,'ver_nacionalidad','Permite ver las nacionalidades'),(15,'ver_ubicacion','Permitir ver ubicaciones'),(16,'editar_difunto',NULL),(17,'eliminar_difunto',NULL);
+INSERT INTO `permisos` VALUES (35,'crear_deudo'),(7,'crear_difunto'),(11,'crear_estado_civil'),(39,'crear_nacionalidad'),(43,'crear_orientacion'),(23,'crear_pago'),(15,'crear_parcela'),(19,'crear_sexo'),(27,'crear_tipo_parcela'),(31,'crear_tipo_usuario'),(47,'crear_ubicacion'),(3,'crear_usuario'),(36,'editar_deudo'),(8,'editar_difunto'),(12,'editar_estado_civil'),(40,'editar_nacionalidad'),(44,'editar_orientacion'),(24,'editar_pago'),(16,'editar_parcela'),(20,'editar_sexo'),(28,'editar_tipo_parcela'),(32,'editar_tipo_usuario'),(48,'editar_ubicacion'),(4,'editar_usuario'),(37,'eliminar_deudo'),(9,'eliminar_difunto'),(13,'eliminar_estado_civil'),(41,'eliminar_nacionalidad'),(45,'eliminar_orientacion'),(25,'eliminar_pago'),(17,'eliminar_parcela'),(21,'eliminar_sexo'),(29,'eliminar_tipo_parcela'),(33,'eliminar_tipo_usuario'),(49,'eliminar_ubicacion'),(5,'eliminar_usuario'),(34,'ver_deudo'),(6,'ver_difunto'),(1,'ver_estadisticas'),(10,'ver_estado_civil'),(38,'ver_nacionalidad'),(42,'ver_orientacion'),(22,'ver_pago'),(14,'ver_parcela'),(18,'ver_sexo'),(26,'ver_tipo_parcela'),(30,'ver_tipo_usuario'),(46,'ver_ubicacion'),(2,'ver_usuario');
 /*!40000 ALTER TABLE `permisos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -330,8 +329,8 @@ CREATE TABLE `rol_permiso` (
   `id_tipo_usuario` int DEFAULT NULL,
   `id_permiso` int DEFAULT NULL,
   KEY `rol_permiso_tipos_usuarios_FK` (`id_tipo_usuario`),
-  KEY `rol_permiso_permisos_FK` (`id_permiso`),
-  CONSTRAINT `rol_permiso_permisos_FK` FOREIGN KEY (`id_permiso`) REFERENCES `permisos` (`id_permiso`),
+  KEY `rol_permiso_permisos_fk` (`id_permiso`),
+  CONSTRAINT `rol_permiso_permisos_fk` FOREIGN KEY (`id_permiso`) REFERENCES `permisos` (`id_permiso`),
   CONSTRAINT `rol_permiso_tipos_usuarios_FK` FOREIGN KEY (`id_tipo_usuario`) REFERENCES `tipos_usuarios` (`id_tipo_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -342,7 +341,7 @@ CREATE TABLE `rol_permiso` (
 
 LOCK TABLES `rol_permiso` WRITE;
 /*!40000 ALTER TABLE `rol_permiso` DISABLE KEYS */;
-INSERT INTO `rol_permiso` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,10),(1,11),(3,4),(3,10),(3,13),(3,12),(3,15),(2,10),(2,11),(2,13),(2,5),(2,1),(2,2),(2,16),(2,4);
+INSERT INTO `rol_permiso` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,19),(1,20),(1,21),(1,22),(1,23),(1,24),(1,25),(1,26),(1,27),(1,28),(1,29),(1,30),(1,31),(1,32),(1,33),(1,34),(1,35),(1,36),(1,37),(1,38),(1,39),(1,40),(1,41),(1,42),(1,43),(1,44),(1,45),(1,46),(1,47),(1,48),(1,49),(2,1),(2,2),(2,3),(2,4),(2,6),(2,7),(2,8),(2,9),(2,10),(2,11),(2,12),(2,13),(2,14),(2,15),(2,16),(2,17),(2,18),(2,19),(2,20),(2,21),(2,22),(2,23),(2,24),(2,25),(2,26),(2,27),(2,28),(2,29),(2,30),(2,31),(2,32),(2,33),(2,34),(2,35),(2,36),(2,37),(2,37),(2,37),(2,37),(2,41),(2,42),(2,43),(2,44),(2,45),(2,46),(2,47),(2,48),(2,49),(3,1),(3,6),(3,14),(3,34),(3,46);
 /*!40000 ALTER TABLE `rol_permiso` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -498,4 +497,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-19 11:15:54
+-- Dump completed on 2025-09-22  9:31:52

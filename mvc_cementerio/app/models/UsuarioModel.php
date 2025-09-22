@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/AuditoriaHelper.php';
 require_once 'Database.php';
 
 class UsuarioModel {
@@ -40,9 +41,11 @@ class UsuarioModel {
             return [];
         }
 
-        // Convertir activo: 1 → "Si", 0 → "No" usando if...else
+        // Convertir activo: 
+        // 1 → "Si", 
+        // 0 → "No" usando if...else
         foreach ($usuarios as &$usuario) {
-            if ($usuario['activo'] === 1) {
+            if ((int)$usuario['activo'] === 1) {
                 $usuario['activo'] = "Si";
             } else {
                 $usuario['activo'] = "No";
@@ -77,11 +80,14 @@ class UsuarioModel {
      * @param mixed $id_tipo_usuario
      * @return bool
      */
-    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $contrasenia, $id_tipo_usuario): bool
+    public function insertUsuario($usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $contrasenia, $id_tipo_usuario): int
     {
-        $stmt = $this->db->prepare("INSERT INTO usuarios (usuario, nombre, apellido, cargo, sector, telefono, email, contrasenia, id_tipo_usuario) 
-                                    VALUES (:usuario, :nombre, :apellido, :cargo, :sector, :telefono, :email, :contrasenia, :id_tipo_usuario)");
-        return $stmt->execute([
+        $sql = "INSERT INTO usuarios (usuario, nombre, apellido, cargo, sector, telefono, email, contrasenia, id_tipo_usuario) 
+                VALUES (:usuario, :nombre, :apellido, :cargo, :sector, :telefono, :email, :contrasenia, :id_tipo_usuario)
+                ";
+        $stmt = $this->db->prepare($sql);
+        
+        $parametros = [
             "usuario" => $usuario,
             "nombre" => $nombre,
             "apellido" => $apellido,
@@ -91,7 +97,17 @@ class UsuarioModel {
             'email' => $email,
             "contrasenia" => password_hash($contrasenia, PASSWORD_DEFAULT),
             "id_tipo_usuario" => $id_tipo_usuario
-        ]);
+        ];
+        $stmt->execute($parametros);
+
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Usuario Model",             // Modelo
+            "Insert"                    // Accion
+        );
+        return (int)$this->db->lastInsertId();
     }
 
     /** 
@@ -110,10 +126,13 @@ class UsuarioModel {
      */
     public function updateUsuario($id_usuario, $usuario, $nombre, $apellido, $cargo, $sector, $telefono, $email, $id_tipo_usuario): bool
     {
-        $stmt = $this->db->prepare("UPDATE usuarios 
-                                    SET usuario = :usuario, nombre = :nombre, apellido = :apellido, cargo = :cargo, sector = :sector, telefono = :telefono, email = :email, id_tipo_usuario = :id_tipo_usuario 
-                                    WHERE id_usuario = :id_usuario");
-        $stmt->execute([
+        $sql = "UPDATE usuarios 
+                SET usuario = :usuario, nombre = :nombre, apellido = :apellido, cargo = :cargo, sector = :sector, telefono = :telefono, email = :email, id_tipo_usuario = :id_tipo_usuario 
+                WHERE id_usuario = :id_usuario
+                ";
+        $stmt = $this->db->prepare($sql);
+        
+        $parametros = [
             "id_usuario" => $id_usuario,
             "usuario" => $usuario,
             "nombre" => $nombre,
@@ -123,7 +142,16 @@ class UsuarioModel {
             'telefono' => $telefono,
             'email' => $email,
             "id_tipo_usuario" => $id_tipo_usuario,
-        ]);
+        ];
+        $stmt->execute($parametros);
+
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Usuario Model",             // Modelo
+            "Update"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
@@ -134,8 +162,18 @@ class UsuarioModel {
      */
     public function deleteUsuario($id_usuario): bool
     {
-        $stmt = $this->db->prepare("UPDATE usuarios SET activo = 0 WHERE id_usuario = :id_usuario");
-        $stmt->execute(['id_usuario' => $id_usuario]);
+        $sql = "UPDATE usuarios SET activo = 0 WHERE id_usuario = :id_usuario";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['id_usuario' => $id_usuario];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Usuario Model",             // Modelo
+            "Delete"                    // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
@@ -159,8 +197,18 @@ class UsuarioModel {
      * @return bool True si se actualizó la contraseña, false en caso contrario.
      */
     public function updatePassword($id_usuario, $password) : bool {
-        $stmt = $this->db->prepare("UPDATE usuarios SET contrasenia = :contrasenia WHERE id_usuario = :id_usuario");
-        $stmt->execute(['id_usuario' => $id_usuario, 'contrasenia'=> $password]);
+        $sql = "UPDATE usuarios SET contrasenia = :contrasenia WHERE id_usuario = :id_usuario";
+        $stmt = $this->db->prepare($sql);
+        $parametros = ['id_usuario' => $id_usuario, 'contrasenia'=> $password];
+        $stmt->execute($parametros);
+        
+        AuditoriaHelper::log(
+            $_SESSION['usuario_id'],    // usuario actual
+            $sql,                       // Query SQL ejecutada
+            $parametros,                // Parámetros
+            "Usuario Model",             // Modelo
+            "Password Update"            // Accion
+        );
         return $stmt->rowCount() > 0;
     }
 
