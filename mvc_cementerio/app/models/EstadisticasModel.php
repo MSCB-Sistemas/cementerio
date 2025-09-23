@@ -245,53 +245,65 @@ class EstadisticasModel extends Control {
 }
 
     public function getDifuntosTrasladados(
-        $fecha_inicio_defuncion_traslado,
-        $fecha_fin_defuncion_traslado,
-        $fecha_inicio_traslado,
-        $fecha_fin_traslado,
-        $letra_apellido_traslado = '',
-        $sort_col = 'fecha_retiro',
-        $sort_dir = 'ASC',
-        $limite = 10,
-        $offset = 0
-    ) {
-        $this->establecerFechasPorDefecto($fecha_inicio_defuncion_traslado, $fecha_fin_defuncion_traslado);
-        $this->establecerFechasPorDefecto($fecha_inicio_traslado, $fecha_fin_traslado);
+    $fecha_inicio_defuncion_traslado,
+    $fecha_fin_defuncion_traslado,
+    $fecha_inicio_traslado,
+    $fecha_fin_traslado,
+    $letra_apellido_traslado = '',
+    $sort_col = 'fecha_retiro',
+    $sort_dir = 'ASC',
+    $limite = 10,
+    $offset = 0
+) {
+    $this->establecerFechasPorDefecto($fecha_inicio_defuncion_traslado, $fecha_fin_defuncion_traslado);
+    $this->establecerFechasPorDefecto($fecha_inicio_traslado, $fecha_fin_traslado);
 
-        $columnas_permitidas = ['nombre', 'apellido', 'fecha_fallecimiento', 'fecha_retiro'];
-        $sort_col = in_array($sort_col, $columnas_permitidas) ? $sort_col : 'fecha_retiro';
-        $sort_dir = strtoupper($sort_dir) === 'DESC' ? 'DESC' : 'ASC';
+    $columnas_permitidas = ['nombre', 'apellido', 'fecha_fallecimiento', 'fecha_retiro'];
+    $sort_col = in_array($sort_col, $columnas_permitidas) ? $sort_col : 'fecha_retiro';
+    $sort_dir = strtoupper($sort_dir) === 'DESC' ? 'DESC' : 'ASC';
 
-        $sql = "SELECT d.*, d.dni, d.nombre, d.apellido, d.fecha_fallecimiento, u.fecha_retiro
-                FROM difunto d
-                INNER JOIN ubicacion_difunto u ON d.id_difunto = u.id_difunto
-                WHERE u.fecha_retiro != '0000-00-00'
-                AND DATE(d.fecha_fallecimiento) BETWEEN :inicio_defuncion AND :fin_defuncion
-                AND DATE(u.fecha_retiro) BETWEEN :inicio_traslado AND :fin_traslado";
+    $sql = "SELECT 
+                d.*, d.dni, d.nombre, d.apellido, d.fecha_fallecimiento, 
+                u.fecha_retiro,
+                u.id_parcela AS parcela_origen, 
+                u2.id_parcela AS parcela_destino, 
+                u2.fecha_ingreso AS fecha_ingreso_destino
+            FROM difunto d
+            INNER JOIN ubicacion_difunto u ON d.id_difunto = u.id_difunto
+            INNER JOIN ubicacion_difunto u2 ON u2.id_difunto = d.id_difunto
+                AND u2.fecha_ingreso = (
+                    SELECT MIN(u3.fecha_ingreso)
+                    FROM ubicacion_difunto u3
+                    WHERE u3.id_difunto = d.id_difunto
+                      AND u3.fecha_ingreso > u.fecha_retiro
+                      AND u3.fecha_ingreso != '0000-00-00'
+                )
+            WHERE u.fecha_retiro != '0000-00-00'
+              AND DATE(d.fecha_fallecimiento) BETWEEN :inicio_defuncion AND :fin_defuncion
+              AND DATE(u.fecha_retiro) BETWEEN :inicio_traslado AND :fin_traslado";
 
-        if (!empty($letra_apellido_traslado)) {
-            $sql .= " AND d.apellido LIKE :letra_apellido_traslado";
-        }
-
-        $sql .= " ORDER BY $sort_col $sort_dir
-                LIMIT :limite OFFSET :offset";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':inicio_defuncion', $fecha_inicio_defuncion_traslado);
-        $stmt->bindValue(':fin_defuncion', $fecha_fin_defuncion_traslado);
-        $stmt->bindValue(':inicio_traslado', $fecha_inicio_traslado);
-        $stmt->bindValue(':fin_traslado', $fecha_fin_traslado);
-
-        if (!empty($letra_apellido_traslado)) {
-            $stmt->bindValue(':letra_apellido_traslado', $letra_apellido_traslado . '%');
-        }
-
-        $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (!empty($letra_apellido_traslado)) {
+        $sql .= " AND d.apellido LIKE :letra_apellido_traslado";
     }
+
+    $sql .= " ORDER BY $sort_col $sort_dir
+              LIMIT :limite OFFSET :offset";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindValue(':inicio_defuncion', $fecha_inicio_defuncion_traslado);
+    $stmt->bindValue(':fin_defuncion', $fecha_fin_defuncion_traslado);
+    $stmt->bindValue(':inicio_traslado', $fecha_inicio_traslado);
+    $stmt->bindValue(':fin_traslado', $fecha_fin_traslado);
+    if (!empty($letra_apellido_traslado)) {
+        $stmt->bindValue(':letra_apellido_traslado', $letra_apellido_traslado . '%');
+    }
+    $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
     public function getTotalParcelasOcupadas()
     {
