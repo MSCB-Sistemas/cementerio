@@ -26,6 +26,10 @@ $routes = [
     'home' => ['HomeController', 'index'],
     'estadisticas' => ['EstadisticasController', 'index'],
 
+    // URL's traslados.
+    'pagoFunc' => ['PagoFuncController', 'index'],
+    'pagoFunc/save' => ['PagoFuncController', 'save'],
+
     // URL's difunto.
     'difunto' => ['DifuntoController', 'index'],
     'difunto/create' => ['DifuntoController', 'create'],
@@ -49,6 +53,7 @@ $routes = [
     'parcela/edit'=> ['ParcelaController', 'edit'],
     'parcela/update'=> ['ParcelaController', 'update'],
     'parcela/delete'=> ['ParcelaController', 'delete'],
+    'parcela/obtenerInfoParcela' => ['ParcelaController', 'obtenerInfoParcela'],
 
     // URL's sexo.
     'sexo' => ['SexoController', 'index'],
