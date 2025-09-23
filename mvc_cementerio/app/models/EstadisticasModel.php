@@ -248,6 +248,10 @@ class EstadisticasModel extends Control
             return [];
         }
     }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
     public function getTotalParcelasOcupadas()
     {
