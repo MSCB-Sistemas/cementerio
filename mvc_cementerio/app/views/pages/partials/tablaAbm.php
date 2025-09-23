@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php if (!empty($datos['errores'])): ?>
     <div class="alert alert-danger">
         <ul>
@@ -16,31 +15,6 @@
             <a href="<?= $datos['urlCrear'] ?>" class="btn btn-success"> Nuevo </a>
         <?php endif; ?>
     </div>
-=======
-<div class="container mt-5">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h2 class="mb-0"><?= $datos['title'] ?></h2>
-            <?php if (!empty($datos['urlCrear']) && !empty($datos['puedeCrear'])): ?>
-                <a href="<?= $datos['urlCrear'] ?>" class="btn btn-light">
-                    <i class="bi bi-plus-circle"></i> Nuevo
-                </a>
-            <?php endif; ?>
-        </div>
-
-
-        <div class="card-body">
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light">
-                            <i class="bi bi-search"></i>
-                        </span>
-                        <input type="text" id="busqueda" class="form-control" placeholder="Buscar...">
-                    </div>
-                </div>
-            </div>
->>>>>>> restriccion-user-dani
 
     <div class="table-responsive-lg shadow-rounded">
         <table class="table table-hover align-middle mb-0" id="tablaABM" style="min-width: 800px;">

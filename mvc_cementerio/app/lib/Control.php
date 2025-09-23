@@ -1,16 +1,7 @@
 <?php
 class Control
 {
-<<<<<<< HEAD
     public function __construct() {}
-=======
-    public function __construct()
-    {
-        // Se deja el “auto refresh” de remember-me acá,
-        // El inicio de sesión se hace en init.php
-        $this->refreshRememberMeIfNeeded();
-    }
->>>>>>> restriccion-user-dani
 
     protected function loadModel($model)
     {
@@ -53,7 +44,6 @@ class Control
         }
     }
     
-    /** RBAC (permisos): Getters rápidos sobre la sesion */
     protected function isLogin(): bool  { return !empty($_SESSION['usuario_id']); }
     protected function userId(): ?int   
     { 
@@ -63,16 +53,6 @@ class Control
             return null;
         }
     }
-
-<<<<<<< HEAD
-    protected function requireLogin() {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        if (!isset($_SESSION['usuario_id'])) {
-            header("Location: " . URL . 'login');
-=======
     protected function roleId(): ?int   
     { 
         if (isset($_SESSION['usuario_tipo'])) {
@@ -109,83 +89,12 @@ class Control
         exit;
     }
 
-    /** ===== Remember-me (token en claro) ===== */    
-    // No abre sesión (ya está abierta en init.php). No redirige.
-    protected function refreshRememberMeIfNeeded(): void
-    {
-        if ($this->isLogin()) return;
-
-        if (isset($_COOKIE["remember_token"])){
-            $rawToken = $_COOKIE["remember_token"];
-        }else{
-            $rawToken = null;
-        }
-
-        if (isset($_COOKIE["id_usuario"])){
-            $usuarioId = (int)$_COOKIE["id_usuario"];
-        }else{
-            $usuarioId = null;
-        }
-
-        if (!$rawToken || !$usuarioId) return;
-
-        // Validar contra BD (token en claro)
-        $tokenModel = $this->loadModel("RememberTokensModel");
-        $usuarioData = $tokenModel->validateRememberMeToken((int)$usuarioId, $token);
-        if(!$usuarioData) return;   // token inválido → no se auto-loguea
-
-        // Rehidratar sesión (pone TODAS las claves que usa toda tu app)
-        $_SESSION["usuario_id"] = $usuarioData["id_usuario"];
-        $_SESSION["usuario_nombre"] = $usuarioData["nombre"];
-        $_SESSION["usuario_apellido"] = $usuarioData["apellido"];
-        $_SESSION["usuario_tipo"] = (int)$usuarioData["id_tipo_usuario"];
-
-        // Cargar permisos de rol
-        $permisoModel = $this->loadModel('PermisoModel');
-        $_SESSION['usuario_permisos'] = $permisoModel->getPermisosPorRol($_SESSION['usuario_tipo']);
-
-        // Rotar token (defensa contra replay)
-        $this->createRememberMeToken($_SESSION['usuario_id']);
-    }
-
-    protected function createRememberMeToken(int $id_usuario): void 
-    {
-        $rawToken = bin2hex(random_bytes(32));
-        $expiry = time() + 60 * 60 * 24 * 30;   //30 días
-
-        // Guarda token en BD
-        $tokenModel = $this->loadModel("RememberTokensModel");
-        $tokenModel->insertRememberMeToken($id_usuario, $token, $expiry);
-
-        $secure = (!empty($_SERVER['HTTPS']) && $_SERVER["HTTPS"] === "on");
-
-        // Cookies modernas (sin redireccionar)
-        setcookie('remember_token', $rawToken, [
-            'expires'  => $expiry,
-            'path'     => '/',
-            'domain'   => '',
-            'secure'   => $secure,
-            'httponly' => true,
-            'samesite' => 'Lax',
-        ]);
-
-        setcookie('id_usuario', (string)$id_usuario, [
-            'expires'  => $expiry,
-            'path'     => '/',
-            'domain'   => '',
-            'secure'   => $secure,
-            'httponly' => true,
-            'samesite' => 'Lax',
-        ]);
-    }
-
     protected function requireLogin(string $redirect = URL . 'login'): void
     {
         // NO session_start() acá: la sesión ya se abrió en init.php
         if (!($this->isLogin())) {
             $_SESSION['flash_error'] = 'Debés iniciar sesión.';
             header('Location: ' . rtrim($redirect, '/'));
->>>>>>> restriccion-user-dani
             exit;
         }
     }

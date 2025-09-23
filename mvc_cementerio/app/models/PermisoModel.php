@@ -9,7 +9,6 @@ class PermisoModel {
         $this->db = Database::connect();    
     }
 
-    // 🔑 Devuelve un array con los nombres de los permisos de un rol
     public function getPermisosPorRol($id_tipo) 
     {
         $sql = "SELECT p.nombre_permiso
@@ -21,6 +20,5 @@ class PermisoModel {
         $stmt->execute([$id_tipo]);
 
         return $stmt->fetchAll(PDO::FETCH_COLUMN); 
-        // Ejemplo: ['crear_usuario', 'eliminar_usuario', 'ver_estadisticas']
     }
 }
