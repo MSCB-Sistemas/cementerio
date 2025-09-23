@@ -10,7 +10,7 @@ class AuthController extends Control {
 
             if (empty($user) || empty($password)) {
                 $datos['error'] = 'Debe ingresar usuario y contraseña';
-                $this->loadView('loginView', $datos, 'login');
+                $this->loadView('LoginView', $datos, 'login');
                 exit;
             }
 
@@ -30,10 +30,10 @@ class AuthController extends Control {
                 exit;
             } else {
                 $datos['error'] = 'Credenciales incorrectas';
-                $this->loadView('loginView', $datos, 'login');
+                $this->loadView('LoginView', $datos, 'login');
             }
         } else {
-            $this->loadView('loginView', $datos, 'login');
+            $this->loadView('LoginView', $datos, 'login');
         }
     }
 
