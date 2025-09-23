@@ -166,5 +166,32 @@ class ParcelaModel {
         );
         return $stmt->rowCount() > 0;
     }
+
+    public function obtenerPagosPorParcela($id_parcela) {
+        $sql = "SELECT pg.id_pago, pg.fecha_pago, pg.fecha_vencimiento, pg.total,
+                   CONCAT(de.nombre, ' ', de.apellido) AS Deudo
+            FROM pago pg
+            JOIN deudo de ON pg.id_deudo = de.id_deudo
+            WHERE pg.id_parcela = :id_parcela";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id_parcela', $id_parcela, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function obtenerDifuntosPorParcela($id_parcela) {
+        $sql = "SELECT di.id_difunto, di.dni, di.nombre, di.apellido, ubi.fecha_ingreso
+                FROM ubicacion_difunto ubi
+                JOIN difunto di ON ubi.id_difunto = di.id_difunto
+                WHERE ubi.id_parcela = :id_parcela";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id_parcela', $id_parcela, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
