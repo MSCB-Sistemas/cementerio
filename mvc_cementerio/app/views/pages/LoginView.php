@@ -37,13 +37,6 @@
                         </div>
                     </div>
                     
-                    <div class="mb-4 form-check">
-                        <input class="form-check-input" type="checkbox" name="remember" id="remember">
-                        <label class="form-check-label" for="remember">
-                            Recordar datos
-                        </label>
-                    </div>
-                    
                     <div class="d-grid gap-3">
                         <button class="btn btn-primary btn-lg py-2" type="submit">
                             <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
