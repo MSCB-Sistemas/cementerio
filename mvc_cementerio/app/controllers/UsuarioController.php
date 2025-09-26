@@ -22,7 +22,7 @@ class UsuarioController extends Control{
             'title'           => 'Lista de Usuarios',
             'urlCrear'        => URL . 'usuario/create',
             'columnas'        => ['ID', 'Usuario', 'Nombre', 'Apellido', 'Cargo', 'Sector', 'Telefono', 'Email', 'Rol', 'Activo'],
-            'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'telefono', 'email', 'descripcion', 'activo'],
+            'columnas_claves' => ['id_usuario', 'usuario', 'nombre', 'apellido', 'cargo', 'sector', 'telefono', 'email', 'id_tipo_usuario', 'activo'],
             'data'            => $usuarios,
              // ★ Se respeta el uso del callback para acciones, pero se chequean los permisos
             'acciones' => function (array $fila) use ($puedeEditar, $puedeEliminar) 

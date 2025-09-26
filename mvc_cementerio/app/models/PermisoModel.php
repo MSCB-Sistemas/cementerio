@@ -13,7 +13,7 @@ class PermisoModel {
     {
         $sql = "SELECT p.nombre_permiso
                   FROM permisos p
-                  INNER JOIN rol_permiso rp ON p.id_permiso = rp.id_permiso
+                  INNER JOIN tipos_usuarios_permisos rp ON p.id_permiso = rp.id_permiso
                 WHERE rp.id_tipo_usuario = ?";
         
         $stmt = $this->db->prepare($sql);

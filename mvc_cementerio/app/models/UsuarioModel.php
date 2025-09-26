@@ -27,7 +27,7 @@ class UsuarioModel {
             u.sector,
             u.telefono,
             u.email,
-            tu.descripcion,
+            tu.id_tipo_usuario,
             u.activo
         FROM 
             usuarios u
