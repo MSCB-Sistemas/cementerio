@@ -65,6 +65,7 @@
         <?php endforeach; ?>
       </ul>
     <hr>
+    
     <div class="dropup mt-auto text-center">
         <hr>
         <a class="d-block text-white dropdown-toggle fw-bold fs-6 text-decoration-none" 
