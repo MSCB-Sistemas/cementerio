@@ -66,11 +66,18 @@
       </ul>
     <hr>
     
-    <div class="d-flex justify-content-center align-items-center">
-        <?php
-          $nombre = $_SESSION['usuario_nombre'] ?? '';
-          $apellido = $_SESSION['usuario_apellido'] ?? '';
-          echo htmlspecialchars(ucfirst($nombre) . " " . ucfirst($apellido));
-        ?>
+    <div class="dropup mt-auto text-center">
+        <hr>
+        <a class="d-block text-white dropdown-toggle fw-bold fs-6 text-decoration-none" 
+        href="#" 
+        role="button" 
+        data-bs-toggle="dropdown" 
+        aria-expanded="false">
+            <?= ucfirst($_SESSION['usuario_nombre'])." ".ucfirst($_SESSION['usuario_apellido']); ?>
+        </a>
+        <ul class="dropdown-menu text-small shadow">
+            <li><button class="dropdown-item" id="toggleTheme">Cambiar tema</button></li>
+            <li><a class="dropdown-item text-danger" href="<?= URL ?>logout">Cerrar sesión</a></li>
+        </ul>
     </div>
 </div>
