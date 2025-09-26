@@ -187,11 +187,7 @@ class UsuarioController extends Control{
                 ],
             ];
 
-            $this->loadView('usuarios/UsuarioForm', $usuario, [
-                'errores' => $errores,
-                'tipos'   => $tipos,
-                'update'  => true,
-            ]);
+            $this->loadView('usuarios/UsuarioForm', $usuario);
             return;
         }
 
@@ -238,8 +234,6 @@ class UsuarioController extends Control{
 
     public function changePass($id)
     {
-        // ★ regla: un usuario puede cambiar su propia clave;
-        // para cambiar la de otro, exige permiso de edición.
         $id = (int)$id;
         if ($this->userId() !== $id && !$this->can('editar_usuario')) {
             $_SESSION['flash_error'] = 'No podés cambiar la contraseña de otro usuario.';
