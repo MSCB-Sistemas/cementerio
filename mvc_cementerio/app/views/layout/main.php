@@ -172,6 +172,7 @@ if (!empty($abmChildren))
     $MENU[] = [
         'label' => 'Alta, Baja y Modificación',
         'perms' => [],                // visible para todos los logueados; cada hijo filtra lo suyo
+        'icon'     => '#table',
         'children' => $abmChildren
     ];
 }
