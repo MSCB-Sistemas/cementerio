@@ -81,6 +81,7 @@ foreach ($routes as $key => [$ctrl, $method, $guard])
 $labelFor = [
   'home'            => 'Home',
   'estadisticas'    => 'Listas y Estadísticas',
+  'registro_traslado' => 'Registro Traslado',
   'usuario'         => 'Usuarios',
   'deudo'           => 'Deudos',
   'difunto'         => 'Difuntos',
@@ -98,6 +99,7 @@ $labelFor = [
 $groupFor = [
   'home'         => null,           // ítems sueltos
   'estadisticas' => null,
+  'registro_traslado' => null,
   // Todo lo demás al grupo ABM:
   'usuario'        => 'ABM',
   'deudo'          => 'ABM',
@@ -113,6 +115,24 @@ $groupFor = [
   'pago'           => 'ABM',
 ];
 
+$iconFor = [
+  'home'            => ['icon' => '#home'],            // sprite interno
+  'estadisticas'    => ['bi'   => 'graph-up'],   // Bootstrap Icons
+  'registro_traslado' => ['bi'  => 'bar-chart-line'],
+  'usuario'         => ['bi'   => 'person-plus-fill'],
+  'deudo'           => ['bi'   => 'person-badge'],
+  'difunto'         => ['bi'   => 'snapchat'],
+  'estadoCivil'     => ['bi'   => 'people'],
+  'parcela'         => ['bi'   => 'grid-3x3-gap'],
+  'ubicacion'       => ['bi'   => 'geo-alt'],
+  'orientaciones'   => ['bi'   => 'compass'],
+  'sexo'            => ['bi'   => 'gender-ambiguous'],
+  'nacionalidades'  => ['bi'   => 'flag'],
+  'tipoParcela'     => ['bi'   => 'columns-gap'],
+  'tipoUsuario'     => ['bi'   => 'person-gear'],
+  'pago'            => ['bi'   => 'credit-card'],
+];
+
 // 4) Construcción del $MENU (⚠️ el grupo ABM se inserta UNA sola vez al final)
 $MENU = [];
 $solo = [];
@@ -121,6 +141,7 @@ $abmChildren = [];
 foreach ($indexRoutes as $path => $def) 
 {
     [$ctrl, $method, $guard] = $def;
+    $icon = $iconFor[$path] ?? [];  // puede ser ['icon'=>'#..'] o ['bi'=>'...']
 
     $label = $labelFor[$path] ?? ucfirst($path);
     $perms = $guardToPerms($guard);
@@ -130,14 +151,14 @@ foreach ($indexRoutes as $path => $def)
     if ($group === null) 
     {
         // Ítems sueltos (home, estadísticas, etc.)
-        $solo []= ['label' => $label, 'href' => $href, 'perms' => $perms];
+        $solo []= ['label' => $label, 'href' => $href, 'perms' => $perms] + $icon;
         continue;
     }
 
     // Resto de Hijos al grupo ABM
     if ($group === 'ABM') 
     {
-        $abmChildren[] = ['label' => $label, 'href' => $href, 'perms' => $perms];
+        $abmChildren[] = ['label'=>$label, 'href'=>$href, 'perms'=>$perms] + $icon;
         continue;
     }    
 }
