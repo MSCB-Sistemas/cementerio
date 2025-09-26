@@ -12,14 +12,14 @@ class EstadisticasController extends Control {
     {
         // Filtros de Defunciones
         $fecha_inicio_defuncion = $_GET['fecha_inicio_defuncion'] ?? $_GET['fecha_inicio_defuncion'] ?? '1900-01-01';
-        $fecha_fin_defuncion   = $_GET['fecha_fin_defuncion']   ?? $_GET['fecha_fin_defuncion'] ?? date('Y-m-d');
+        $fecha_fin_defuncion   = $_GET['fecha_fin_defuncion']   ?? $_GET['fecha_fin_defuncion']    ?? date('Y-m-d');
         $letra_apellido_difunto = $_GET['letra_apellido_difunto'] ?? '';
 
         // Filtros de Traslados
         $fecha_inicio_defuncion_traslado = $_GET['fecha_inicio_defuncion_traslado'] ?? $_GET['fecha_inicio_defuncion_traslado'] ?? '1900-01-01';
         $fecha_fin_defuncion_traslado   = $_GET['fecha_fin_defuncion_traslado']   ?? $_GET['fecha_fin_defuncion_traslado']    ?? date('Y-m-d');
         $fecha_inicio_traslado = $_GET['fecha_inicio_traslado'] ?? $_GET['fecha_inicio_traslado'] ?? '1900-01-01';
-        $fecha_fin_traslado   = $_GET['fecha_fin_traslado']   ?? $_GET['fecha_fin_traslado'] ?? date('Y-m-d');
+        $fecha_fin_traslado   = $_GET['fecha_fin_traslado']   ?? $_GET['fecha_fin_traslado']    ?? date('Y-m-d');
         $letra_apellido_traslado = $_GET['letra_apellido_traslado'] ?? '';
 
         // Filtros de Parcelas Vendidas
@@ -94,6 +94,11 @@ class EstadisticasController extends Control {
             $fecha_fin_defuncion_traslado,
             $fecha_inicio_traslado,
             $fecha_fin_traslado,
+            $letra_apellido_traslado,
+            $sort_col,
+            $sort_dir,
+            $limite,
+            $offset
         );
 
         $total_difuntos = $this->model->getTotalDifuntos();
